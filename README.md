@@ -1,5 +1,5 @@
 # Gord-Overlay
-- Gord-Overlay is a fork of [Gord](https://github.com/taisho6339/gord) which is enabled to run on overlay network with gossip-overlay lib
+- Gord-Overlay is a fork of [Gord](https://github.com/taisho6339/gord) which is enabled to run on overlay network constructed with [gossip-overlay lib](https://github.com/ryogrid/gossip-overlay)
 - Gord is a reference implementation of [Chord protocol](https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf).
 
 ## What is Gord?
