@@ -1,6 +1,6 @@
-# Gord
-
-This repository goals a reference implementation of [Chord protocol](https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf).
+# Gord-Overlay
+- Gord-Overlay is a fork of [Gord](https://github.com/taisho6339/gord) which is enabled to run on overlay network with gossip-overlay lib
+- Gord is a reference implementation of [Chord protocol](https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf).
 
 ## What is Gord?
 Gord is a peer-to-peer lookup service for internet applications.
