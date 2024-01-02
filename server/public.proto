@@ -1,6 +1,6 @@
 syntax = "proto3";
 package server;
-option go_package = "github.com/taisho6339/gord/server";
+option go_package = "github.com/ryogrid/gord-overlay/server";
 
 import "node.proto";
 
