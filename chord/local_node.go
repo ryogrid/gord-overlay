@@ -92,7 +92,9 @@ type LocalNode struct {
 	successors  *exclusiveNodeList
 	predecessor RingNode
 	isShutdown  bool
-	lock        sync.Mutex
+	// string => *string
+	storedValues sync.Map
+	lock         sync.Mutex
 }
 
 // NewLocalNode creates a local node.
@@ -270,4 +272,19 @@ func (l *LocalNode) Notify(_ context.Context, node RingNode) error {
 		l.predecessor = node
 	}
 	return nil
+}
+
+func (l *LocalNode) PutValueInner(ctx context.Context, key *string, value *string) (bool, error) {
+	// TODO: need to implement LocalNode::PutValueInner
+	panic("not implemented")
+}
+
+func (l *LocalNode) GetValueInner(ctx context.Context, key *string) (*string, bool, error) {
+	// TODO: need to implement LocalNode::GetValueInner
+	panic("not implemented")
+}
+
+func (l *LocalNode) DeleteValueInner(ctx context.Context, key *string) (bool, error) {
+	// TODO: need to implement LocalNode::DeleteValueInner
+	panic("not implemented")
 }

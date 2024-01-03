@@ -15,6 +15,9 @@ type RingNode interface {
 	FindSuccessorByList(ctx context.Context, id model.HashID) (RingNode, error)
 	FindClosestPrecedingNode(ctx context.Context, id model.HashID) (RingNode, error)
 	Notify(ctx context.Context, node RingNode) error
+	PutValueInner(ctx context.Context, key *string, value *string) (bool, error)
+	GetValueInner(ctx context.Context, key *string) (*string, bool, error)
+	DeleteValueInner(ctx context.Context, key *string) (bool, error)
 }
 
 // Transport represents rpc to remote node
