@@ -166,17 +166,17 @@ func (c *ApiClient) Shutdown() {
 	}
 }
 
-func (c *ApiClient) PutValueInnerRPC(ctx context.Context, key *string, value *string) (bool, error) {
+func (c *ApiClient) PutValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string, value *string) (bool, error) {
 	// TODO: need to implement ApiClient::PutValueInnerRPC
 	panic("not implemented")
 }
 
-func (c *ApiClient) GetValueInnerRPC(ctx context.Context, key *string) (*string, bool, error) {
+func (c *ApiClient) GetValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string) (*string, bool, error) {
 	// TODO: need to implement ApiClient::GetValueInnerRPC
 	panic("not implemented")
 }
 
-func (c *ApiClient) DeleteValueInnerRPC(ctx context.Context, key *string) (bool, error) {
+func (c *ApiClient) DeleteValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string) (bool, error) {
 	// TODO: need to implement ApiClient::DeleteValueInnerRPC
 	panic("not implemented")
 }

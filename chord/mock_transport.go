@@ -47,12 +47,12 @@ func (m *MockTransport) NotifyRPC(ctx context.Context, to *model.NodeRef, node *
 func (m *MockTransport) Shutdown() {
 }
 
-func (m *MockTransport) PutValueInnerRPC(ctx context.Context, key *string, value *string) (bool, error) {
+func (m *MockTransport) PutValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string, value *string) (bool, error) {
 	return false, nil
 }
-func (m *MockTransport) GetValueInnerRPC(ctx context.Context, key *string) (*string, bool, error) {
+func (m *MockTransport) GetValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string) (*string, bool, error) {
 	return nil, false, nil
 }
-func (m *MockTransport) DeleteValueInnerRPC(ctx context.Context, key *string) (bool, error) {
+func (m *MockTransport) DeleteValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string) (bool, error) {
 	return false, nil
 }

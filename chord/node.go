@@ -27,7 +27,7 @@ type Transport interface {
 	FindClosestPrecedingNodeRPC(ctx context.Context, to *model.NodeRef, id model.HashID) (RingNode, error)
 	NotifyRPC(ctx context.Context, to *model.NodeRef, node *model.NodeRef) error
 	Shutdown()
-	PutValueInnerRPC(ctx context.Context, key *string, value *string) (bool, error)
-	GetValueInnerRPC(ctx context.Context, key *string) (*string, bool, error)
-	DeleteValueInnerRPC(ctx context.Context, key *string) (bool, error)
+	PutValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string, value *string) (bool, error)
+	GetValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string) (*string, bool, error)
+	DeleteValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string) (bool, error)
 }
