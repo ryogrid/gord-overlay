@@ -11,5 +11,6 @@
 - $ mv private.pb.go server
 - $ protoc -I./server --go_out=plugins=grpc,paths=source_relative:. server/node.proto
 - $ mv node.pb.go server
+- $ go mod tidy
 - check generated code can be used
   - $ go build -o gordolctl ./cmd/main.go 
