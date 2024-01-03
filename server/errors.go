@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/taisho6339/gord/chord"
+	"github.com/ryogrid/gord-overlay/chord"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

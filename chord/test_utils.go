@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/binary"
 	"fmt"
-	"github.com/taisho6339/gord/pkg/model"
+	"github.com/ryogrid/gord-overlay/pkg/model"
 	"sync"
 )
 

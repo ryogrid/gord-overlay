@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/ryogrid/gord-overlay/chord"
 	log "github.com/sirupsen/logrus"
-	"github.com/taisho6339/gord/chord"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
@@ -198,4 +198,19 @@ func (is *InternalServer) Notify(ctx context.Context, req *Node) (*empty.Empty, 
 		return nil, status.Errorf(codes.Internal, "server: notify failed. reason = %#v", err)
 	}
 	return &empty.Empty{}, nil
+}
+
+func (is *InternalServer) PutValueInner(ctx context.Context, req *PutValueInnerRequest) (*PutValueInnerResponse, error) {
+	// TODO: need to implement InternalServer::PutValueInner
+	panic("not implemented")
+}
+
+func (is *InternalServer) GetValueInner(ctx context.Context, req *GetValueInnerRequest) (*GetValueInnerResponse, error) {
+	// TODO: need to implement InternalServer::GetValueInner
+	panic("not implemented")
+}
+
+func (is *InternalServer) DeleteValueInner(ctx context.Context, req *DeleteValueInnerRequest) (*DeleteValueInnerResponse, error) {
+	// TODO: need to implement InternalServer::DeleteValueInner
+	panic("not implemented")
 }

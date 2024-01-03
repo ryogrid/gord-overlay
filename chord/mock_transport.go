@@ -2,7 +2,7 @@ package chord
 
 import (
 	"context"
-	"github.com/taisho6339/gord/pkg/model"
+	"github.com/ryogrid/gord-overlay/pkg/model"
 )
 
 // MockTransport does nothing
@@ -45,4 +45,14 @@ func (m *MockTransport) NotifyRPC(ctx context.Context, to *model.NodeRef, node *
 
 // Shutdown does nothing
 func (m *MockTransport) Shutdown() {
+}
+
+func (m *MockTransport) PutValueInnerRPC(ctx context.Context, key *string, value *string) (bool, error) {
+	return false, nil
+}
+func (m *MockTransport) GetValueInnerRPC(ctx context.Context, key *string) (*string, bool, error) {
+	return nil, false, nil
+}
+func (m *MockTransport) DeleteValueInnerRPC(ctx context.Context, key *string) (bool, error) {
+	return false, nil
 }

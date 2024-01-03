@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/taisho6339/gord/chord"
-	"github.com/taisho6339/gord/pkg/model"
+	"github.com/ryogrid/gord-overlay/chord"
+	"github.com/ryogrid/gord-overlay/pkg/model"
 	"google.golang.org/grpc"
 	"sync"
 	"time"
@@ -164,4 +164,19 @@ func (c *ApiClient) Shutdown() {
 	for _, conn := range c.connPool {
 		conn.Close()
 	}
+}
+
+func (c *ApiClient) PutValueInnerRPC(ctx context.Context, key *string, value *string) (bool, error) {
+	// TODO: need to implement ApiClient::PutValueInnerRPC
+	panic("not implemented")
+}
+
+func (c *ApiClient) GetValueInnerRPC(ctx context.Context, key *string) (*string, bool, error) {
+	// TODO: need to implement ApiClient::GetValueInnerRPC
+	panic("not implemented")
+}
+
+func (c *ApiClient) DeleteValueInnerRPC(ctx context.Context, key *string) (bool, error) {
+	// TODO: need to implement ApiClient::DeleteValueInnerRPC
+	panic("not implemented")
 }

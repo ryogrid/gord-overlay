@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
+	"github.com/ryogrid/gord-overlay/chord"
+	"github.com/ryogrid/gord-overlay/server"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/taisho6339/gord/chord"
-	"github.com/taisho6339/gord/server"
 	"os"
 	"os/signal"
 	"syscall"

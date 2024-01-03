@@ -2,7 +2,7 @@ package chord
 
 import (
 	"context"
-	"github.com/taisho6339/gord/pkg/model"
+	"github.com/ryogrid/gord-overlay/pkg/model"
 )
 
 // RemoteNode represents remote nodes.
@@ -49,4 +49,19 @@ func (r *RemoteNode) FindClosestPrecedingNode(ctx context.Context, id model.Hash
 
 func (r *RemoteNode) Notify(ctx context.Context, node RingNode) error {
 	return r.NotifyRPC(ctx, r.NodeRef, node.Reference())
+}
+
+func (r *RemoteNode) PutValueInner(ctx context.Context, key *string, value *string) (bool, error) {
+	// TODO: need to implement RemoteNode::PutValueInner
+	return r.PutValueInnerRPC(ctx, key, value)
+}
+
+func (r *RemoteNode) GetValueInnerRPC(ctx context.Context, key *string) (*string, bool, error) {
+	// TODO: need to implement RemoteNode::GetValueInner
+	return r.GetValueInnerRPC(ctx, key)
+}
+
+func (r *RemoteNode) DeleteValueInnerRPC(ctx context.Context, key *string) (bool, error) {
+	// TODO: need to implement RemoteNode::DeleteValueInner
+	return r.DeleteValueInnerRPC(ctx, key)
 }

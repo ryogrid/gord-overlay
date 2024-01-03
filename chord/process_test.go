@@ -2,9 +2,9 @@ package chord
 
 import (
 	"context"
+	"github.com/ryogrid/gord-overlay/pkg/model"
+	"github.com/ryogrid/gord-overlay/pkg/test"
 	"github.com/stretchr/testify/assert"
-	"github.com/taisho6339/gord/pkg/model"
-	"github.com/taisho6339/gord/pkg/test"
 	"testing"
 	"time"
 )
