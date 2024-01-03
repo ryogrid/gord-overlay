@@ -1,8 +1,8 @@
 - check go version
   - $ go version
-  - "go version go1.21.2 windows/amd64" is worked 
+  - "go version go1.21.2 windows/amd64" worked 
 - install protoc command line tool
-  - libprotoc 3.19.6 worked
+  - "libprotoc 3.19.6" worked
 - $ go get google.golang.org/grpc/cmd/protoc-gen-go
 - $ go get github.com/golang/protobuf/protoc-gen-go-grpc
 - $ protoc -I./server --go_out=plugins=grpc,paths=source_relative:. server/public.proto
