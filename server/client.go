@@ -167,16 +167,43 @@ func (c *ApiClient) Shutdown() {
 }
 
 func (c *ApiClient) PutValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string, value *string) (bool, error) {
-	// TODO: need to implement ApiClient::PutValueInnerRPC
-	panic("not implemented")
+	client, err := c.getGrpcConn(to.Host)
+	if err != nil {
+		return false, err
+	}
+	ctx, cancel := context.WithTimeout(ctx, c.timeout)
+	defer cancel()
+	resp, err := client.PutValueInner(ctx, &PutValueInnerRequest{Key: *key, Value: *value})
+	if err != nil {
+		return false, handleError(err)
+	}
+	return resp.Success, nil
 }
 
 func (c *ApiClient) GetValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string) (*string, bool, error) {
-	// TODO: need to implement ApiClient::GetValueInnerRPC
-	panic("not implemented")
+	client, err := c.getGrpcConn(to.Host)
+	if err != nil {
+		return nil, false, err
+	}
+	ctx, cancel := context.WithTimeout(ctx, c.timeout)
+	defer cancel()
+	resp, err := client.GetValueInner(ctx, &GetValueInnerRequest{Key: *key})
+	if err != nil {
+		return nil, false, handleError(err)
+	}
+	return &resp.Value, resp.Success, nil
 }
 
 func (c *ApiClient) DeleteValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string) (bool, error) {
-	// TODO: need to implement ApiClient::DeleteValueInnerRPC
-	panic("not implemented")
+	client, err := c.getGrpcConn(to.Host)
+	if err != nil {
+		return false, err
+	}
+	ctx, cancel := context.WithTimeout(ctx, c.timeout)
+	defer cancel()
+	resp, err := client.DeleteValueInner(ctx, &DeleteValueInnerRequest{Key: *key})
+	if err != nil {
+		return false, handleError(err)
+	}
+	return resp.Success, nil
 }
