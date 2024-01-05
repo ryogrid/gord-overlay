@@ -276,6 +276,8 @@ func (l *LocalNode) Notify(_ context.Context, node RingNode) error {
 
 func (l *LocalNode) PutValueInner(ctx context.Context, key *string, value *string) (bool, error) {
 	// TODO: need to implement LocalNode::PutValueInner
+
+	//l.storedValues.Store(*key, *value)
 	panic("not implemented")
 }
 

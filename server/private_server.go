@@ -201,16 +201,43 @@ func (is *InternalServer) Notify(ctx context.Context, req *Node) (*empty.Empty, 
 }
 
 func (is *InternalServer) PutValueInner(ctx context.Context, req *PutValueInnerRequest) (*PutValueInnerResponse, error) {
-	// TODO: need to implement InternalServer::PutValueInner
-	panic("not implemented")
+	if is.process.IsShutdown {
+		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
+	}
+	success, err := is.process.PutValueInner(ctx, &req.Key, &req.Value)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "server: put value failed. reason = %#v", err)
+	}
+	return &PutValueInnerResponse{
+		Success: success,
+	}, nil
+
 }
 
 func (is *InternalServer) GetValueInner(ctx context.Context, req *GetValueInnerRequest) (*GetValueInnerResponse, error) {
-	// TODO: need to implement InternalServer::GetValueInner
-	panic("not implemented")
+	if is.process.IsShutdown {
+		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
+	}
+	val, success, err := is.process.GetValueInner(ctx, &req.Key)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "server: get value failed. reason = %#v", err)
+	}
+
+	return &GetValueInnerResponse{
+		Value:   *val,
+		Success: success,
+	}, nil
 }
 
 func (is *InternalServer) DeleteValueInner(ctx context.Context, req *DeleteValueInnerRequest) (*DeleteValueInnerResponse, error) {
-	// TODO: need to implement InternalServer::DeleteValueInner
-	panic("not implemented")
+	if is.process.IsShutdown {
+		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
+	}
+	success, err := is.process.DeleteValueInner(ctx, &req.Key)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "server: delete value failed. reason = %#v", err)
+	}
+	return &DeleteValueInnerResponse{
+		Success: success,
+	}, nil
 }
