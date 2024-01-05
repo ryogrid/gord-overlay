@@ -77,9 +77,15 @@ func (g *ExternalServer) PutValue(ctx context.Context, req *PutValueRequest) (*P
 		log.Errorf("FindHostForKey failed. reason: %#v", err)
 		return nil, err
 	}
-	// TODO: Implement ExternalServer::PutValue
-	fmt.Println(s)
-	panic("not implemented")
+	// TODO: need to consider repllication (ExternalServer::PutValue)
+	success, err2 := s.PutValue(ctx, &req.Key, &req.Value)
+	if err2 != nil {
+		log.Errorf("External PutValue failed. reason: %#v", err)
+		return nil, err2
+	}
+	return &PutValueResponse{
+		Success: success,
+	}, nil
 }
 
 func (g *ExternalServer) GetValue(ctx context.Context, req *GetValueRequest) (*GetValueResponse, error) {
@@ -89,9 +95,16 @@ func (g *ExternalServer) GetValue(ctx context.Context, req *GetValueRequest) (*G
 		log.Errorf("FindHostForKey failed. reason: %#v", err)
 		return nil, err
 	}
-	// TODO: Implement ExternalServer::PutValue
-	fmt.Println(s)
-	panic("not implemented")
+	// TODO: need to consider repllication (ExternalServer::GetValue)
+	val, success, err2 := s.GetValue(ctx, &req.Key)
+	if err2 != nil {
+		log.Errorf("External GetValue failed. reason: %#v", err)
+		return nil, err2
+	}
+	return &GetValueResponse{
+		Value:   *val,
+		Success: success,
+	}, nil
 }
 
 func (g *ExternalServer) DeleteValue(ctx context.Context, req *DeleteValueRequest) (*DeleteValueResponse, error) {
@@ -101,7 +114,13 @@ func (g *ExternalServer) DeleteValue(ctx context.Context, req *DeleteValueReques
 		log.Errorf("FindHostForKey failed. reason: %#v", err)
 		return nil, err
 	}
-	// TODO: Implement ExternalServer::DeleteValue
-	fmt.Println(s)
-	panic("not implemented")
+	// TODO: need to consider repllication (ExternalServer::DeleteValue)
+	success, err2 := s.DeleteValue(ctx, &req.Key)
+	if err2 != nil {
+		log.Errorf("External DeleteValue failed. reason: %#v", err)
+		return nil, err2
+	}
+	return &DeleteValueResponse{
+		Success: success,
+	}, nil
 }

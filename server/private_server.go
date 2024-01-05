@@ -204,7 +204,7 @@ func (is *InternalServer) PutValueInner(ctx context.Context, req *PutValueInnerR
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
-	success, err := is.process.PutValueInner(ctx, &req.Key, &req.Value)
+	success, err := is.process.PutValue(ctx, &req.Key, &req.Value)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: put value failed. reason = %#v", err)
 	}
@@ -218,7 +218,7 @@ func (is *InternalServer) GetValueInner(ctx context.Context, req *GetValueInnerR
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
-	val, success, err := is.process.GetValueInner(ctx, &req.Key)
+	val, success, err := is.process.GetValue(ctx, &req.Key)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: get value failed. reason = %#v", err)
 	}
@@ -233,7 +233,7 @@ func (is *InternalServer) DeleteValueInner(ctx context.Context, req *DeleteValue
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
-	success, err := is.process.DeleteValueInner(ctx, &req.Key)
+	success, err := is.process.DeleteValue(ctx, &req.Key)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: delete value failed. reason = %#v", err)
 	}
