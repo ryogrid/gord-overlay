@@ -51,14 +51,14 @@ func (r *RemoteNode) Notify(ctx context.Context, node RingNode) error {
 	return r.NotifyRPC(ctx, r.NodeRef, node.Reference())
 }
 
-func (r *RemoteNode) PutValueInner(ctx context.Context, key *string, value *string) (bool, error) {
+func (r *RemoteNode) PutValue(ctx context.Context, key *string, value *string) (bool, error) {
 	return r.PutValueInnerRPC(ctx, r.NodeRef, key, value)
 }
 
-func (r *RemoteNode) GetValueInner(ctx context.Context, key *string) (*string, bool, error) {
+func (r *RemoteNode) GetValue(ctx context.Context, key *string) (*string, bool, error) {
 	return r.GetValueInnerRPC(ctx, r.NodeRef, key)
 }
 
-func (r *RemoteNode) DeleteValueInner(ctx context.Context, key *string) (bool, error) {
+func (r *RemoteNode) DeleteValue(ctx context.Context, key *string) (bool, error) {
 	return r.DeleteValueInnerRPC(ctx, r.NodeRef, key)
 }

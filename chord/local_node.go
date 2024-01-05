@@ -274,19 +274,24 @@ func (l *LocalNode) Notify(_ context.Context, node RingNode) error {
 	return nil
 }
 
-func (l *LocalNode) PutValue(ctx context.Context, key *string, value *string) (bool, error) {
-	// TODO: need to implement LocalNode::PutValueInner
-
-	//l.storedValues.Store(*key, *value)
-	panic("not implemented")
+func (l *LocalNode) PutValue(_ context.Context, key *string, value *string) (bool, error) {
+	l.storedValues.Store(*key, value)
+	return true, nil
 }
 
 func (l *LocalNode) GetValue(ctx context.Context, key *string) (*string, bool, error) {
-	// TODO: need to implement LocalNode::GetValueInner
-	panic("not implemented")
+	if val, ok := l.storedValues.Load(*key); ok {
+		return val.(*string), true, nil
+	} else {
+		return nil, false, ErrNotFound
+	}
 }
 
 func (l *LocalNode) DeleteValue(ctx context.Context, key *string) (bool, error) {
-	// TODO: need to implement LocalNode::DeleteValueInner
-	panic("not implemented")
+	if _, ok := l.storedValues.Load(*key); !ok {
+		return false, ErrNotFound
+	} else {
+		l.storedValues.Delete(*key)
+		return true, nil
+	}
 }
