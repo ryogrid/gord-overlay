@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/ryogird/gord-overlay/core"
 	"github.com/ryogrid/gord-overlay/chord"
-	"github.com/ryogrid/gord-overlay/server"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"net"
@@ -50,26 +50,26 @@ func main() {
 			var (
 				ctx, cancel = context.WithCancel(context.Background())
 				localNode   = chord.NewLocalNode(hostAndPortBase)
-				transport   = server.NewChordApiClient(localNode, basePort, time.Second*3)
+				transport   = core.NewChordApiClient(localNode, basePort, time.Second*3)
 				process     = chord.NewProcess(localNode, transport)
-				opts        = []server.InternalServerOptionFunc{
-					server.WithNodeOption(host),
-					server.WithTimeoutConnNode(time.Second * 3),
+				opts        = []core.InternalServerOptionFunc{
+					core.WithNodeOption(host),
+					core.WithTimeoutConnNode(time.Second * 3),
 				}
 			)
 			defer cancel()
 			if existNodeHostAndPort != "" {
-				opts = append(opts, server.WithProcessOptions(chord.WithExistNode(
+				opts = append(opts, core.WithProcessOptions(chord.WithExistNode(
 					chord.NewRemoteNode(existNodeHostAndPort, process.Transport),
 				)))
 			}
-			ins := server.NewChordServer(process, basePort, opts...)
+			ins := core.NewChordServer(process, basePort, opts...)
 			basePortNum, err := strconv.Atoi(basePort)
 			if err != nil {
 				fmt.Println("invalid basePort. err = %#v", err)
 				os.Exit(1)
 			}
-			exs := server.NewExternalServer(process, strconv.Itoa(basePortNum+1))
+			exs := core.NewExternalServer(process, strconv.Itoa(basePortNum+1))
 			go ins.Run(ctx)
 			go exs.Run()
 

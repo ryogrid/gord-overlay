@@ -1,8 +1,9 @@
-package server
+package core
 
 import (
 	"connectrpc.com/connect"
 	"context"
+	"github.com/ryogird/gord-overlay/server"
 	"github.com/ryogird/gord-overlay/serverconnect"
 	"github.com/ryogrid/gord-overlay/chord"
 	log "github.com/sirupsen/logrus"
@@ -122,7 +123,7 @@ func (is *InternalServer) Ping(_ context.Context, _ *connect.Request[emptypb.Emp
 	}, nil
 }
 
-func (is *InternalServer) Successors(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[Nodes], error) {
+func (is *InternalServer) Successors(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[server.Nodes], error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -130,23 +131,23 @@ func (is *InternalServer) Successors(ctx context.Context, req *connect.Request[e
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: internal error occured. successor is not set.")
 	}
-	var nodes []*Node
+	var nodes []*server.Node
 	for _, suc := range successors {
 		if suc == nil {
 			continue
 		}
-		nodes = append(nodes, &Node{
+		nodes = append(nodes, &server.Node{
 			Host: suc.Reference().Host,
 		})
 	}
-	return &connect.Response[Nodes]{
-		Msg: &Nodes{
+	return &connect.Response[server.Nodes]{
+		Msg: &server.Nodes{
 			Nodes: nodes,
 		},
 	}, nil
 }
 
-func (is *InternalServer) Predecessor(ctx context.Context, _ *connect.Request[emptypb.Empty]) (*connect.Response[Node], error) {
+func (is *InternalServer) Predecessor(ctx context.Context, _ *connect.Request[emptypb.Empty]) (*connect.Response[server.Node], error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -155,8 +156,8 @@ func (is *InternalServer) Predecessor(ctx context.Context, _ *connect.Request[em
 		return nil, status.Errorf(codes.Internal, "server: internal error occured. predecessor is not set.")
 	}
 	if pred != nil {
-		return &connect.Response[Node]{
-			Msg: &Node{
+		return &connect.Response[server.Node]{
+			Msg: &server.Node{
 				Host: pred.Reference().Host,
 			},
 		}, nil
@@ -164,7 +165,7 @@ func (is *InternalServer) Predecessor(ctx context.Context, _ *connect.Request[em
 	return nil, status.Errorf(codes.NotFound, "server: predecessor is not set.")
 }
 
-func (is *InternalServer) FindSuccessorByTable(ctx context.Context, req *connect.Request[FindRequest]) (*connect.Response[Node], error) {
+func (is *InternalServer) FindSuccessorByTable(ctx context.Context, req *connect.Request[server.FindRequest]) (*connect.Response[server.Node], error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -172,14 +173,14 @@ func (is *InternalServer) FindSuccessorByTable(ctx context.Context, req *connect
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: find successor failed. reason = %#v", err)
 	}
-	return &connect.Response[Node]{
-		Msg: &Node{
+	return &connect.Response[server.Node]{
+		Msg: &server.Node{
 			Host: successor.Reference().Host,
 		},
 	}, nil
 }
 
-func (is *InternalServer) FindSuccessorByList(ctx context.Context, req *connect.Request[FindRequest]) (*connect.Response[Node], error) {
+func (is *InternalServer) FindSuccessorByList(ctx context.Context, req *connect.Request[server.FindRequest]) (*connect.Response[server.Node], error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -187,14 +188,14 @@ func (is *InternalServer) FindSuccessorByList(ctx context.Context, req *connect.
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: find successor fallback failed. reason = %#v", err)
 	}
-	return &connect.Response[Node]{
-		Msg: &Node{
+	return &connect.Response[server.Node]{
+		Msg: &server.Node{
 			Host: successor.Reference().Host,
 		},
 	}, nil
 }
 
-func (is *InternalServer) FindClosestPrecedingNode(ctx context.Context, req *connect.Request[FindRequest]) (*connect.Response[Node], error) {
+func (is *InternalServer) FindClosestPrecedingNode(ctx context.Context, req *connect.Request[server.FindRequest]) (*connect.Response[server.Node], error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -205,14 +206,14 @@ func (is *InternalServer) FindClosestPrecedingNode(ctx context.Context, req *con
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: find closest preceding node failed. reason = %#v", err)
 	}
-	return &connect.Response[Node]{
-		Msg: &Node{
+	return &connect.Response[server.Node]{
+		Msg: &server.Node{
 			Host: node.Reference().Host,
 		},
 	}, nil
 }
 
-func (is *InternalServer) Notify(ctx context.Context, req *connect.Request[Node]) (*connect.Response[emptypb.Empty], error) {
+func (is *InternalServer) Notify(ctx context.Context, req *connect.Request[server.Node]) (*connect.Response[emptypb.Empty], error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -225,7 +226,7 @@ func (is *InternalServer) Notify(ctx context.Context, req *connect.Request[Node]
 	}, nil
 }
 
-func (is *InternalServer) PutValueInner(ctx context.Context, req *connect.Request[PutValueInnerRequest]) (*connect.Response[PutValueInnerResponse], error) {
+func (is *InternalServer) PutValueInner(ctx context.Context, req *connect.Request[server.PutValueInnerRequest]) (*connect.Response[server.PutValueInnerResponse], error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -233,14 +234,14 @@ func (is *InternalServer) PutValueInner(ctx context.Context, req *connect.Reques
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: put value failed. reason = %#v", err)
 	}
-	return &connect.Response[PutValueInnerResponse]{
-		Msg: &PutValueInnerResponse{
+	return &connect.Response[server.PutValueInnerResponse]{
+		Msg: &server.PutValueInnerResponse{
 			Success: success,
 		},
 	}, nil
 }
 
-func (is *InternalServer) GetValueInner(ctx context.Context, req *connect.Request[GetValueInnerRequest]) (*connect.Response[GetValueInnerResponse], error) {
+func (is *InternalServer) GetValueInner(ctx context.Context, req *connect.Request[server.GetValueInnerRequest]) (*connect.Response[server.GetValueInnerResponse], error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -249,15 +250,15 @@ func (is *InternalServer) GetValueInner(ctx context.Context, req *connect.Reques
 		return nil, status.Errorf(codes.Internal, "server: get value failed. reason = %#v", err)
 	}
 
-	return &connect.Response[GetValueInnerResponse]{
-		Msg: &GetValueInnerResponse{
+	return &connect.Response[server.GetValueInnerResponse]{
+		Msg: &server.GetValueInnerResponse{
 			Value:   *val,
 			Success: success,
 		},
 	}, nil
 }
 
-func (is *InternalServer) DeleteValueInner(ctx context.Context, req *connect.Request[DeleteValueInnerRequest]) (*connect.Response[DeleteValueInnerResponse], error) {
+func (is *InternalServer) DeleteValueInner(ctx context.Context, req *connect.Request[server.DeleteValueInnerRequest]) (*connect.Response[server.DeleteValueInnerResponse], error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -265,8 +266,8 @@ func (is *InternalServer) DeleteValueInner(ctx context.Context, req *connect.Req
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: delete value failed. reason = %#v", err)
 	}
-	return &connect.Response[DeleteValueInnerResponse]{
-		Msg: &DeleteValueInnerResponse{
+	return &connect.Response[server.DeleteValueInnerResponse]{
+		Msg: &server.DeleteValueInnerResponse{
 			Success: success,
 		},
 	}, nil

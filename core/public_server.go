@@ -1,8 +1,9 @@
-package server
+package core
 
 import (
 	"connectrpc.com/connect"
 	"context"
+	"github.com/ryogird/gord-overlay/server"
 	"github.com/ryogird/gord-overlay/serverconnect"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/pkg/model"
@@ -71,21 +72,21 @@ func (g *ExternalServer) Shutdown() {
 
 // FindHostForKey search for a given key's node.
 // It is implemented for PublicService.
-func (g *ExternalServer) FindHostForKey(ctx context.Context, req *connect.Request[FindHostRequest]) (*connect.Response[Node], error) {
+func (g *ExternalServer) FindHostForKey(ctx context.Context, req *connect.Request[server.FindHostRequest]) (*connect.Response[server.Node], error) {
 	id := model.NewHashID(req.Msg.Key)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
 	if err != nil {
 		log.Errorf("FindHostForKey failed. reason: %#v", err)
 		return nil, err
 	}
-	return &connect.Response[Node]{
-		Msg: &Node{
+	return &connect.Response[server.Node]{
+		Msg: &server.Node{
 			Host: s.Reference().Host,
 		},
 	}, nil
 }
 
-func (g *ExternalServer) PutValue(ctx context.Context, req *connect.Request[PutValueRequest]) (*connect.Response[PutValueResponse], error) {
+func (g *ExternalServer) PutValue(ctx context.Context, req *connect.Request[server.PutValueRequest]) (*connect.Response[server.PutValueResponse], error) {
 	id := model.NewHashID(req.Msg.Key)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
 	if err != nil {
@@ -98,14 +99,14 @@ func (g *ExternalServer) PutValue(ctx context.Context, req *connect.Request[PutV
 		log.Errorf("External PutValue failed. reason: %#v", err)
 		return nil, err2
 	}
-	return &connect.Response[PutValueResponse]{
-		Msg: &PutValueResponse{
+	return &connect.Response[server.PutValueResponse]{
+		Msg: &server.PutValueResponse{
 			Success: success,
 		},
 	}, nil
 }
 
-func (g *ExternalServer) GetValue(ctx context.Context, req *connect.Request[GetValueRequest]) (*connect.Response[GetValueResponse], error) {
+func (g *ExternalServer) GetValue(ctx context.Context, req *connect.Request[server.GetValueRequest]) (*connect.Response[server.GetValueResponse], error) {
 	id := model.NewHashID(req.Msg.Key)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
 	if err != nil {
@@ -118,15 +119,15 @@ func (g *ExternalServer) GetValue(ctx context.Context, req *connect.Request[GetV
 		log.Errorf("External GetValue failed. reason: %#v", err)
 		return nil, err2
 	}
-	return &connect.Response[GetValueResponse]{
-		Msg: &GetValueResponse{
+	return &connect.Response[server.GetValueResponse]{
+		Msg: &server.GetValueResponse{
 			Value:   *val,
 			Success: success,
 		},
 	}, nil
 }
 
-func (g *ExternalServer) DeleteValue(ctx context.Context, req *connect.Request[DeleteValueRequest]) (*connect.Response[DeleteValueResponse], error) {
+func (g *ExternalServer) DeleteValue(ctx context.Context, req *connect.Request[server.DeleteValueRequest]) (*connect.Response[server.DeleteValueResponse], error) {
 	id := model.NewHashID(req.Msg.Key)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
 	if err != nil {
@@ -139,8 +140,8 @@ func (g *ExternalServer) DeleteValue(ctx context.Context, req *connect.Request[D
 		log.Errorf("External DeleteValue failed. reason: %#v", err)
 		return nil, err2
 	}
-	return &connect.Response[DeleteValueResponse]{
-		Msg: &DeleteValueResponse{
+	return &connect.Response[server.DeleteValueResponse]{
+		Msg: &server.DeleteValueResponse{
 			Success: success,
 		},
 	}, nil
