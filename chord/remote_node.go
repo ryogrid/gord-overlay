@@ -12,9 +12,9 @@ type RemoteNode struct {
 	Transport
 }
 
-func NewRemoteNode(host string, transport Transport) RingNode {
+func NewRemoteNode(hostAndPort string, transport Transport) RingNode {
 	return &RemoteNode{
-		NodeRef:   model.NewNodeRef(host),
+		NodeRef:   model.NewNodeRef(hostAndPort),
 		Transport: transport,
 	}
 }

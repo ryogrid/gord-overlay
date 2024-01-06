@@ -98,10 +98,15 @@ type LocalNode struct {
 }
 
 // NewLocalNode creates a local node.
-func NewLocalNode(host string) *LocalNode {
-	id := model.NewHashID(host)
+func NewLocalNode(hostAndPort string) *LocalNode {
+	id := model.NewHashID(hostAndPort)
+	//host, _, err := net.SplitHostPort(hostAndPort)
+	//if err != nil {
+	//	fmt.Println("invalid hostAndPort. err = %#v", err)
+	//	os.Exit(1)
+	//}
 	return &LocalNode{
-		NodeRef:     model.NewNodeRef(host),
+		NodeRef:     model.NewNodeRef(hostAndPort),
 		fingerTable: NewFingerTable(id),
 	}
 }
