@@ -69,7 +69,7 @@ func main() {
 				fmt.Println("invalid basePort. err = %#v", err)
 				os.Exit(1)
 			}
-			exs := server.NewExternalServer(process, string(basePortNum+1))
+			exs := server.NewExternalServer(process, strconv.Itoa(basePortNum+1))
 			go ins.Run(ctx)
 			go exs.Run()
 
