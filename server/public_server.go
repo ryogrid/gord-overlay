@@ -3,7 +3,7 @@ package server
 import (
 	"connectrpc.com/connect"
 	"context"
-	"github.com/ryogird/gord-overlay/gen/server/serverconnect"
+	"github.com/ryogird/gord-overlay/serverconnect"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/pkg/model"
 	log "github.com/sirupsen/logrus"
