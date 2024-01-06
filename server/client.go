@@ -2,11 +2,12 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/ryogird/gord-overlay/serverconnect"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/pkg/model"
 	"google.golang.org/grpc"
+	"net/http"
 	"sync"
 	"time"
 )
@@ -29,6 +30,7 @@ func NewChordApiClient(hostNode *chord.LocalNode, port string, timeout time.Dura
 	}
 }
 
+/*
 // TODO: Enable mTLS
 // TODO: Add conn pool capacity limit for file descriptors.
 func (c *ApiClient) getGrpcConn(address string) (InternalServiceClient, error) {
@@ -45,6 +47,29 @@ func (c *ApiClient) getGrpcConn(address string) (InternalServiceClient, error) {
 	}
 	c.connPool[address] = conn
 	return NewInternalServiceClient(conn), nil
+}
+*/
+
+func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceClient, error) {
+	//cli := http.DefaultClient
+	//overlayTransport := &http.Transport{
+	//	Proxy: http.ProxyFromEnvironment,
+	//	//DialContext: defaultTransportDialContext(&net.Dialer{
+	//	//	Timeout:   30 * time.Second,
+	//	//	KeepAlive: 30 * time.Second,
+	//	//}),
+	//	DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+	//		return nil, nil
+	//	},
+	//	ForceAttemptHTTP2:     false,
+	//	MaxIdleConns:          100,
+	//	IdleConnTimeout:       90 * time.Second,
+	//	TLSHandshakeTimeout:   10 * time.Second,
+	//	ExpectContinueTimeout: 1 * time.Second,
+	//}
+	//cli.Transport = overlayTransport
+
+	return serverconnect.NewInternalServiceClient(http.DefaultClient, address), nil
 }
 
 func (c *ApiClient) createRingNodeFrom(node *Node) chord.RingNode {

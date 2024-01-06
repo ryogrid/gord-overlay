@@ -78,24 +78,6 @@ func main() {
 			exs.Shutdown()
 			process.Shutdown()
 
-			//cli := http.DefaultClient
-			//overlayTransport := &http.Transport{
-			//	Proxy: http.ProxyFromEnvironment,
-			//	//DialContext: defaultTransportDialContext(&net.Dialer{
-			//	//	Timeout:   30 * time.Second,
-			//	//	KeepAlive: 30 * time.Second,
-			//	//}),
-			//	DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-			//		return nil, nil
-			//	},
-			//	ForceAttemptHTTP2:     false,
-			//	MaxIdleConns:          100,
-			//	IdleConnTimeout:       90 * time.Second,
-			//	TLSHandshakeTimeout:   10 * time.Second,
-			//	ExpectContinueTimeout: 1 * time.Second,
-			//}
-			//cli.Transport = overlayTransport
-
 			//mux := http.NewServeMux()
 			//mux.Handle()
 			//http.Serve(nil, mux)

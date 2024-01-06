@@ -1,6 +1,6 @@
 module github.com/ryogird/gord-overlay
 
-go 1.14
+go 1.18
 
 replace github.com/ryogrid/gord-overlay => ./
 

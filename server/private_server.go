@@ -2,15 +2,13 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/ryogird/gord-overlay/serverconnect"
 	"github.com/ryogrid/gord-overlay/chord"
 	log "github.com/sirupsen/logrus"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
-	"net"
+	"net/http"
 	"time"
 )
 
@@ -70,24 +68,36 @@ func NewChordServer(process *chord.Process, port string, opts ...InternalServerO
 	}
 }
 
+/*
 func (is *InternalServer) newGrpcServer() *grpc.Server {
 	s := grpc.NewServer()
 	reflection.Register(s)
 	RegisterInternalServiceServer(s, is)
 	return s
 }
+*/
 
 // Run runs chord server.
 func (is *InternalServer) Run(ctx context.Context) {
 	go func() {
-		lis, err := net.Listen("tcp", fmt.Sprintf("%s:%s", is.opt.host, is.port))
-		if err != nil {
-			log.Fatalf("failed to run chord server. reason: %#v", err)
-		}
-		grpcServer := is.newGrpcServer()
-		if err := grpcServer.Serve(lis); err != nil {
-			log.Fatalf("failed to run chord server. reason: %#v", err)
-		}
+		//lis, err := net.Listen("tcp", fmt.Sprintf("%s:%s", is.opt.host, is.port))
+		//if err != nil {
+		//	log.Fatalf("failed to run chord server. reason: %#v", err)
+		//}
+		//grpcServer := is.newGrpcServer()
+		//if err := grpcServer.Serve(lis); err != nil {
+		//	log.Fatalf("failed to run chord server. reason: %#v", err)
+		//}
+
+		mux := http.NewServeMux()
+		path, handler := serverconnect.NewExternalServiceHandler(is)
+		mux.Handle(path, handler)
+		http.ListenAndServe(
+			"127.0.0.1:26041",
+			mux,
+			//// Use h2c so we can serve HTTP/2 without TLS.
+			//h2c.NewHandler(mux, &http2.Server{}),
+		)
 	}()
 	if err := is.process.Start(ctx, is.opt.processOpts...); err != nil {
 		log.Fatalf("failed to run chord server. reason: %#v", err)
