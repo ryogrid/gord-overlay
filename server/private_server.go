@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/ryogrid/gord-overlay/chord"
 	log "github.com/sirupsen/logrus"
-	"github.com/taisho6339/gord/chord"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
@@ -198,4 +198,46 @@ func (is *InternalServer) Notify(ctx context.Context, req *Node) (*empty.Empty, 
 		return nil, status.Errorf(codes.Internal, "server: notify failed. reason = %#v", err)
 	}
 	return &empty.Empty{}, nil
+}
+
+func (is *InternalServer) PutValueInner(ctx context.Context, req *PutValueInnerRequest) (*PutValueInnerResponse, error) {
+	if is.process.IsShutdown {
+		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
+	}
+	success, err := is.process.PutValue(ctx, &req.Key, &req.Value)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "server: put value failed. reason = %#v", err)
+	}
+	return &PutValueInnerResponse{
+		Success: success,
+	}, nil
+
+}
+
+func (is *InternalServer) GetValueInner(ctx context.Context, req *GetValueInnerRequest) (*GetValueInnerResponse, error) {
+	if is.process.IsShutdown {
+		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
+	}
+	val, success, err := is.process.GetValue(ctx, &req.Key)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "server: get value failed. reason = %#v", err)
+	}
+
+	return &GetValueInnerResponse{
+		Value:   *val,
+		Success: success,
+	}, nil
+}
+
+func (is *InternalServer) DeleteValueInner(ctx context.Context, req *DeleteValueInnerRequest) (*DeleteValueInnerResponse, error) {
+	if is.process.IsShutdown {
+		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
+	}
+	success, err := is.process.DeleteValue(ctx, &req.Key)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "server: delete value failed. reason = %#v", err)
+	}
+	return &DeleteValueInnerResponse{
+		Success: success,
+	}, nil
 }

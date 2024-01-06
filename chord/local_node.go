@@ -3,7 +3,7 @@ package chord
 import (
 	"context"
 	"fmt"
-	"github.com/taisho6339/gord/pkg/model"
+	"github.com/ryogrid/gord-overlay/pkg/model"
 	"sync"
 )
 
@@ -92,7 +92,9 @@ type LocalNode struct {
 	successors  *exclusiveNodeList
 	predecessor RingNode
 	isShutdown  bool
-	lock        sync.Mutex
+	// string => *string
+	storedValues sync.Map
+	lock         sync.Mutex
 }
 
 // NewLocalNode creates a local node.
@@ -270,4 +272,26 @@ func (l *LocalNode) Notify(_ context.Context, node RingNode) error {
 		l.predecessor = node
 	}
 	return nil
+}
+
+func (l *LocalNode) PutValue(_ context.Context, key *string, value *string) (bool, error) {
+	l.storedValues.Store(*key, value)
+	return true, nil
+}
+
+func (l *LocalNode) GetValue(ctx context.Context, key *string) (*string, bool, error) {
+	if val, ok := l.storedValues.Load(*key); ok {
+		return val.(*string), true, nil
+	} else {
+		return nil, false, ErrNotFound
+	}
+}
+
+func (l *LocalNode) DeleteValue(ctx context.Context, key *string) (bool, error) {
+	if _, ok := l.storedValues.Load(*key); !ok {
+		return false, ErrNotFound
+	} else {
+		l.storedValues.Delete(*key)
+		return true, nil
+	}
 }

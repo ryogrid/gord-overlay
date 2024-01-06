@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/ryogrid/gord-overlay/chord"
+	"github.com/ryogrid/gord-overlay/pkg/model"
 	log "github.com/sirupsen/logrus"
-	"github.com/taisho6339/gord/chord"
-	"github.com/taisho6339/gord/pkg/model"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"net"
@@ -67,5 +67,60 @@ func (g *ExternalServer) FindHostForKey(ctx context.Context, req *FindHostReques
 	}
 	return &Node{
 		Host: s.Reference().Host,
+	}, nil
+}
+
+func (g *ExternalServer) PutValue(ctx context.Context, req *PutValueRequest) (*PutValueResponse, error) {
+	id := model.NewHashID(req.Key)
+	s, err := g.process.FindSuccessorByTable(ctx, id)
+	if err != nil {
+		log.Errorf("FindHostForKey failed. reason: %#v", err)
+		return nil, err
+	}
+	// TODO: need to consider repllication (ExternalServer::PutValue)
+	success, err2 := s.PutValue(ctx, &req.Key, &req.Value)
+	if err2 != nil {
+		log.Errorf("External PutValue failed. reason: %#v", err)
+		return nil, err2
+	}
+	return &PutValueResponse{
+		Success: success,
+	}, nil
+}
+
+func (g *ExternalServer) GetValue(ctx context.Context, req *GetValueRequest) (*GetValueResponse, error) {
+	id := model.NewHashID(req.Key)
+	s, err := g.process.FindSuccessorByTable(ctx, id)
+	if err != nil {
+		log.Errorf("FindHostForKey failed. reason: %#v", err)
+		return nil, err
+	}
+	// TODO: need to consider repllication (ExternalServer::GetValue)
+	val, success, err2 := s.GetValue(ctx, &req.Key)
+	if err2 != nil {
+		log.Errorf("External GetValue failed. reason: %#v", err)
+		return nil, err2
+	}
+	return &GetValueResponse{
+		Value:   *val,
+		Success: success,
+	}, nil
+}
+
+func (g *ExternalServer) DeleteValue(ctx context.Context, req *DeleteValueRequest) (*DeleteValueResponse, error) {
+	id := model.NewHashID(req.Key)
+	s, err := g.process.FindSuccessorByTable(ctx, id)
+	if err != nil {
+		log.Errorf("FindHostForKey failed. reason: %#v", err)
+		return nil, err
+	}
+	// TODO: need to consider repllication (ExternalServer::DeleteValue)
+	success, err2 := s.DeleteValue(ctx, &req.Key)
+	if err2 != nil {
+		log.Errorf("External DeleteValue failed. reason: %#v", err)
+		return nil, err2
+	}
+	return &DeleteValueResponse{
+		Success: success,
 	}, nil
 }

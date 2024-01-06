@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/taisho6339/gord/chord"
-	"github.com/taisho6339/gord/pkg/model"
+	"github.com/ryogrid/gord-overlay/chord"
+	"github.com/ryogrid/gord-overlay/pkg/model"
 	"google.golang.org/grpc"
 	"sync"
 	"time"
@@ -164,4 +164,46 @@ func (c *ApiClient) Shutdown() {
 	for _, conn := range c.connPool {
 		conn.Close()
 	}
+}
+
+func (c *ApiClient) PutValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string, value *string) (bool, error) {
+	client, err := c.getGrpcConn(to.Host)
+	if err != nil {
+		return false, err
+	}
+	ctx, cancel := context.WithTimeout(ctx, c.timeout)
+	defer cancel()
+	resp, err := client.PutValueInner(ctx, &PutValueInnerRequest{Key: *key, Value: *value})
+	if err != nil {
+		return false, handleError(err)
+	}
+	return resp.Success, nil
+}
+
+func (c *ApiClient) GetValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string) (*string, bool, error) {
+	client, err := c.getGrpcConn(to.Host)
+	if err != nil {
+		return nil, false, err
+	}
+	ctx, cancel := context.WithTimeout(ctx, c.timeout)
+	defer cancel()
+	resp, err := client.GetValueInner(ctx, &GetValueInnerRequest{Key: *key})
+	if err != nil {
+		return nil, false, handleError(err)
+	}
+	return &resp.Value, resp.Success, nil
+}
+
+func (c *ApiClient) DeleteValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string) (bool, error) {
+	client, err := c.getGrpcConn(to.Host)
+	if err != nil {
+		return false, err
+	}
+	ctx, cancel := context.WithTimeout(ctx, c.timeout)
+	defer cancel()
+	resp, err := client.DeleteValueInner(ctx, &DeleteValueInnerRequest{Key: *key})
+	if err != nil {
+		return false, handleError(err)
+	}
+	return resp.Success, nil
 }

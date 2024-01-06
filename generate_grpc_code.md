@@ -1,0 +1,16 @@
+- check go version
+  - $ go version
+  - "go version go1.21.2 windows/amd64" worked 
+- install protoc command line tool
+  - "libprotoc 3.19.6" worked
+- $ go get google.golang.org/grpc/cmd/protoc-gen-go
+- $ go get github.com/golang/protobuf/protoc-gen-go-grpc
+- $ protoc -I./server --go_out=plugins=grpc,paths=source_relative:. server/public.proto
+- $ mv public.pb.go server
+- $ protoc -I./server --go_out=plugins=grpc,paths=source_relative:. server/private.proto
+- $ mv private.pb.go server
+- $ protoc -I./server --go_out=plugins=grpc,paths=source_relative:. server/node.proto
+- $ mv node.pb.go server
+- $ go mod tidy
+- check generated code can be used
+  - $ go build -o gordolctl ./cmd/main.go 

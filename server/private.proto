@@ -1,6 +1,6 @@
 syntax = "proto3";
 package server;
-option go_package = "github.com/taisho6339/gord/server";
+option go_package = "github.com/ryogrid/gord-overlay/server";
 
 import "google/protobuf/empty.proto";
 import "node.proto";
@@ -16,6 +16,10 @@ service InternalService {
   rpc FindClosestPrecedingNode(FindRequest) returns (Node) {}
 
   rpc Notify(Node) returns (google.protobuf.Empty) {}
+
+  rpc PutValueInner(PutValueInnerRequest) returns (PutValueInnerResponse) {}
+  rpc GetValueInner(GetValueInnerRequest) returns (GetValueInnerResponse) {}
+  rpc DeleteValueInner(DeleteValueInnerRequest) returns (DeleteValueInnerResponse) {}
 }
 
 message Nodes {
@@ -24,4 +28,30 @@ message Nodes {
 
 message FindRequest {
   bytes id = 1;
+}
+
+message PutValueInnerRequest {
+  string key = 1;
+  string value = 2;
+}
+
+message PutValueInnerResponse {
+  bool success = 1;
+}
+
+message GetValueInnerRequest {
+  string key = 1;
+}
+
+message GetValueInnerResponse {
+  string value = 1;
+  bool success = 2;
+}
+
+message DeleteValueInnerRequest {
+  string key = 1;
+}
+
+message DeleteValueInnerResponse {
+  bool success = 1;
 }

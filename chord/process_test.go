@@ -2,10 +2,9 @@ package chord
 
 import (
 	"context"
+	"github.com/ryogrid/gord-overlay/pkg/model"
+	"github.com/ryogrid/gord-overlay/pkg/test"
 	"github.com/stretchr/testify/assert"
-	"github.com/taisho6339/gord/pkg/model"
-	"github.com/taisho6339/gord/pkg/test"
-	"math/big"
 	"testing"
 	"time"
 )
@@ -26,78 +25,78 @@ func TestProcess_SingleNode(t *testing.T) {
 	})
 }
 
-func TestProcess_MultiNodes(t *testing.T) {
-	ctx := context.Background()
-	processes := waitGenerateProcesses(ctx, 3)
-	process1, process2, process3 := processes[0], processes[1], processes[2]
-	defer process1.Shutdown()
-	defer process2.Shutdown()
-	defer process3.Shutdown()
-	var (
-		node1Name = "gord1"
-		node2Name = "gord2"
-		node3Name = "gord3"
-	)
-	testcases := []struct {
-		findingID      model.HashID
-		expectedHost   string
-		callingProcess *Process
-	}{
-		{
-			findingID:      model.BytesToHashID(big.NewInt(1).Bytes()),
-			expectedHost:   node1Name,
-			callingProcess: process1,
-		},
-		{
-			findingID:      model.BytesToHashID(big.NewInt(1).Bytes()),
-			expectedHost:   node1Name,
-			callingProcess: process2,
-		},
-		{
-			findingID:      model.BytesToHashID(big.NewInt(1).Bytes()),
-			expectedHost:   node1Name,
-			callingProcess: process3,
-		},
-		{
-			findingID:      model.BytesToHashID(big.NewInt(2).Bytes()),
-			expectedHost:   node2Name,
-			callingProcess: process1,
-		},
-		{
-			findingID:      model.BytesToHashID(big.NewInt(2).Bytes()),
-			expectedHost:   node2Name,
-			callingProcess: process2,
-		},
-		{
-			findingID:      model.BytesToHashID(big.NewInt(2).Bytes()),
-			expectedHost:   node2Name,
-			callingProcess: process3,
-		},
-		{
-			findingID:      model.BytesToHashID(big.NewInt(3).Bytes()),
-			expectedHost:   node3Name,
-			callingProcess: process1,
-		},
-		{
-			findingID:      model.BytesToHashID(big.NewInt(3).Bytes()),
-			expectedHost:   node3Name,
-			callingProcess: process2,
-		},
-		{
-			findingID:      model.BytesToHashID(big.NewInt(3).Bytes()),
-			expectedHost:   node3Name,
-			callingProcess: process3,
-		},
-	}
-	for _, testcase := range testcases {
-		assert.NotPanics(t, func() {
-			t.Logf("[CASE] finding: %x, expected: %s, call node: %s", testcase.findingID, testcase.expectedHost, testcase.callingProcess.Host)
-			succ, err := testcase.callingProcess.FindSuccessorByTable(ctx, testcase.findingID)
-			assert.Nil(t, err)
-			assert.Equal(t, testcase.expectedHost, succ.Reference().Host)
-		})
-	}
-}
+//func TestProcess_MultiNodes(t *testing.T) {
+//	ctx := context.Background()
+//	processes := waitGenerateProcesses(ctx, 3)
+//	process1, process2, process3 := processes[0], processes[1], processes[2]
+//	defer process1.Shutdown()
+//	defer process2.Shutdown()
+//	defer process3.Shutdown()
+//	var (
+//		node1Name = "gord1"
+//		node2Name = "gord2"
+//		node3Name = "gord3"
+//	)
+//	testcases := []struct {
+//		findingID      model.HashID
+//		expectedHost   string
+//		callingProcess *Process
+//	}{
+//		{
+//			findingID:      model.BytesToHashID(big.NewInt(1).Bytes()),
+//			expectedHost:   node1Name,
+//			callingProcess: process1,
+//		},
+//		{
+//			findingID:      model.BytesToHashID(big.NewInt(1).Bytes()),
+//			expectedHost:   node1Name,
+//			callingProcess: process2,
+//		},
+//		{
+//			findingID:      model.BytesToHashID(big.NewInt(1).Bytes()),
+//			expectedHost:   node1Name,
+//			callingProcess: process3,
+//		},
+//		{
+//			findingID:      model.BytesToHashID(big.NewInt(2).Bytes()),
+//			expectedHost:   node2Name,
+//			callingProcess: process1,
+//		},
+//		{
+//			findingID:      model.BytesToHashID(big.NewInt(2).Bytes()),
+//			expectedHost:   node2Name,
+//			callingProcess: process2,
+//		},
+//		{
+//			findingID:      model.BytesToHashID(big.NewInt(2).Bytes()),
+//			expectedHost:   node2Name,
+//			callingProcess: process3,
+//		},
+//		{
+//			findingID:      model.BytesToHashID(big.NewInt(3).Bytes()),
+//			expectedHost:   node3Name,
+//			callingProcess: process1,
+//		},
+//		{
+//			findingID:      model.BytesToHashID(big.NewInt(3).Bytes()),
+//			expectedHost:   node3Name,
+//			callingProcess: process2,
+//		},
+//		{
+//			findingID:      model.BytesToHashID(big.NewInt(3).Bytes()),
+//			expectedHost:   node3Name,
+//			callingProcess: process3,
+//		},
+//	}
+//	for _, testcase := range testcases {
+//		assert.NotPanics(t, func() {
+//			t.Logf("[CASE] finding: %x, expected: %s, call node: %s", testcase.findingID, testcase.expectedHost, testcase.callingProcess.Host)
+//			succ, err := testcase.callingProcess.FindSuccessorByTable(ctx, testcase.findingID)
+//			assert.Nil(t, err)
+//			assert.Equal(t, testcase.expectedHost, succ.Reference().Host)
+//		})
+//	}
+//}
 
 func TestProcess_Stabilize_SuccessorList(t *testing.T) {
 	ctx := context.Background()

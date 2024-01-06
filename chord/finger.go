@@ -1,7 +1,7 @@
 package chord
 
 import (
-	"github.com/taisho6339/gord/pkg/model"
+	"github.com/ryogrid/gord-overlay/pkg/model"
 	"math/big"
 )
 
