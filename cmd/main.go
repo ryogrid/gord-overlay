@@ -77,10 +77,6 @@ func main() {
 			ins.Shutdown()
 			exs.Shutdown()
 			process.Shutdown()
-
-			//mux := http.NewServeMux()
-			//mux.Handle()
-			//http.Serve(nil, mux)
 		},
 	}
 	command.PersistentFlags().StringVarP(&hostAndPortBase, "hostAndPort", "l", "127.0.0.1", "host name and port to attach this process.")

@@ -45,6 +45,10 @@ func (g *ExternalServer) Run() {
 		//	log.Fatalf("failed to run server. reason: %#v", err)
 		//}
 
+		//mux := http.NewServeMux()
+		//mux.Handle()
+		//http.Serve(nil, mux)
+
 		mux := http.NewServeMux()
 		path, handler := serverconnect.NewExternalServiceHandler(g)
 		mux.Handle(path, handler)
