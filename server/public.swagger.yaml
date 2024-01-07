@@ -15,8 +15,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            $ref: "#/definitions/serverDeleteValueResponse"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverDeleteValueResponse"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       parameters:
         - name: "key"
           in: "query"
@@ -31,8 +39,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            $ref: "#/definitions/serverNode"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverNode"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       parameters:
         - name: "key"
           in: "query"
@@ -47,8 +63,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            $ref: "#/definitions/serverGetValueResponse"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverGetValueResponse"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       parameters:
         - name: "key"
           in: "query"
@@ -63,8 +87,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            $ref: "#/definitions/serverPutValueResponse"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverPutValueResponse"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       parameters:
         - name: "key"
           in: "query"
@@ -101,3 +133,15 @@ definitions:
     properties:
       success:
         type: "boolean"
+  Error:
+    description: Represents error object
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int64
+      message:
+        type: string
+    required:
+      - code
+      - message

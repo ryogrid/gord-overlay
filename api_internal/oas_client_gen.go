@@ -30,39 +30,39 @@ type Invoker interface {
 	// InternalServiceFindClosestPrecedingNode invokes InternalService_FindClosestPrecedingNode operation.
 	//
 	// POST /server.InternalService/FindClosestPrecedingNode
-	InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) error
+	InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) (*ServerNode, error)
 	// InternalServiceFindSuccessorByList invokes InternalService_FindSuccessorByList operation.
 	//
 	// POST /server.InternalService/FindSuccessorByList
-	InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) error
+	InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) (*ServerNode, error)
 	// InternalServiceFindSuccessorByTable invokes InternalService_FindSuccessorByTable operation.
 	//
 	// POST /server.InternalService/FindSuccessorByTable
-	InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) error
+	InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) (*ServerNode, error)
 	// InternalServiceGetValueInner invokes InternalService_GetValueInner operation.
 	//
 	// POST /server.InternalService/GetValueInner
-	InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) error
+	InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) (*ServerGetValueInnerResponse, error)
 	// InternalServiceNotify invokes InternalService_Notify operation.
 	//
 	// POST /server.InternalService/Notify
-	InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) error
+	InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) (*ServerSuccessResponse, error)
 	// InternalServicePing invokes InternalService_Ping operation.
 	//
 	// POST /server.InternalService/Ping
-	InternalServicePing(ctx context.Context) error
+	InternalServicePing(ctx context.Context) (*ServerSuccessResponse, error)
 	// InternalServicePredecessor invokes InternalService_Predecessor operation.
 	//
 	// POST /server.InternalService/Predecessor
-	InternalServicePredecessor(ctx context.Context) error
+	InternalServicePredecessor(ctx context.Context) (*ServerNode, error)
 	// InternalServicePutValueInner invokes InternalService_PutValueInner operation.
 	//
 	// POST /server.InternalService/PutValueInner
-	InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) error
+	InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) (*ServerPutValueInnerResponse, error)
 	// InternalServiceSuccessors invokes InternalService_Successors operation.
 	//
 	// POST /server.InternalService/Successors
-	InternalServiceSuccessors(ctx context.Context) error
+	InternalServiceSuccessors(ctx context.Context) (*ServerNodes, error)
 }
 
 // Client implements OAS client.
@@ -70,8 +70,12 @@ type Client struct {
 	serverURL *url.URL
 	baseClient
 }
+type errorHandler interface {
+	NewError(ctx context.Context, err error) *ErrorStatusCode
+}
 
 var _ Handler = struct {
+	errorHandler
 	*Client
 }{}
 
@@ -207,12 +211,12 @@ func (c *Client) sendInternalServiceDeleteValueInner(ctx context.Context, params
 // InternalServiceFindClosestPrecedingNode invokes InternalService_FindClosestPrecedingNode operation.
 //
 // POST /server.InternalService/FindClosestPrecedingNode
-func (c *Client) InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) error {
-	_, err := c.sendInternalServiceFindClosestPrecedingNode(ctx, params)
-	return err
+func (c *Client) InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) (*ServerNode, error) {
+	res, err := c.sendInternalServiceFindClosestPrecedingNode(ctx, params)
+	return res, err
 }
 
-func (c *Client) sendInternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) (res *InternalServiceFindClosestPrecedingNodeOK, err error) {
+func (c *Client) sendInternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) (res *ServerNode, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_FindClosestPrecedingNode"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -295,12 +299,12 @@ func (c *Client) sendInternalServiceFindClosestPrecedingNode(ctx context.Context
 // InternalServiceFindSuccessorByList invokes InternalService_FindSuccessorByList operation.
 //
 // POST /server.InternalService/FindSuccessorByList
-func (c *Client) InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) error {
-	_, err := c.sendInternalServiceFindSuccessorByList(ctx, params)
-	return err
+func (c *Client) InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) (*ServerNode, error) {
+	res, err := c.sendInternalServiceFindSuccessorByList(ctx, params)
+	return res, err
 }
 
-func (c *Client) sendInternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) (res *InternalServiceFindSuccessorByListOK, err error) {
+func (c *Client) sendInternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) (res *ServerNode, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_FindSuccessorByList"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -383,12 +387,12 @@ func (c *Client) sendInternalServiceFindSuccessorByList(ctx context.Context, par
 // InternalServiceFindSuccessorByTable invokes InternalService_FindSuccessorByTable operation.
 //
 // POST /server.InternalService/FindSuccessorByTable
-func (c *Client) InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) error {
-	_, err := c.sendInternalServiceFindSuccessorByTable(ctx, params)
-	return err
+func (c *Client) InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) (*ServerNode, error) {
+	res, err := c.sendInternalServiceFindSuccessorByTable(ctx, params)
+	return res, err
 }
 
-func (c *Client) sendInternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) (res *InternalServiceFindSuccessorByTableOK, err error) {
+func (c *Client) sendInternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) (res *ServerNode, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_FindSuccessorByTable"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -471,12 +475,12 @@ func (c *Client) sendInternalServiceFindSuccessorByTable(ctx context.Context, pa
 // InternalServiceGetValueInner invokes InternalService_GetValueInner operation.
 //
 // POST /server.InternalService/GetValueInner
-func (c *Client) InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) error {
-	_, err := c.sendInternalServiceGetValueInner(ctx, params)
-	return err
+func (c *Client) InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) (*ServerGetValueInnerResponse, error) {
+	res, err := c.sendInternalServiceGetValueInner(ctx, params)
+	return res, err
 }
 
-func (c *Client) sendInternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) (res *InternalServiceGetValueInnerOK, err error) {
+func (c *Client) sendInternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) (res *ServerGetValueInnerResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_GetValueInner"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -562,12 +566,12 @@ func (c *Client) sendInternalServiceGetValueInner(ctx context.Context, params In
 // InternalServiceNotify invokes InternalService_Notify operation.
 //
 // POST /server.InternalService/Notify
-func (c *Client) InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) error {
-	_, err := c.sendInternalServiceNotify(ctx, params)
-	return err
+func (c *Client) InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) (*ServerSuccessResponse, error) {
+	res, err := c.sendInternalServiceNotify(ctx, params)
+	return res, err
 }
 
-func (c *Client) sendInternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) (res *InternalServiceNotifyOK, err error) {
+func (c *Client) sendInternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) (res *ServerSuccessResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_Notify"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -653,12 +657,12 @@ func (c *Client) sendInternalServiceNotify(ctx context.Context, params InternalS
 // InternalServicePing invokes InternalService_Ping operation.
 //
 // POST /server.InternalService/Ping
-func (c *Client) InternalServicePing(ctx context.Context) error {
-	_, err := c.sendInternalServicePing(ctx)
-	return err
+func (c *Client) InternalServicePing(ctx context.Context) (*ServerSuccessResponse, error) {
+	res, err := c.sendInternalServicePing(ctx)
+	return res, err
 }
 
-func (c *Client) sendInternalServicePing(ctx context.Context) (res *InternalServicePingOK, err error) {
+func (c *Client) sendInternalServicePing(ctx context.Context) (res *ServerSuccessResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_Ping"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -723,12 +727,12 @@ func (c *Client) sendInternalServicePing(ctx context.Context) (res *InternalServ
 // InternalServicePredecessor invokes InternalService_Predecessor operation.
 //
 // POST /server.InternalService/Predecessor
-func (c *Client) InternalServicePredecessor(ctx context.Context) error {
-	_, err := c.sendInternalServicePredecessor(ctx)
-	return err
+func (c *Client) InternalServicePredecessor(ctx context.Context) (*ServerNode, error) {
+	res, err := c.sendInternalServicePredecessor(ctx)
+	return res, err
 }
 
-func (c *Client) sendInternalServicePredecessor(ctx context.Context) (res *InternalServicePredecessorOK, err error) {
+func (c *Client) sendInternalServicePredecessor(ctx context.Context) (res *ServerNode, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_Predecessor"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -793,12 +797,12 @@ func (c *Client) sendInternalServicePredecessor(ctx context.Context) (res *Inter
 // InternalServicePutValueInner invokes InternalService_PutValueInner operation.
 //
 // POST /server.InternalService/PutValueInner
-func (c *Client) InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) error {
-	_, err := c.sendInternalServicePutValueInner(ctx, params)
-	return err
+func (c *Client) InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) (*ServerPutValueInnerResponse, error) {
+	res, err := c.sendInternalServicePutValueInner(ctx, params)
+	return res, err
 }
 
-func (c *Client) sendInternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) (res *InternalServicePutValueInnerOK, err error) {
+func (c *Client) sendInternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) (res *ServerPutValueInnerResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_PutValueInner"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -901,12 +905,12 @@ func (c *Client) sendInternalServicePutValueInner(ctx context.Context, params In
 // InternalServiceSuccessors invokes InternalService_Successors operation.
 //
 // POST /server.InternalService/Successors
-func (c *Client) InternalServiceSuccessors(ctx context.Context) error {
-	_, err := c.sendInternalServiceSuccessors(ctx)
-	return err
+func (c *Client) InternalServiceSuccessors(ctx context.Context) (*ServerNodes, error) {
+	res, err := c.sendInternalServiceSuccessors(ctx)
+	return res, err
 }
 
-func (c *Client) sendInternalServiceSuccessors(ctx context.Context) (res *InternalServiceSuccessorsOK, err error) {
+func (c *Client) sendInternalServiceSuccessors(ctx context.Context) (res *ServerNodes, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_Successors"),
 		semconv.HTTPMethodKey.String("POST"),

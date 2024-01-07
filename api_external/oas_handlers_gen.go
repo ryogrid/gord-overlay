@@ -71,7 +71,7 @@ func (s *Server) handleExternalServiceDeleteValueRequest(args [0]string, argsEsc
 		return
 	}
 
-	var response *ExternalServiceDeleteValueOK
+	var response *ServerDeleteValueResponse
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -91,7 +91,7 @@ func (s *Server) handleExternalServiceDeleteValueRequest(args [0]string, argsEsc
 		type (
 			Request  = struct{}
 			Params   = ExternalServiceDeleteValueParams
-			Response = *ExternalServiceDeleteValueOK
+			Response = *ServerDeleteValueResponse
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -102,16 +102,27 @@ func (s *Server) handleExternalServiceDeleteValueRequest(args [0]string, argsEsc
 			mreq,
 			unpackExternalServiceDeleteValueParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.ExternalServiceDeleteValue(ctx, params)
+				response, err = s.h.ExternalServiceDeleteValue(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.ExternalServiceDeleteValue(ctx, params)
+		response, err = s.h.ExternalServiceDeleteValue(ctx, params)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 
@@ -175,7 +186,7 @@ func (s *Server) handleExternalServiceFindHostForKeyRequest(args [0]string, args
 		return
 	}
 
-	var response *ExternalServiceFindHostForKeyOK
+	var response *ServerNode
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -195,7 +206,7 @@ func (s *Server) handleExternalServiceFindHostForKeyRequest(args [0]string, args
 		type (
 			Request  = struct{}
 			Params   = ExternalServiceFindHostForKeyParams
-			Response = *ExternalServiceFindHostForKeyOK
+			Response = *ServerNode
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -206,16 +217,27 @@ func (s *Server) handleExternalServiceFindHostForKeyRequest(args [0]string, args
 			mreq,
 			unpackExternalServiceFindHostForKeyParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.ExternalServiceFindHostForKey(ctx, params)
+				response, err = s.h.ExternalServiceFindHostForKey(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.ExternalServiceFindHostForKey(ctx, params)
+		response, err = s.h.ExternalServiceFindHostForKey(ctx, params)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 
@@ -279,7 +301,7 @@ func (s *Server) handleExternalServiceGetValueRequest(args [0]string, argsEscape
 		return
 	}
 
-	var response *ExternalServiceGetValueOK
+	var response *ServerGetValueResponse
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -299,7 +321,7 @@ func (s *Server) handleExternalServiceGetValueRequest(args [0]string, argsEscape
 		type (
 			Request  = struct{}
 			Params   = ExternalServiceGetValueParams
-			Response = *ExternalServiceGetValueOK
+			Response = *ServerGetValueResponse
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -310,16 +332,27 @@ func (s *Server) handleExternalServiceGetValueRequest(args [0]string, argsEscape
 			mreq,
 			unpackExternalServiceGetValueParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.ExternalServiceGetValue(ctx, params)
+				response, err = s.h.ExternalServiceGetValue(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.ExternalServiceGetValue(ctx, params)
+		response, err = s.h.ExternalServiceGetValue(ctx, params)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 
@@ -383,7 +416,7 @@ func (s *Server) handleExternalServicePutValueRequest(args [0]string, argsEscape
 		return
 	}
 
-	var response *ExternalServicePutValueOK
+	var response *ServerPutValueResponse
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -407,7 +440,7 @@ func (s *Server) handleExternalServicePutValueRequest(args [0]string, argsEscape
 		type (
 			Request  = struct{}
 			Params   = ExternalServicePutValueParams
-			Response = *ExternalServicePutValueOK
+			Response = *ServerPutValueResponse
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -418,16 +451,27 @@ func (s *Server) handleExternalServicePutValueRequest(args [0]string, argsEscape
 			mreq,
 			unpackExternalServicePutValueParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.ExternalServicePutValue(ctx, params)
+				response, err = s.h.ExternalServicePutValue(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.ExternalServicePutValue(ctx, params)
+		response, err = s.h.ExternalServicePutValue(ctx, params)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 

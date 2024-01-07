@@ -15,8 +15,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            $ref: "#/definitions/serverDeleteValueInnerResponse"
+          conntent:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverDeleteValueInnerResponse"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       parameters:
         - name: "key"
           in: "query"
@@ -31,8 +39,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            $ref: "#/definitions/serverNode"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverNode"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       parameters:
         - name: "id"
           in: "query"
@@ -48,8 +64,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            $ref: "#/definitions/serverNode"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverNode"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       parameters:
         - name: "id"
           in: "query"
@@ -65,8 +89,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            $ref: "#/definitions/serverNode"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverNode"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       parameters:
         - name: "id"
           in: "query"
@@ -82,8 +114,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            $ref: "#/definitions/serverGetValueInnerResponse"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverGetValueInnerResponse"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       parameters:
         - name: "key"
           in: "query"
@@ -98,9 +138,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            type: "object"
-            properties:
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverSuccessResponse"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       parameters:
         - name: "host"
           in: "query"
@@ -115,9 +162,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            type: "object"
-            properties:
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverSuccessResponse"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       tags:
         - "InternalService"
   /server.InternalService/Predecessor:
@@ -126,8 +180,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            $ref: "#/definitions/serverNode"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverNode"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       tags:
         - "InternalService"
   /server.InternalService/PutValueInner:
@@ -136,8 +198,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            $ref: "#/definitions/serverPutValueInnerResponse"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverPutValueInnerResponse"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       parameters:
         - name: "key"
           in: "query"
@@ -157,8 +227,16 @@ paths:
       responses:
         200:
           description: "A successful response."
-          schema:
-            $ref: "#/definitions/serverNodes"
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/serverNodes"
+        default:
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/definitions/Error"
       tags:
         - "InternalService"
 definitions:
@@ -172,6 +250,11 @@ definitions:
     properties:
       value:
         type: "string"
+      success:
+        type: "boolean"
+  serverSuccessResponse:
+    type: "object"
+    properties:
       success:
         type: "boolean"
   serverNode:
@@ -192,3 +275,15 @@ definitions:
     properties:
       success:
         type: "boolean"
+  Error:
+    description: Represents error object
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int64
+      message:
+        type: string
+    required:
+      - code
+      - message

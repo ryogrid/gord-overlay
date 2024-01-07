@@ -23,62 +23,70 @@ func (UnimplementedHandler) InternalServiceDeleteValueInner(ctx context.Context,
 // InternalServiceFindClosestPrecedingNode implements InternalService_FindClosestPrecedingNode operation.
 //
 // POST /server.InternalService/FindClosestPrecedingNode
-func (UnimplementedHandler) InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) error {
-	return ht.ErrNotImplemented
+func (UnimplementedHandler) InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) (r *ServerNode, _ error) {
+	return r, ht.ErrNotImplemented
 }
 
 // InternalServiceFindSuccessorByList implements InternalService_FindSuccessorByList operation.
 //
 // POST /server.InternalService/FindSuccessorByList
-func (UnimplementedHandler) InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) error {
-	return ht.ErrNotImplemented
+func (UnimplementedHandler) InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) (r *ServerNode, _ error) {
+	return r, ht.ErrNotImplemented
 }
 
 // InternalServiceFindSuccessorByTable implements InternalService_FindSuccessorByTable operation.
 //
 // POST /server.InternalService/FindSuccessorByTable
-func (UnimplementedHandler) InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) error {
-	return ht.ErrNotImplemented
+func (UnimplementedHandler) InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) (r *ServerNode, _ error) {
+	return r, ht.ErrNotImplemented
 }
 
 // InternalServiceGetValueInner implements InternalService_GetValueInner operation.
 //
 // POST /server.InternalService/GetValueInner
-func (UnimplementedHandler) InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) error {
-	return ht.ErrNotImplemented
+func (UnimplementedHandler) InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) (r *ServerGetValueInnerResponse, _ error) {
+	return r, ht.ErrNotImplemented
 }
 
 // InternalServiceNotify implements InternalService_Notify operation.
 //
 // POST /server.InternalService/Notify
-func (UnimplementedHandler) InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) error {
-	return ht.ErrNotImplemented
+func (UnimplementedHandler) InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) (r *ServerSuccessResponse, _ error) {
+	return r, ht.ErrNotImplemented
 }
 
 // InternalServicePing implements InternalService_Ping operation.
 //
 // POST /server.InternalService/Ping
-func (UnimplementedHandler) InternalServicePing(ctx context.Context) error {
-	return ht.ErrNotImplemented
+func (UnimplementedHandler) InternalServicePing(ctx context.Context) (r *ServerSuccessResponse, _ error) {
+	return r, ht.ErrNotImplemented
 }
 
 // InternalServicePredecessor implements InternalService_Predecessor operation.
 //
 // POST /server.InternalService/Predecessor
-func (UnimplementedHandler) InternalServicePredecessor(ctx context.Context) error {
-	return ht.ErrNotImplemented
+func (UnimplementedHandler) InternalServicePredecessor(ctx context.Context) (r *ServerNode, _ error) {
+	return r, ht.ErrNotImplemented
 }
 
 // InternalServicePutValueInner implements InternalService_PutValueInner operation.
 //
 // POST /server.InternalService/PutValueInner
-func (UnimplementedHandler) InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) error {
-	return ht.ErrNotImplemented
+func (UnimplementedHandler) InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) (r *ServerPutValueInnerResponse, _ error) {
+	return r, ht.ErrNotImplemented
 }
 
 // InternalServiceSuccessors implements InternalService_Successors operation.
 //
 // POST /server.InternalService/Successors
-func (UnimplementedHandler) InternalServiceSuccessors(ctx context.Context) error {
-	return ht.ErrNotImplemented
+func (UnimplementedHandler) InternalServiceSuccessors(ctx context.Context) (r *ServerNodes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// NewError creates *ErrorStatusCode from error returned by handler.
+//
+// Used for common default response.
+func (UnimplementedHandler) NewError(ctx context.Context, err error) (r *ErrorStatusCode) {
+	r = new(ErrorStatusCode)
+	return r
 }

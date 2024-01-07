@@ -110,8 +110,19 @@ func (s *Server) handleInternalServiceDeleteValueInnerRequest(args [0]string, ar
 		err = s.h.InternalServiceDeleteValueInner(ctx, params)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 
@@ -175,7 +186,7 @@ func (s *Server) handleInternalServiceFindClosestPrecedingNodeRequest(args [0]st
 		return
 	}
 
-	var response *InternalServiceFindClosestPrecedingNodeOK
+	var response *ServerNode
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -195,7 +206,7 @@ func (s *Server) handleInternalServiceFindClosestPrecedingNodeRequest(args [0]st
 		type (
 			Request  = struct{}
 			Params   = InternalServiceFindClosestPrecedingNodeParams
-			Response = *InternalServiceFindClosestPrecedingNodeOK
+			Response = *ServerNode
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -206,16 +217,27 @@ func (s *Server) handleInternalServiceFindClosestPrecedingNodeRequest(args [0]st
 			mreq,
 			unpackInternalServiceFindClosestPrecedingNodeParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.InternalServiceFindClosestPrecedingNode(ctx, params)
+				response, err = s.h.InternalServiceFindClosestPrecedingNode(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.InternalServiceFindClosestPrecedingNode(ctx, params)
+		response, err = s.h.InternalServiceFindClosestPrecedingNode(ctx, params)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 
@@ -279,7 +301,7 @@ func (s *Server) handleInternalServiceFindSuccessorByListRequest(args [0]string,
 		return
 	}
 
-	var response *InternalServiceFindSuccessorByListOK
+	var response *ServerNode
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -299,7 +321,7 @@ func (s *Server) handleInternalServiceFindSuccessorByListRequest(args [0]string,
 		type (
 			Request  = struct{}
 			Params   = InternalServiceFindSuccessorByListParams
-			Response = *InternalServiceFindSuccessorByListOK
+			Response = *ServerNode
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -310,16 +332,27 @@ func (s *Server) handleInternalServiceFindSuccessorByListRequest(args [0]string,
 			mreq,
 			unpackInternalServiceFindSuccessorByListParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.InternalServiceFindSuccessorByList(ctx, params)
+				response, err = s.h.InternalServiceFindSuccessorByList(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.InternalServiceFindSuccessorByList(ctx, params)
+		response, err = s.h.InternalServiceFindSuccessorByList(ctx, params)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 
@@ -383,7 +416,7 @@ func (s *Server) handleInternalServiceFindSuccessorByTableRequest(args [0]string
 		return
 	}
 
-	var response *InternalServiceFindSuccessorByTableOK
+	var response *ServerNode
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -403,7 +436,7 @@ func (s *Server) handleInternalServiceFindSuccessorByTableRequest(args [0]string
 		type (
 			Request  = struct{}
 			Params   = InternalServiceFindSuccessorByTableParams
-			Response = *InternalServiceFindSuccessorByTableOK
+			Response = *ServerNode
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -414,16 +447,27 @@ func (s *Server) handleInternalServiceFindSuccessorByTableRequest(args [0]string
 			mreq,
 			unpackInternalServiceFindSuccessorByTableParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.InternalServiceFindSuccessorByTable(ctx, params)
+				response, err = s.h.InternalServiceFindSuccessorByTable(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.InternalServiceFindSuccessorByTable(ctx, params)
+		response, err = s.h.InternalServiceFindSuccessorByTable(ctx, params)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 
@@ -487,7 +531,7 @@ func (s *Server) handleInternalServiceGetValueInnerRequest(args [0]string, argsE
 		return
 	}
 
-	var response *InternalServiceGetValueInnerOK
+	var response *ServerGetValueInnerResponse
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -507,7 +551,7 @@ func (s *Server) handleInternalServiceGetValueInnerRequest(args [0]string, argsE
 		type (
 			Request  = struct{}
 			Params   = InternalServiceGetValueInnerParams
-			Response = *InternalServiceGetValueInnerOK
+			Response = *ServerGetValueInnerResponse
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -518,16 +562,27 @@ func (s *Server) handleInternalServiceGetValueInnerRequest(args [0]string, argsE
 			mreq,
 			unpackInternalServiceGetValueInnerParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.InternalServiceGetValueInner(ctx, params)
+				response, err = s.h.InternalServiceGetValueInner(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.InternalServiceGetValueInner(ctx, params)
+		response, err = s.h.InternalServiceGetValueInner(ctx, params)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 
@@ -591,7 +646,7 @@ func (s *Server) handleInternalServiceNotifyRequest(args [0]string, argsEscaped 
 		return
 	}
 
-	var response *InternalServiceNotifyOK
+	var response *ServerSuccessResponse
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -611,7 +666,7 @@ func (s *Server) handleInternalServiceNotifyRequest(args [0]string, argsEscaped 
 		type (
 			Request  = struct{}
 			Params   = InternalServiceNotifyParams
-			Response = *InternalServiceNotifyOK
+			Response = *ServerSuccessResponse
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -622,16 +677,27 @@ func (s *Server) handleInternalServiceNotifyRequest(args [0]string, argsEscaped 
 			mreq,
 			unpackInternalServiceNotifyParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.InternalServiceNotify(ctx, params)
+				response, err = s.h.InternalServiceNotify(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.InternalServiceNotify(ctx, params)
+		response, err = s.h.InternalServiceNotify(ctx, params)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 
@@ -681,7 +747,7 @@ func (s *Server) handleInternalServicePingRequest(args [0]string, argsEscaped bo
 		err error
 	)
 
-	var response *InternalServicePingOK
+	var response *ServerSuccessResponse
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -696,7 +762,7 @@ func (s *Server) handleInternalServicePingRequest(args [0]string, argsEscaped bo
 		type (
 			Request  = struct{}
 			Params   = struct{}
-			Response = *InternalServicePingOK
+			Response = *ServerSuccessResponse
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -707,16 +773,27 @@ func (s *Server) handleInternalServicePingRequest(args [0]string, argsEscaped bo
 			mreq,
 			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.InternalServicePing(ctx)
+				response, err = s.h.InternalServicePing(ctx)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.InternalServicePing(ctx)
+		response, err = s.h.InternalServicePing(ctx)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 
@@ -766,7 +843,7 @@ func (s *Server) handleInternalServicePredecessorRequest(args [0]string, argsEsc
 		err error
 	)
 
-	var response *InternalServicePredecessorOK
+	var response *ServerNode
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -781,7 +858,7 @@ func (s *Server) handleInternalServicePredecessorRequest(args [0]string, argsEsc
 		type (
 			Request  = struct{}
 			Params   = struct{}
-			Response = *InternalServicePredecessorOK
+			Response = *ServerNode
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -792,16 +869,27 @@ func (s *Server) handleInternalServicePredecessorRequest(args [0]string, argsEsc
 			mreq,
 			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.InternalServicePredecessor(ctx)
+				response, err = s.h.InternalServicePredecessor(ctx)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.InternalServicePredecessor(ctx)
+		response, err = s.h.InternalServicePredecessor(ctx)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 
@@ -865,7 +953,7 @@ func (s *Server) handleInternalServicePutValueInnerRequest(args [0]string, argsE
 		return
 	}
 
-	var response *InternalServicePutValueInnerOK
+	var response *ServerPutValueInnerResponse
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -889,7 +977,7 @@ func (s *Server) handleInternalServicePutValueInnerRequest(args [0]string, argsE
 		type (
 			Request  = struct{}
 			Params   = InternalServicePutValueInnerParams
-			Response = *InternalServicePutValueInnerOK
+			Response = *ServerPutValueInnerResponse
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -900,16 +988,27 @@ func (s *Server) handleInternalServicePutValueInnerRequest(args [0]string, argsE
 			mreq,
 			unpackInternalServicePutValueInnerParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.InternalServicePutValueInner(ctx, params)
+				response, err = s.h.InternalServicePutValueInner(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.InternalServicePutValueInner(ctx, params)
+		response, err = s.h.InternalServicePutValueInner(ctx, params)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 
@@ -959,7 +1058,7 @@ func (s *Server) handleInternalServiceSuccessorsRequest(args [0]string, argsEsca
 		err error
 	)
 
-	var response *InternalServiceSuccessorsOK
+	var response *ServerNodes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -974,7 +1073,7 @@ func (s *Server) handleInternalServiceSuccessorsRequest(args [0]string, argsEsca
 		type (
 			Request  = struct{}
 			Params   = struct{}
-			Response = *InternalServiceSuccessorsOK
+			Response = *ServerNodes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -985,16 +1084,27 @@ func (s *Server) handleInternalServiceSuccessorsRequest(args [0]string, argsEsca
 			mreq,
 			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.InternalServiceSuccessors(ctx)
+				response, err = s.h.InternalServiceSuccessors(ctx)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.InternalServiceSuccessors(ctx)
+		response, err = s.h.InternalServiceSuccessors(ctx)
 	}
 	if err != nil {
-		recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
+		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
+			if err := encodeErrorResponse(errRes, w, span); err != nil {
+				recordError("Internal", err)
+			}
+			return
+		}
+		if errors.Is(err, ht.ErrNotImplemented) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+			return
+		}
+		if err := encodeErrorResponse(s.h.NewError(ctx, err), w, span); err != nil {
+			recordError("Internal", err)
+		}
 		return
 	}
 

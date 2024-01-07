@@ -5,8 +5,12 @@ package api_internal
 import (
 	"net/http"
 
+	"github.com/go-faster/errors"
+	"github.com/go-faster/jx"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
+
+	ht "github.com/ogen-go/ogen/http"
 )
 
 func encodeInternalServiceDeleteValueInnerResponse(response *InternalServiceDeleteValueInnerOK, w http.ResponseWriter, span trace.Span) error {
@@ -16,65 +20,155 @@ func encodeInternalServiceDeleteValueInnerResponse(response *InternalServiceDele
 	return nil
 }
 
-func encodeInternalServiceFindClosestPrecedingNodeResponse(response *InternalServiceFindClosestPrecedingNodeOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServiceFindClosestPrecedingNodeResponse(response *ServerNode, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
 
 	return nil
 }
 
-func encodeInternalServiceFindSuccessorByListResponse(response *InternalServiceFindSuccessorByListOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServiceFindSuccessorByListResponse(response *ServerNode, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
 
 	return nil
 }
 
-func encodeInternalServiceFindSuccessorByTableResponse(response *InternalServiceFindSuccessorByTableOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServiceFindSuccessorByTableResponse(response *ServerNode, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
 
 	return nil
 }
 
-func encodeInternalServiceGetValueInnerResponse(response *InternalServiceGetValueInnerOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServiceGetValueInnerResponse(response *ServerGetValueInnerResponse, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
 
 	return nil
 }
 
-func encodeInternalServiceNotifyResponse(response *InternalServiceNotifyOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServiceNotifyResponse(response *ServerSuccessResponse, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
 
 	return nil
 }
 
-func encodeInternalServicePingResponse(response *InternalServicePingOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServicePingResponse(response *ServerSuccessResponse, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
 
 	return nil
 }
 
-func encodeInternalServicePredecessorResponse(response *InternalServicePredecessorOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServicePredecessorResponse(response *ServerNode, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
 
 	return nil
 }
 
-func encodeInternalServicePutValueInnerResponse(response *InternalServicePutValueInnerOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServicePutValueInnerResponse(response *ServerPutValueInnerResponse, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
 
 	return nil
 }
 
-func encodeInternalServiceSuccessorsResponse(response *InternalServiceSuccessorsOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServiceSuccessorsResponse(response *ServerNodes, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
 
+	e := new(jx.Encoder)
+	response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
 	return nil
+}
+
+func encodeErrorResponse(response *ErrorStatusCode, w http.ResponseWriter, span trace.Span) error {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	code := response.StatusCode
+	if code == 0 {
+		// Set default status code.
+		code = http.StatusOK
+	}
+	w.WriteHeader(code)
+	if st := http.StatusText(code); code >= http.StatusBadRequest {
+		span.SetStatus(codes.Error, st)
+	} else {
+		span.SetStatus(codes.Ok, st)
+	}
+
+	e := new(jx.Encoder)
+	response.Response.Encode(e)
+	if _, err := e.WriteTo(w); err != nil {
+		return errors.Wrap(err, "write")
+	}
+
+	if code >= http.StatusInternalServerError {
+		return errors.Wrapf(ht.ErrInternalServerErrorResponse, "code: %d, message: %s", code, http.StatusText(code))
+	}
+	return nil
+
 }

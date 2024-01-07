@@ -11,19 +11,23 @@ type Handler interface {
 	// ExternalServiceDeleteValue implements ExternalService_DeleteValue operation.
 	//
 	// POST /server.ExternalService/DeleteValue
-	ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) error
+	ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) (*ServerDeleteValueResponse, error)
 	// ExternalServiceFindHostForKey implements ExternalService_FindHostForKey operation.
 	//
 	// POST /server.ExternalService/FindHostForKey
-	ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) error
+	ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) (*ServerNode, error)
 	// ExternalServiceGetValue implements ExternalService_GetValue operation.
 	//
 	// POST /server.ExternalService/GetValue
-	ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) error
+	ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) (*ServerGetValueResponse, error)
 	// ExternalServicePutValue implements ExternalService_PutValue operation.
 	//
 	// POST /server.ExternalService/PutValue
-	ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) error
+	ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) (*ServerPutValueResponse, error)
+	// NewError creates *ErrorStatusCode from error returned by handler.
+	//
+	// Used for common default response.
+	NewError(ctx context.Context, err error) *ErrorStatusCode
 }
 
 // Server implements http server based on OpenAPI v3 specification and

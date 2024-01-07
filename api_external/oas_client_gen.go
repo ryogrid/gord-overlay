@@ -26,19 +26,19 @@ type Invoker interface {
 	// ExternalServiceDeleteValue invokes ExternalService_DeleteValue operation.
 	//
 	// POST /server.ExternalService/DeleteValue
-	ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) error
+	ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) (*ServerDeleteValueResponse, error)
 	// ExternalServiceFindHostForKey invokes ExternalService_FindHostForKey operation.
 	//
 	// POST /server.ExternalService/FindHostForKey
-	ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) error
+	ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) (*ServerNode, error)
 	// ExternalServiceGetValue invokes ExternalService_GetValue operation.
 	//
 	// POST /server.ExternalService/GetValue
-	ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) error
+	ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) (*ServerGetValueResponse, error)
 	// ExternalServicePutValue invokes ExternalService_PutValue operation.
 	//
 	// POST /server.ExternalService/PutValue
-	ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) error
+	ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) (*ServerPutValueResponse, error)
 }
 
 // Client implements OAS client.
@@ -46,8 +46,12 @@ type Client struct {
 	serverURL *url.URL
 	baseClient
 }
+type errorHandler interface {
+	NewError(ctx context.Context, err error) *ErrorStatusCode
+}
 
 var _ Handler = struct {
+	errorHandler
 	*Client
 }{}
 
@@ -92,12 +96,12 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 // ExternalServiceDeleteValue invokes ExternalService_DeleteValue operation.
 //
 // POST /server.ExternalService/DeleteValue
-func (c *Client) ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) error {
-	_, err := c.sendExternalServiceDeleteValue(ctx, params)
-	return err
+func (c *Client) ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) (*ServerDeleteValueResponse, error) {
+	res, err := c.sendExternalServiceDeleteValue(ctx, params)
+	return res, err
 }
 
-func (c *Client) sendExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) (res *ExternalServiceDeleteValueOK, err error) {
+func (c *Client) sendExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) (res *ServerDeleteValueResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("ExternalService_DeleteValue"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -183,12 +187,12 @@ func (c *Client) sendExternalServiceDeleteValue(ctx context.Context, params Exte
 // ExternalServiceFindHostForKey invokes ExternalService_FindHostForKey operation.
 //
 // POST /server.ExternalService/FindHostForKey
-func (c *Client) ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) error {
-	_, err := c.sendExternalServiceFindHostForKey(ctx, params)
-	return err
+func (c *Client) ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) (*ServerNode, error) {
+	res, err := c.sendExternalServiceFindHostForKey(ctx, params)
+	return res, err
 }
 
-func (c *Client) sendExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) (res *ExternalServiceFindHostForKeyOK, err error) {
+func (c *Client) sendExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) (res *ServerNode, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("ExternalService_FindHostForKey"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -274,12 +278,12 @@ func (c *Client) sendExternalServiceFindHostForKey(ctx context.Context, params E
 // ExternalServiceGetValue invokes ExternalService_GetValue operation.
 //
 // POST /server.ExternalService/GetValue
-func (c *Client) ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) error {
-	_, err := c.sendExternalServiceGetValue(ctx, params)
-	return err
+func (c *Client) ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) (*ServerGetValueResponse, error) {
+	res, err := c.sendExternalServiceGetValue(ctx, params)
+	return res, err
 }
 
-func (c *Client) sendExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) (res *ExternalServiceGetValueOK, err error) {
+func (c *Client) sendExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) (res *ServerGetValueResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("ExternalService_GetValue"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -365,12 +369,12 @@ func (c *Client) sendExternalServiceGetValue(ctx context.Context, params Externa
 // ExternalServicePutValue invokes ExternalService_PutValue operation.
 //
 // POST /server.ExternalService/PutValue
-func (c *Client) ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) error {
-	_, err := c.sendExternalServicePutValue(ctx, params)
-	return err
+func (c *Client) ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) (*ServerPutValueResponse, error) {
+	res, err := c.sendExternalServicePutValue(ctx, params)
+	return res, err
 }
 
-func (c *Client) sendExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) (res *ExternalServicePutValueOK, err error) {
+func (c *Client) sendExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) (res *ServerPutValueResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("ExternalService_PutValue"),
 		semconv.HTTPMethodKey.String("POST"),

@@ -15,39 +15,43 @@ type Handler interface {
 	// InternalServiceFindClosestPrecedingNode implements InternalService_FindClosestPrecedingNode operation.
 	//
 	// POST /server.InternalService/FindClosestPrecedingNode
-	InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) error
+	InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) (*ServerNode, error)
 	// InternalServiceFindSuccessorByList implements InternalService_FindSuccessorByList operation.
 	//
 	// POST /server.InternalService/FindSuccessorByList
-	InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) error
+	InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) (*ServerNode, error)
 	// InternalServiceFindSuccessorByTable implements InternalService_FindSuccessorByTable operation.
 	//
 	// POST /server.InternalService/FindSuccessorByTable
-	InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) error
+	InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) (*ServerNode, error)
 	// InternalServiceGetValueInner implements InternalService_GetValueInner operation.
 	//
 	// POST /server.InternalService/GetValueInner
-	InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) error
+	InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) (*ServerGetValueInnerResponse, error)
 	// InternalServiceNotify implements InternalService_Notify operation.
 	//
 	// POST /server.InternalService/Notify
-	InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) error
+	InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) (*ServerSuccessResponse, error)
 	// InternalServicePing implements InternalService_Ping operation.
 	//
 	// POST /server.InternalService/Ping
-	InternalServicePing(ctx context.Context) error
+	InternalServicePing(ctx context.Context) (*ServerSuccessResponse, error)
 	// InternalServicePredecessor implements InternalService_Predecessor operation.
 	//
 	// POST /server.InternalService/Predecessor
-	InternalServicePredecessor(ctx context.Context) error
+	InternalServicePredecessor(ctx context.Context) (*ServerNode, error)
 	// InternalServicePutValueInner implements InternalService_PutValueInner operation.
 	//
 	// POST /server.InternalService/PutValueInner
-	InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) error
+	InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) (*ServerPutValueInnerResponse, error)
 	// InternalServiceSuccessors implements InternalService_Successors operation.
 	//
 	// POST /server.InternalService/Successors
-	InternalServiceSuccessors(ctx context.Context) error
+	InternalServiceSuccessors(ctx context.Context) (*ServerNodes, error)
+	// NewError creates *ErrorStatusCode from error returned by handler.
+	//
+	// Used for common default response.
+	NewError(ctx context.Context, err error) *ErrorStatusCode
 }
 
 // Server implements http server based on OpenAPI v3 specification and
