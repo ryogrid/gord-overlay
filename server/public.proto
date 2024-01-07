@@ -2,13 +2,30 @@ syntax = "proto3";
 package server;
 option go_package = "github.com/ryogrid/gord-overlay/server";
 
-import "node.proto";
+import "server/node.proto";
+import "google/api/annotations.proto";
 
 service ExternalService {
-  rpc FindHostForKey(FindHostRequest) returns (Node) {}
-  rpc PutValue(PutValueRequest) returns (PutValueResponse) {}
-  rpc GetValue(GetValueRequest) returns (GetValueResponse) {}
-  rpc DeleteValue(DeleteValueRequest) returns (DeleteValueResponse) {}
+  rpc FindHostForKey(FindHostRequest) returns (Node) {
+    option (google.api.http) = {
+      post: "/server.ExternalService/FindHostForKey"
+    };
+  }
+  rpc PutValue(PutValueRequest) returns (PutValueResponse) {
+    option (google.api.http) = {
+      post: "/server.ExternalService/PutValue"
+    };
+  }
+  rpc GetValue(GetValueRequest) returns (GetValueResponse) {
+    option (google.api.http) = {
+      post: "/server.ExternalService/GetValue"
+    };
+  }
+  rpc DeleteValue(DeleteValueRequest) returns (DeleteValueResponse) {
+    option (google.api.http) = {
+      post: "/server.ExternalService/DeleteValue"
+    };
+  }
 }
 
 message FindHostRequest {

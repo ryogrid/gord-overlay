@@ -3,23 +3,64 @@ package server;
 option go_package = "github.com/ryogrid/gord-overlay/server";
 
 import "google/protobuf/empty.proto";
-import "node.proto";
+import "server/node.proto";
+import "google/api/annotations.proto";
 
 service InternalService {
-  rpc Ping(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc Ping(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/server.InternalService/Ping"
+    };
+  }
 
-  rpc Successors(google.protobuf.Empty) returns (Nodes) {}
-  rpc Predecessor(google.protobuf.Empty) returns (Node) {}
+  rpc Successors(google.protobuf.Empty) returns (Nodes) {
+    option (google.api.http) = {
+      post: "/server.InternalService/Successors"
+    };
+  }
+  rpc Predecessor(google.protobuf.Empty) returns (Node) {
+    option (google.api.http) = {
+      post: "/server.InternalService/Predecessor"
+    };
+  }
 
-  rpc FindSuccessorByTable(FindRequest) returns (Node) {}
-  rpc FindSuccessorByList(FindRequest) returns (Node) {}
-  rpc FindClosestPrecedingNode(FindRequest) returns (Node) {}
+  rpc FindSuccessorByTable(FindRequest) returns (Node) {
+    option (google.api.http) = {
+      post: "/server.InternalService/FindSuccessorByTable"
+    };
+  }
+  rpc FindSuccessorByList(FindRequest) returns (Node) {
+    option (google.api.http) = {
+      post: "/server.InternalService/FindSuccessorByList"
+    };
+  }
+  rpc FindClosestPrecedingNode(FindRequest) returns (Node) {
+    option (google.api.http) = {
+      post: "/server.InternalService/FindClosestPrecedingNode"
+    };
+  }
 
-  rpc Notify(Node) returns (google.protobuf.Empty) {}
+  rpc Notify(Node) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/server.InternalService/Notify"
+    };
+  }
 
-  rpc PutValueInner(PutValueInnerRequest) returns (PutValueInnerResponse) {}
-  rpc GetValueInner(GetValueInnerRequest) returns (GetValueInnerResponse) {}
-  rpc DeleteValueInner(DeleteValueInnerRequest) returns (DeleteValueInnerResponse) {}
+  rpc PutValueInner(PutValueInnerRequest) returns (PutValueInnerResponse) {
+    option (google.api.http) = {
+      post: "/server.InternalService/PutValueInner"
+    };
+  }
+  rpc GetValueInner(GetValueInnerRequest) returns (GetValueInnerResponse) {
+    option (google.api.http) = {
+      post: "/server.InternalService/GetValueInner"
+    };
+  }
+  rpc DeleteValueInner(DeleteValueInnerRequest) returns (DeleteValueInnerResponse) {
+    option (google.api.http) = {
+      post: "/server.InternalService/DeleteValueInner"
+    };
+  }
 }
 
 message Nodes {
