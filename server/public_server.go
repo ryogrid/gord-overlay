@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"github.com/ryogird/gord-overlay/api_external"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/pkg/model"
 	log "github.com/sirupsen/logrus"
@@ -27,7 +28,8 @@ func NewExternalServer(process *chord.Process, port string) *ExternalServer {
 	}
 }
 
-func (g *ExternalServer) newGrpcServer() *grpc.Server {
+func (g *ExternalServer) newRpcServer() *grpc.Server {
+	// TODO: need to implement ExternalServer::newRpcServer method
 	s := grpc.NewServer()
 	reflection.Register(s)
 	RegisterExternalServiceServer(s, g)
@@ -41,7 +43,7 @@ func (g *ExternalServer) Run() {
 		if err != nil {
 			log.Fatalf("failed to run server. reason: %#v", err)
 		}
-		grpcServer := g.newGrpcServer()
+		grpcServer := g.newRpcServer()
 		if err := grpcServer.Serve(lis); err != nil {
 			log.Fatalf("failed to run server. reason: %#v", err)
 		}
@@ -58,21 +60,21 @@ func (g *ExternalServer) Shutdown() {
 
 // FindHostForKey search for a given key's node.
 // It is implemented for PublicService.
-// ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) (*ServerNode, error)
-func (g *ExternalServer) FindHostForKey(ctx context.Context, req *FindHostRequest) (*Node, error) {
+func (g *ExternalServer) ExternalServiceFindHostForKey(ctx context.Context, params api_external.ExternalServiceFindHostForKeyParams) (*api_external.ServerNode, error) {
+	//func (g *ExternalServer) FindHostForKey(ctx context.Context, req *FindHostRequest) (*Node, error) {
 	id := model.NewHashID(req.Key)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
 	if err != nil {
 		log.Errorf("FindHostForKey failed. reason: %#v", err)
 		return nil, err
 	}
-	return &Node{
+	return &api_external.ServerNode{
 		Host: s.Reference().Host,
 	}, nil
 }
 
-// ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) (*ServerPutValueResponse, error)
-func (g *ExternalServer) PutValue(ctx context.Context, req *PutValueRequest) (*PutValueResponse, error) {
+func (g *ExternalServer) ExternalServicePutValue(ctx context.Context, params api_external.ExternalServicePutValueParams) (*api_external.ServerPutValueResponse, error) {
+	//func (g *ExternalServer) PutValue(ctx context.Context, req *PutValueRequest) (*PutValueResponse, error) {
 	id := model.NewHashID(req.Key)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
 	if err != nil {
@@ -85,13 +87,13 @@ func (g *ExternalServer) PutValue(ctx context.Context, req *PutValueRequest) (*P
 		log.Errorf("External PutValue failed. reason: %#v", err)
 		return nil, err2
 	}
-	return &PutValueResponse{
+	return &api_external.ServerPutValueResponse{
 		Success: success,
 	}, nil
 }
 
-// ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) (*ServerGetValueResponse, error)
-func (g *ExternalServer) GetValue(ctx context.Context, req *GetValueRequest) (*GetValueResponse, error) {
+func (g *ExternalServer) ExternalServiceGetValue(ctx context.Context, params api_external.ExternalServiceGetValueParams) (*api_external.ServerGetValueResponse, error) {
+	//func (g *ExternalServer) GetValue(ctx context.Context, req *GetValueRequest) (*GetValueResponse, error) {
 	id := model.NewHashID(req.Key)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
 	if err != nil {
@@ -104,14 +106,14 @@ func (g *ExternalServer) GetValue(ctx context.Context, req *GetValueRequest) (*G
 		log.Errorf("External GetValue failed. reason: %#v", err)
 		return nil, err2
 	}
-	return &GetValueResponse{
+	return &api_external.ServerGetValueResponse{
 		Value:   *val,
 		Success: success,
 	}, nil
 }
 
-// ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) (*ServerDeleteValueResponse, error)
-func (g *ExternalServer) DeleteValue(ctx context.Context, req *DeleteValueRequest) (*DeleteValueResponse, error) {
+ func (g *ExternalServer) ExternalServiceDeleteValue(ctx context.Context, params api_external.ExternalServiceDeleteValueParams) (*api_external.ServerDeleteValueResponse, error)
+//func (g *ExternalServer) DeleteValue(ctx context.Context, req *api_external.DeleteValueRequest) (*api_external.ServerDeleteValueResponse, error) {
 	id := model.NewHashID(req.Key)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
 	if err != nil {
@@ -124,7 +126,11 @@ func (g *ExternalServer) DeleteValue(ctx context.Context, req *DeleteValueReques
 		log.Errorf("External DeleteValue failed. reason: %#v", err)
 		return nil, err2
 	}
-	return &DeleteValueResponse{
+	return &api_external.ServerDeleteValueResponse{
 		Success: success,
 	}, nil
+}
+
+func (g *ExternalServer) NewError(ctx context.Context, err error) *api_external.ErrorStatusCode {
+	panic("implement me")
 }

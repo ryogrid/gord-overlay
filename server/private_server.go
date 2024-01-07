@@ -71,7 +71,8 @@ func NewChordServer(process *chord.Process, port string, opts ...InternalServerO
 	}
 }
 
-func (is *InternalServer) newGrpcServer() *grpc.Server {
+func (is *InternalServer) newRpcServer() *grpc.Server {
+	// TODO: need to implement InternalServer::newRpcServer method
 	s := grpc.NewServer()
 	reflection.Register(s)
 	RegisterInternalServiceServer(s, is)
@@ -85,7 +86,7 @@ func (is *InternalServer) Run(ctx context.Context) {
 		if err != nil {
 			log.Fatalf("failed to run chord server. reason: %#v", err)
 		}
-		grpcServer := is.newGrpcServer()
+		grpcServer := is.newRpcServer()
 		if err := grpcServer.Serve(lis); err != nil {
 			log.Fatalf("failed to run chord server. reason: %#v", err)
 		}
@@ -103,16 +104,16 @@ func (is *InternalServer) Shutdown() {
 	is.shutdownCh <- struct{}{}
 }
 
-// InternalServicePing(ctx context.Context) (*ServerSuccessResponse, error)
-func (is *InternalServer) Ping(_ context.Context, _ *empty.Empty) (*empty.Empty, error) {
+func (is *InternalServer) InternalServicePing(ctx context.Context) (*api_internal.ServerSuccessResponse, error) {
+	//func (is *InternalServer) Ping(_ context.Context, _ *empty.Empty) (*empty.Empty, error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
 	return &empty.Empty{}, nil
 }
 
-// InternalServiceSuccessors(ctx context.Context) (*ServerNodes, error)
-func (is *InternalServer) Successors(ctx context.Context, req *empty.Empty) (*Nodes, error) {
+func (is *InternalServer) InternalServiceSuccessors(ctx context.Context) (*api_internal.ServerNodes, error) {
+	//func (is *InternalServer) Successors(ctx context.Context, req *empty.Empty) (*Nodes, error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -120,22 +121,22 @@ func (is *InternalServer) Successors(ctx context.Context, req *empty.Empty) (*No
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: internal error occured. successor is not set.")
 	}
-	var nodes []*Node
+	var nodes []*api_internal.ServerNode
 	for _, suc := range successors {
 		if suc == nil {
 			continue
 		}
-		nodes = append(nodes, &Node{
+		nodes = append(nodes, &api_internal.ServerNode{
 			Host: suc.Reference().Host,
 		})
 	}
-	return &Nodes{
+	return &api_internal.ServerNodes{
 		Nodes: nodes,
 	}, nil
 }
 
-// InternalServicePredecessor(ctx context.Context) (*ServerNode, error)
-func (is *InternalServer) Predecessor(ctx context.Context, _ *empty.Empty) (*Node, error) {
+func (is *InternalServer) InternalServicePredecessor(ctx context.Context) (*api_internal.ServerNode, error) {
+	//func (is *InternalServer) Predecessor(ctx context.Context, _ *empty.Empty) (*Node, error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -144,7 +145,7 @@ func (is *InternalServer) Predecessor(ctx context.Context, _ *empty.Empty) (*Nod
 		return nil, status.Errorf(codes.Internal, "server: internal error occured. predecessor is not set.")
 	}
 	if pred != nil {
-		return &Node{
+		return &api_internal.ServerNode{
 			Host: pred.Reference().Host,
 		}, nil
 	}
@@ -152,7 +153,7 @@ func (is *InternalServer) Predecessor(ctx context.Context, _ *empty.Empty) (*Nod
 }
 
 // InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) (*ServerNode, error)
-func (is *InternalServer) FindSuccessorByTable(ctx context.Context, req *FindRequest) (*Node, error) {
+func (is *InternalServer) FindSuccessorByTable(ctx context.Context, req *api_internal.FindRequest) (*api_internal.ServerNode, error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -160,13 +161,13 @@ func (is *InternalServer) FindSuccessorByTable(ctx context.Context, req *FindReq
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: find successor failed. reason = %#v", err)
 	}
-	return &Node{
+	return &api_internal.ServerNode{
 		Host: successor.Reference().Host,
 	}, nil
 }
 
-// InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) (*ServerNode, error)
-func (is *InternalServer) FindSuccessorByList(ctx context.Context, req *FindRequest) (*Node, error) {
+func (is *InternalServer) InternalServiceFindSuccessorByList(ctx context.Context, params api_internal.InternalServiceFindSuccessorByListParams) (*api_internal.ServerNode, error) {
+	//func (is *InternalServer) FindSuccessorByList(ctx context.Context, req *FindRequest) (*Node, error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -174,13 +175,13 @@ func (is *InternalServer) FindSuccessorByList(ctx context.Context, req *FindRequ
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: find successor fallback failed. reason = %#v", err)
 	}
-	return &Node{
+	return &api_internal.ServerNode{
 		Host: successor.Reference().Host,
 	}, nil
 }
 
 // InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) (*ServerNode, error)
-func (is *InternalServer) FindClosestPrecedingNode(ctx context.Context, req *FindRequest) (*Node, error) {
+func (is *InternalServer) FindClosestPrecedingNode(ctx context.Context, req *api_internal.FindRequest) (*api_internal.ServerNode, error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -191,13 +192,13 @@ func (is *InternalServer) FindClosestPrecedingNode(ctx context.Context, req *Fin
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: find closest preceding node failed. reason = %#v", err)
 	}
-	return &Node{
+	return &api_internal.ServerNode{
 		Host: node.Reference().Host,
 	}, nil
 }
 
-// InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) (*ServerSuccessResponse, error)
-func (is *InternalServer) Notify(ctx context.Context, req *Node) (*empty.Empty, error) {
+func (is *InternalServer) InternalServiceNotify(ctx context.Context, params api_internal.InternalServiceNotifyParams) (*api_internal.ServerSuccessResponse, error) {
+	//func (is *InternalServer) Notify(ctx context.Context, req *Node) (*empty.Empty, error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -208,8 +209,8 @@ func (is *InternalServer) Notify(ctx context.Context, req *Node) (*empty.Empty, 
 	return &empty.Empty{}, nil
 }
 
-// InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) (*ServerPutValueInnerResponse, error)
-func (is *InternalServer) PutValueInner(ctx context.Context, req *PutValueInnerRequest) (*PutValueInnerResponse, error) {
+func (is *InternalServer) InternalServicePutValueInner(ctx context.Context, params api_internal.InternalServicePutValueInnerParams) (*api_internal.ServerPutValueInnerResponse, error) {
+	//func (is *InternalServer) PutValueInner(ctx context.Context, req *PutValueInnerRequest) (*PutValueInnerResponse, error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -217,14 +218,14 @@ func (is *InternalServer) PutValueInner(ctx context.Context, req *PutValueInnerR
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: put value failed. reason = %#v", err)
 	}
-	return &PutValueInnerResponse{
+	return &api_internal.ServerPutValueInnerResponse{
 		Success: success,
 	}, nil
 
 }
 
-// InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) (*ServerGetValueInnerResponse, error)
-func (is *InternalServer) GetValueInner(ctx context.Context, req *GetValueInnerRequest) (*GetValueInnerResponse, error) {
+func (is *InternalServer) InternalServiceGetValueInner(ctx context.Context, params api_internal.InternalServiceGetValueInnerParams) (*api_internal.ServerGetValueInnerResponse, error) {
+	//func (is *InternalServer) GetValueInner(ctx context.Context, req *GetValueInnerRequest) (*GetValueInnerResponse, error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -233,14 +234,14 @@ func (is *InternalServer) GetValueInner(ctx context.Context, req *GetValueInnerR
 		return nil, status.Errorf(codes.Internal, "server: get value failed. reason = %#v", err)
 	}
 
-	return &GetValueInnerResponse{
+	return &api_internal.ServerGetValueInnerResponse{
 		Value:   *val,
 		Success: success,
 	}, nil
 }
 
-// InternalServiceDeleteValueInner(ctx context.Context, params InternalServiceDeleteValueInnerParams) error
-func (is *InternalServer) DeleteValueInner(ctx context.Context, req *DeleteValueInnerRequest) (*DeleteValueInnerResponse, error) {
+func (is *InternalServer) InternalServiceDeleteValueInner(ctx context.Context, params api_internal.InternalServiceDeleteValueInnerParams) error {
+	//func (is *InternalServer) DeleteValueInner(ctx context.Context, req *DeleteValueInnerRequest) (*DeleteValueInnerResponse, error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -248,9 +249,10 @@ func (is *InternalServer) DeleteValueInner(ctx context.Context, req *DeleteValue
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: delete value failed. reason = %#v", err)
 	}
-	return &DeleteValueInnerResponse{
-		Success: success,
-	}, nil
+	//return &api_internal.ServerDeleteValueInnerResponse{
+	//	Success: success,
+	//}, nil
+	return nil
 }
 
 func (is *InternalServer) NewError(ctx context.Context, err error) *api_internal.ErrorStatusCode {

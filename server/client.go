@@ -2,11 +2,12 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/ryogird/gord-overlay/api_internal"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/pkg/model"
 	"google.golang.org/grpc"
+	"net/http"
 	"sync"
 	"time"
 )
@@ -33,23 +34,28 @@ func NewChordApiClient(hostNode *chord.LocalNode, port string, timeout time.Dura
 
 // TODO: Enable mTLS
 // TODO: Add conn pool capacity limit for file descriptors.
-func (c *ApiClient) getRpcClient(address string) (InternalServiceClient, error) {
-	c.poolLock.Lock()
-	defer c.poolLock.Unlock()
-	conn, ok := c.connPool[address]
-	if ok {
-		return NewInternalServiceClient(conn), nil
-	}
-
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", address, c.serverPort), grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		return nil, err
-	}
-	c.connPool[address] = conn
-	return NewInternalServiceClient(conn), nil
+func (c *ApiClient) getRpcClient(address string) (*api_internal.Client, error) {
+	//// TODO: need to implement ApiClient::getRpcClient method
+	//c.poolLock.Lock()
+	//defer c.poolLock.Unlock()
+	//conn, ok := c.connPool[address]
+	//if ok {
+	//	return NewInternalServiceClient(conn), nil
+	//}
+	//
+	//conn, err := grpc.Dial(fmt.Sprintf("%s:%s", address, c.serverPort), grpc.WithInsecure(), grpc.WithBlock())
+	//if err != nil {
+	//	return nil, err
+	//}
+	//c.connPool[address] = conn
+	//return NewInternalServiceClient(conn), nil
+	customClient := http.DefaultClient
+	customClient.Transport = nil // TODO: need to implement transport (ApiClient::getRpcClient method)
+	ret, err := api_internal.NewClient(address, api_internal.WithClient(customClient))
+	return ret, err
 }
 
-func (c *ApiClient) createRingNodeFrom(node *Node) chord.RingNode {
+func (c *ApiClient) createRingNodeFrom(node *api_internal.ServerNode) chord.RingNode {
 	if c.hostNode.Host == node.Host {
 		return c.hostNode
 	}
