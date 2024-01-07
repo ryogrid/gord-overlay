@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+// TODO: need to modify eatch method codes (client.go)
+
 type ApiClient struct {
 	hostNode   *chord.LocalNode
 	serverPort string
@@ -31,7 +33,7 @@ func NewChordApiClient(hostNode *chord.LocalNode, port string, timeout time.Dura
 
 // TODO: Enable mTLS
 // TODO: Add conn pool capacity limit for file descriptors.
-func (c *ApiClient) getGrpcConn(address string) (InternalServiceClient, error) {
+func (c *ApiClient) getRpcClient(address string) (InternalServiceClient, error) {
 	c.poolLock.Lock()
 	defer c.poolLock.Unlock()
 	conn, ok := c.connPool[address]
@@ -55,7 +57,7 @@ func (c *ApiClient) createRingNodeFrom(node *Node) chord.RingNode {
 }
 
 func (c *ApiClient) PingRPC(ctx context.Context, to *model.NodeRef) error {
-	client, err := c.getGrpcConn(to.Host)
+	client, err := c.getRpcClient(to.Host)
 	if err != nil {
 		return err
 	}
@@ -69,7 +71,7 @@ func (c *ApiClient) PingRPC(ctx context.Context, to *model.NodeRef) error {
 }
 
 func (c *ApiClient) SuccessorsRPC(ctx context.Context, to *model.NodeRef) ([]chord.RingNode, error) {
-	client, err := c.getGrpcConn(to.Host)
+	client, err := c.getRpcClient(to.Host)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +89,7 @@ func (c *ApiClient) SuccessorsRPC(ctx context.Context, to *model.NodeRef) ([]cho
 }
 
 func (c *ApiClient) PredecessorRPC(ctx context.Context, to *model.NodeRef) (chord.RingNode, error) {
-	client, err := c.getGrpcConn(to.Host)
+	client, err := c.getRpcClient(to.Host)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +103,7 @@ func (c *ApiClient) PredecessorRPC(ctx context.Context, to *model.NodeRef) (chor
 }
 
 func (c *ApiClient) FindSuccessorByTableRPC(ctx context.Context, to *model.NodeRef, id model.HashID) (chord.RingNode, error) {
-	client, err := c.getGrpcConn(to.Host)
+	client, err := c.getRpcClient(to.Host)
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +117,7 @@ func (c *ApiClient) FindSuccessorByTableRPC(ctx context.Context, to *model.NodeR
 }
 
 func (c *ApiClient) FindSuccessorByListRPC(ctx context.Context, to *model.NodeRef, id model.HashID) (chord.RingNode, error) {
-	client, err := c.getGrpcConn(to.Host)
+	client, err := c.getRpcClient(to.Host)
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +131,7 @@ func (c *ApiClient) FindSuccessorByListRPC(ctx context.Context, to *model.NodeRe
 }
 
 func (c *ApiClient) FindClosestPrecedingNodeRPC(ctx context.Context, to *model.NodeRef, id model.HashID) (chord.RingNode, error) {
-	client, err := c.getGrpcConn(to.Host)
+	client, err := c.getRpcClient(to.Host)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +145,7 @@ func (c *ApiClient) FindClosestPrecedingNodeRPC(ctx context.Context, to *model.N
 }
 
 func (c *ApiClient) NotifyRPC(ctx context.Context, to *model.NodeRef, node *model.NodeRef) error {
-	client, err := c.getGrpcConn(to.Host)
+	client, err := c.getRpcClient(to.Host)
 	if err != nil {
 		return err
 	}
@@ -167,7 +169,7 @@ func (c *ApiClient) Shutdown() {
 }
 
 func (c *ApiClient) PutValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string, value *string) (bool, error) {
-	client, err := c.getGrpcConn(to.Host)
+	client, err := c.getRpcClient(to.Host)
 	if err != nil {
 		return false, err
 	}
@@ -181,7 +183,7 @@ func (c *ApiClient) PutValueInnerRPC(ctx context.Context, to *model.NodeRef, key
 }
 
 func (c *ApiClient) GetValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string) (*string, bool, error) {
-	client, err := c.getGrpcConn(to.Host)
+	client, err := c.getRpcClient(to.Host)
 	if err != nil {
 		return nil, false, err
 	}
@@ -195,7 +197,7 @@ func (c *ApiClient) GetValueInnerRPC(ctx context.Context, to *model.NodeRef, key
 }
 
 func (c *ApiClient) DeleteValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string) (bool, error) {
-	client, err := c.getGrpcConn(to.Host)
+	client, err := c.getRpcClient(to.Host)
 	if err != nil {
 		return false, err
 	}
