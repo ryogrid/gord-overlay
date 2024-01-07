@@ -8,38 +8,92 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func decodeExternalServiceDeleteValueResponse(resp *http.Response) (res *ExternalServiceDeleteValueOK, _ error) {
+func decodeInternalServiceDeleteValueInnerResponse(resp *http.Response) (res *InternalServiceDeleteValueInnerOK, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
-		return &ExternalServiceDeleteValueOK{}, nil
+		return &InternalServiceDeleteValueInnerOK{}, nil
 	}
 	return res, validate.UnexpectedStatusCode(resp.StatusCode)
 }
 
-func decodeExternalServiceFindHostForKeyResponse(resp *http.Response) (res *ExternalServiceFindHostForKeyOK, _ error) {
+func decodeInternalServiceFindClosestPrecedingNodeResponse(resp *http.Response) (res *InternalServiceFindClosestPrecedingNodeOK, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
-		return &ExternalServiceFindHostForKeyOK{}, nil
+		return &InternalServiceFindClosestPrecedingNodeOK{}, nil
 	}
 	return res, validate.UnexpectedStatusCode(resp.StatusCode)
 }
 
-func decodeExternalServiceGetValueResponse(resp *http.Response) (res *ExternalServiceGetValueOK, _ error) {
+func decodeInternalServiceFindSuccessorByListResponse(resp *http.Response) (res *InternalServiceFindSuccessorByListOK, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
-		return &ExternalServiceGetValueOK{}, nil
+		return &InternalServiceFindSuccessorByListOK{}, nil
 	}
 	return res, validate.UnexpectedStatusCode(resp.StatusCode)
 }
 
-func decodeExternalServicePutValueResponse(resp *http.Response) (res *ExternalServicePutValueOK, _ error) {
+func decodeInternalServiceFindSuccessorByTableResponse(resp *http.Response) (res *InternalServiceFindSuccessorByTableOK, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
-		return &ExternalServicePutValueOK{}, nil
+		return &InternalServiceFindSuccessorByTableOK{}, nil
+	}
+	return res, validate.UnexpectedStatusCode(resp.StatusCode)
+}
+
+func decodeInternalServiceGetValueInnerResponse(resp *http.Response) (res *InternalServiceGetValueInnerOK, _ error) {
+	switch resp.StatusCode {
+	case 200:
+		// Code 200.
+		return &InternalServiceGetValueInnerOK{}, nil
+	}
+	return res, validate.UnexpectedStatusCode(resp.StatusCode)
+}
+
+func decodeInternalServiceNotifyResponse(resp *http.Response) (res *InternalServiceNotifyOK, _ error) {
+	switch resp.StatusCode {
+	case 200:
+		// Code 200.
+		return &InternalServiceNotifyOK{}, nil
+	}
+	return res, validate.UnexpectedStatusCode(resp.StatusCode)
+}
+
+func decodeInternalServicePingResponse(resp *http.Response) (res *InternalServicePingOK, _ error) {
+	switch resp.StatusCode {
+	case 200:
+		// Code 200.
+		return &InternalServicePingOK{}, nil
+	}
+	return res, validate.UnexpectedStatusCode(resp.StatusCode)
+}
+
+func decodeInternalServicePredecessorResponse(resp *http.Response) (res *InternalServicePredecessorOK, _ error) {
+	switch resp.StatusCode {
+	case 200:
+		// Code 200.
+		return &InternalServicePredecessorOK{}, nil
+	}
+	return res, validate.UnexpectedStatusCode(resp.StatusCode)
+}
+
+func decodeInternalServicePutValueInnerResponse(resp *http.Response) (res *InternalServicePutValueInnerOK, _ error) {
+	switch resp.StatusCode {
+	case 200:
+		// Code 200.
+		return &InternalServicePutValueInnerOK{}, nil
+	}
+	return res, validate.UnexpectedStatusCode(resp.StatusCode)
+}
+
+func decodeInternalServiceSuccessorsResponse(resp *http.Response) (res *InternalServiceSuccessorsOK, _ error) {
+	switch resp.StatusCode {
+	case 200:
+		// Code 200.
+		return &InternalServiceSuccessorsOK{}, nil
 	}
 	return res, validate.UnexpectedStatusCode(resp.StatusCode)
 }

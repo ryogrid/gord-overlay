@@ -48,8 +48,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/server.ExternalService/"
-			if l := len("/server.ExternalService/"); len(elem) >= l && elem[0:l] == "/server.ExternalService/" {
+		case '/': // Prefix: "/server.InternalService/"
+			if l := len("/server.InternalService/"); len(elem) >= l && elem[0:l] == "/server.InternalService/" {
 				elem = elem[l:]
 			} else {
 				break
@@ -59,8 +59,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 			switch elem[0] {
-			case 'D': // Prefix: "DeleteValue"
-				if l := len("DeleteValue"); len(elem) >= l && elem[0:l] == "DeleteValue" {
+			case 'D': // Prefix: "DeleteValueInner"
+				if l := len("DeleteValueInner"); len(elem) >= l && elem[0:l] == "DeleteValueInner" {
 					elem = elem[l:]
 				} else {
 					break
@@ -70,15 +70,93 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					// Leaf node.
 					switch r.Method {
 					case "POST":
-						s.handleExternalServiceDeleteValueRequest([0]string{}, elemIsEscaped, w, r)
+						s.handleInternalServiceDeleteValueInnerRequest([0]string{}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, "POST")
 					}
 
 					return
 				}
-			case 'F': // Prefix: "FindHostForKey"
-				if l := len("FindHostForKey"); len(elem) >= l && elem[0:l] == "FindHostForKey" {
+			case 'F': // Prefix: "Find"
+				if l := len("Find"); len(elem) >= l && elem[0:l] == "Find" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					break
+				}
+				switch elem[0] {
+				case 'C': // Prefix: "ClosestPrecedingNode"
+					if l := len("ClosestPrecedingNode"); len(elem) >= l && elem[0:l] == "ClosestPrecedingNode" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "POST":
+							s.handleInternalServiceFindClosestPrecedingNodeRequest([0]string{}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "POST")
+						}
+
+						return
+					}
+				case 'S': // Prefix: "SuccessorBy"
+					if l := len("SuccessorBy"); len(elem) >= l && elem[0:l] == "SuccessorBy" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						break
+					}
+					switch elem[0] {
+					case 'L': // Prefix: "List"
+						if l := len("List"); len(elem) >= l && elem[0:l] == "List" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleInternalServiceFindSuccessorByListRequest([0]string{}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+					case 'T': // Prefix: "Table"
+						if l := len("Table"); len(elem) >= l && elem[0:l] == "Table" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "POST":
+								s.handleInternalServiceFindSuccessorByTableRequest([0]string{}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "POST")
+							}
+
+							return
+						}
+					}
+				}
+			case 'G': // Prefix: "GetValueInner"
+				if l := len("GetValueInner"); len(elem) >= l && elem[0:l] == "GetValueInner" {
 					elem = elem[l:]
 				} else {
 					break
@@ -88,15 +166,15 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					// Leaf node.
 					switch r.Method {
 					case "POST":
-						s.handleExternalServiceFindHostForKeyRequest([0]string{}, elemIsEscaped, w, r)
+						s.handleInternalServiceGetValueInnerRequest([0]string{}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, "POST")
 					}
 
 					return
 				}
-			case 'G': // Prefix: "GetValue"
-				if l := len("GetValue"); len(elem) >= l && elem[0:l] == "GetValue" {
+			case 'N': // Prefix: "Notify"
+				if l := len("Notify"); len(elem) >= l && elem[0:l] == "Notify" {
 					elem = elem[l:]
 				} else {
 					break
@@ -106,15 +184,81 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					// Leaf node.
 					switch r.Method {
 					case "POST":
-						s.handleExternalServiceGetValueRequest([0]string{}, elemIsEscaped, w, r)
+						s.handleInternalServiceNotifyRequest([0]string{}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, "POST")
 					}
 
 					return
 				}
-			case 'P': // Prefix: "PutValue"
-				if l := len("PutValue"); len(elem) >= l && elem[0:l] == "PutValue" {
+			case 'P': // Prefix: "P"
+				if l := len("P"); len(elem) >= l && elem[0:l] == "P" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					break
+				}
+				switch elem[0] {
+				case 'i': // Prefix: "ing"
+					if l := len("ing"); len(elem) >= l && elem[0:l] == "ing" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "POST":
+							s.handleInternalServicePingRequest([0]string{}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "POST")
+						}
+
+						return
+					}
+				case 'r': // Prefix: "redecessor"
+					if l := len("redecessor"); len(elem) >= l && elem[0:l] == "redecessor" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "POST":
+							s.handleInternalServicePredecessorRequest([0]string{}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "POST")
+						}
+
+						return
+					}
+				case 'u': // Prefix: "utValueInner"
+					if l := len("utValueInner"); len(elem) >= l && elem[0:l] == "utValueInner" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						// Leaf node.
+						switch r.Method {
+						case "POST":
+							s.handleInternalServicePutValueInnerRequest([0]string{}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "POST")
+						}
+
+						return
+					}
+				}
+			case 'S': // Prefix: "Successors"
+				if l := len("Successors"); len(elem) >= l && elem[0:l] == "Successors" {
 					elem = elem[l:]
 				} else {
 					break
@@ -124,7 +268,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					// Leaf node.
 					switch r.Method {
 					case "POST":
-						s.handleExternalServicePutValueRequest([0]string{}, elemIsEscaped, w, r)
+						s.handleInternalServiceSuccessorsRequest([0]string{}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, "POST")
 					}
@@ -212,8 +356,8 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/server.ExternalService/"
-			if l := len("/server.ExternalService/"); len(elem) >= l && elem[0:l] == "/server.ExternalService/" {
+		case '/': // Prefix: "/server.InternalService/"
+			if l := len("/server.InternalService/"); len(elem) >= l && elem[0:l] == "/server.InternalService/" {
 				elem = elem[l:]
 			} else {
 				break
@@ -223,8 +367,8 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				break
 			}
 			switch elem[0] {
-			case 'D': // Prefix: "DeleteValue"
-				if l := len("DeleteValue"); len(elem) >= l && elem[0:l] == "DeleteValue" {
+			case 'D': // Prefix: "DeleteValueInner"
+				if l := len("DeleteValueInner"); len(elem) >= l && elem[0:l] == "DeleteValueInner" {
 					elem = elem[l:]
 				} else {
 					break
@@ -233,11 +377,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				if len(elem) == 0 {
 					switch method {
 					case "POST":
-						// Leaf: ExternalServiceDeleteValue
-						r.name = "ExternalServiceDeleteValue"
+						// Leaf: InternalServiceDeleteValueInner
+						r.name = "InternalServiceDeleteValueInner"
 						r.summary = ""
-						r.operationID = "ExternalService_DeleteValue"
-						r.pathPattern = "/server.ExternalService/DeleteValue"
+						r.operationID = "InternalService_DeleteValueInner"
+						r.pathPattern = "/server.InternalService/DeleteValueInner"
 						r.args = args
 						r.count = 0
 						return r, true
@@ -245,8 +389,98 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						return
 					}
 				}
-			case 'F': // Prefix: "FindHostForKey"
-				if l := len("FindHostForKey"); len(elem) >= l && elem[0:l] == "FindHostForKey" {
+			case 'F': // Prefix: "Find"
+				if l := len("Find"); len(elem) >= l && elem[0:l] == "Find" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					break
+				}
+				switch elem[0] {
+				case 'C': // Prefix: "ClosestPrecedingNode"
+					if l := len("ClosestPrecedingNode"); len(elem) >= l && elem[0:l] == "ClosestPrecedingNode" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						switch method {
+						case "POST":
+							// Leaf: InternalServiceFindClosestPrecedingNode
+							r.name = "InternalServiceFindClosestPrecedingNode"
+							r.summary = ""
+							r.operationID = "InternalService_FindClosestPrecedingNode"
+							r.pathPattern = "/server.InternalService/FindClosestPrecedingNode"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
+					}
+				case 'S': // Prefix: "SuccessorBy"
+					if l := len("SuccessorBy"); len(elem) >= l && elem[0:l] == "SuccessorBy" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						break
+					}
+					switch elem[0] {
+					case 'L': // Prefix: "List"
+						if l := len("List"); len(elem) >= l && elem[0:l] == "List" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: InternalServiceFindSuccessorByList
+								r.name = "InternalServiceFindSuccessorByList"
+								r.summary = ""
+								r.operationID = "InternalService_FindSuccessorByList"
+								r.pathPattern = "/server.InternalService/FindSuccessorByList"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+					case 'T': // Prefix: "Table"
+						if l := len("Table"); len(elem) >= l && elem[0:l] == "Table" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							switch method {
+							case "POST":
+								// Leaf: InternalServiceFindSuccessorByTable
+								r.name = "InternalServiceFindSuccessorByTable"
+								r.summary = ""
+								r.operationID = "InternalService_FindSuccessorByTable"
+								r.pathPattern = "/server.InternalService/FindSuccessorByTable"
+								r.args = args
+								r.count = 0
+								return r, true
+							default:
+								return
+							}
+						}
+					}
+				}
+			case 'G': // Prefix: "GetValueInner"
+				if l := len("GetValueInner"); len(elem) >= l && elem[0:l] == "GetValueInner" {
 					elem = elem[l:]
 				} else {
 					break
@@ -255,11 +489,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				if len(elem) == 0 {
 					switch method {
 					case "POST":
-						// Leaf: ExternalServiceFindHostForKey
-						r.name = "ExternalServiceFindHostForKey"
+						// Leaf: InternalServiceGetValueInner
+						r.name = "InternalServiceGetValueInner"
 						r.summary = ""
-						r.operationID = "ExternalService_FindHostForKey"
-						r.pathPattern = "/server.ExternalService/FindHostForKey"
+						r.operationID = "InternalService_GetValueInner"
+						r.pathPattern = "/server.InternalService/GetValueInner"
 						r.args = args
 						r.count = 0
 						return r, true
@@ -267,8 +501,8 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						return
 					}
 				}
-			case 'G': // Prefix: "GetValue"
-				if l := len("GetValue"); len(elem) >= l && elem[0:l] == "GetValue" {
+			case 'N': // Prefix: "Notify"
+				if l := len("Notify"); len(elem) >= l && elem[0:l] == "Notify" {
 					elem = elem[l:]
 				} else {
 					break
@@ -277,11 +511,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				if len(elem) == 0 {
 					switch method {
 					case "POST":
-						// Leaf: ExternalServiceGetValue
-						r.name = "ExternalServiceGetValue"
+						// Leaf: InternalServiceNotify
+						r.name = "InternalServiceNotify"
 						r.summary = ""
-						r.operationID = "ExternalService_GetValue"
-						r.pathPattern = "/server.ExternalService/GetValue"
+						r.operationID = "InternalService_Notify"
+						r.pathPattern = "/server.InternalService/Notify"
 						r.args = args
 						r.count = 0
 						return r, true
@@ -289,8 +523,86 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						return
 					}
 				}
-			case 'P': // Prefix: "PutValue"
-				if l := len("PutValue"); len(elem) >= l && elem[0:l] == "PutValue" {
+			case 'P': // Prefix: "P"
+				if l := len("P"); len(elem) >= l && elem[0:l] == "P" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				if len(elem) == 0 {
+					break
+				}
+				switch elem[0] {
+				case 'i': // Prefix: "ing"
+					if l := len("ing"); len(elem) >= l && elem[0:l] == "ing" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						switch method {
+						case "POST":
+							// Leaf: InternalServicePing
+							r.name = "InternalServicePing"
+							r.summary = ""
+							r.operationID = "InternalService_Ping"
+							r.pathPattern = "/server.InternalService/Ping"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
+					}
+				case 'r': // Prefix: "redecessor"
+					if l := len("redecessor"); len(elem) >= l && elem[0:l] == "redecessor" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						switch method {
+						case "POST":
+							// Leaf: InternalServicePredecessor
+							r.name = "InternalServicePredecessor"
+							r.summary = ""
+							r.operationID = "InternalService_Predecessor"
+							r.pathPattern = "/server.InternalService/Predecessor"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
+					}
+				case 'u': // Prefix: "utValueInner"
+					if l := len("utValueInner"); len(elem) >= l && elem[0:l] == "utValueInner" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						switch method {
+						case "POST":
+							// Leaf: InternalServicePutValueInner
+							r.name = "InternalServicePutValueInner"
+							r.summary = ""
+							r.operationID = "InternalService_PutValueInner"
+							r.pathPattern = "/server.InternalService/PutValueInner"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
+					}
+				}
+			case 'S': // Prefix: "Successors"
+				if l := len("Successors"); len(elem) >= l && elem[0:l] == "Successors" {
 					elem = elem[l:]
 				} else {
 					break
@@ -299,11 +611,11 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				if len(elem) == 0 {
 					switch method {
 					case "POST":
-						// Leaf: ExternalServicePutValue
-						r.name = "ExternalServicePutValue"
+						// Leaf: InternalServiceSuccessors
+						r.name = "InternalServiceSuccessors"
 						r.summary = ""
-						r.operationID = "ExternalService_PutValue"
-						r.pathPattern = "/server.ExternalService/PutValue"
+						r.operationID = "InternalService_Successors"
+						r.pathPattern = "/server.InternalService/Successors"
 						r.args = args
 						r.count = 0
 						return r, true

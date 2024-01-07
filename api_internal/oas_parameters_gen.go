@@ -11,12 +11,12 @@ import (
 	"github.com/ogen-go/ogen/uri"
 )
 
-// ExternalServiceDeleteValueParams is parameters of ExternalService_DeleteValue operation.
-type ExternalServiceDeleteValueParams struct {
+// InternalServiceDeleteValueInnerParams is parameters of InternalService_DeleteValueInner operation.
+type InternalServiceDeleteValueInnerParams struct {
 	Key OptString
 }
 
-func unpackExternalServiceDeleteValueParams(packed middleware.Parameters) (params ExternalServiceDeleteValueParams) {
+func unpackInternalServiceDeleteValueInnerParams(packed middleware.Parameters) (params InternalServiceDeleteValueInnerParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "key",
@@ -29,7 +29,7 @@ func unpackExternalServiceDeleteValueParams(packed middleware.Parameters) (param
 	return params
 }
 
-func decodeExternalServiceDeleteValueParams(args [0]string, argsEscaped bool, r *http.Request) (params ExternalServiceDeleteValueParams, _ error) {
+func decodeInternalServiceDeleteValueInnerParams(args [0]string, argsEscaped bool, r *http.Request) (params InternalServiceDeleteValueInnerParams, _ error) {
 	q := uri.NewQueryDecoder(r.URL.Query())
 	// Decode query: key.
 	if err := func() error {
@@ -75,12 +75,183 @@ func decodeExternalServiceDeleteValueParams(args [0]string, argsEscaped bool, r 
 	return params, nil
 }
 
-// ExternalServiceFindHostForKeyParams is parameters of ExternalService_FindHostForKey operation.
-type ExternalServiceFindHostForKeyParams struct {
+// InternalServiceFindClosestPrecedingNodeParams is parameters of InternalService_FindClosestPrecedingNode operation.
+type InternalServiceFindClosestPrecedingNodeParams struct {
+	ID []byte
+}
+
+func unpackInternalServiceFindClosestPrecedingNodeParams(packed middleware.Parameters) (params InternalServiceFindClosestPrecedingNodeParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.ID = v.([]byte)
+		}
+	}
+	return params
+}
+
+func decodeInternalServiceFindClosestPrecedingNodeParams(args [0]string, argsEscaped bool, r *http.Request) (params InternalServiceFindClosestPrecedingNodeParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode query: id.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "id",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToBytes(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// InternalServiceFindSuccessorByListParams is parameters of InternalService_FindSuccessorByList operation.
+type InternalServiceFindSuccessorByListParams struct {
+	ID []byte
+}
+
+func unpackInternalServiceFindSuccessorByListParams(packed middleware.Parameters) (params InternalServiceFindSuccessorByListParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.ID = v.([]byte)
+		}
+	}
+	return params
+}
+
+func decodeInternalServiceFindSuccessorByListParams(args [0]string, argsEscaped bool, r *http.Request) (params InternalServiceFindSuccessorByListParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode query: id.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "id",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToBytes(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// InternalServiceFindSuccessorByTableParams is parameters of InternalService_FindSuccessorByTable operation.
+type InternalServiceFindSuccessorByTableParams struct {
+	ID []byte
+}
+
+func unpackInternalServiceFindSuccessorByTableParams(packed middleware.Parameters) (params InternalServiceFindSuccessorByTableParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "id",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.ID = v.([]byte)
+		}
+	}
+	return params
+}
+
+func decodeInternalServiceFindSuccessorByTableParams(args [0]string, argsEscaped bool, r *http.Request) (params InternalServiceFindSuccessorByTableParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode query: id.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "id",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToBytes(val)
+				if err != nil {
+					return err
+				}
+
+				params.ID = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "id",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// InternalServiceGetValueInnerParams is parameters of InternalService_GetValueInner operation.
+type InternalServiceGetValueInnerParams struct {
 	Key OptString
 }
 
-func unpackExternalServiceFindHostForKeyParams(packed middleware.Parameters) (params ExternalServiceFindHostForKeyParams) {
+func unpackInternalServiceGetValueInnerParams(packed middleware.Parameters) (params InternalServiceGetValueInnerParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "key",
@@ -93,7 +264,7 @@ func unpackExternalServiceFindHostForKeyParams(packed middleware.Parameters) (pa
 	return params
 }
 
-func decodeExternalServiceFindHostForKeyParams(args [0]string, argsEscaped bool, r *http.Request) (params ExternalServiceFindHostForKeyParams, _ error) {
+func decodeInternalServiceGetValueInnerParams(args [0]string, argsEscaped bool, r *http.Request) (params InternalServiceGetValueInnerParams, _ error) {
 	q := uri.NewQueryDecoder(r.URL.Query())
 	// Decode query: key.
 	if err := func() error {
@@ -139,37 +310,37 @@ func decodeExternalServiceFindHostForKeyParams(args [0]string, argsEscaped bool,
 	return params, nil
 }
 
-// ExternalServiceGetValueParams is parameters of ExternalService_GetValue operation.
-type ExternalServiceGetValueParams struct {
-	Key OptString
+// InternalServiceNotifyParams is parameters of InternalService_Notify operation.
+type InternalServiceNotifyParams struct {
+	Host OptString
 }
 
-func unpackExternalServiceGetValueParams(packed middleware.Parameters) (params ExternalServiceGetValueParams) {
+func unpackInternalServiceNotifyParams(packed middleware.Parameters) (params InternalServiceNotifyParams) {
 	{
 		key := middleware.ParameterKey{
-			Name: "key",
+			Name: "host",
 			In:   "query",
 		}
 		if v, ok := packed[key]; ok {
-			params.Key = v.(OptString)
+			params.Host = v.(OptString)
 		}
 	}
 	return params
 }
 
-func decodeExternalServiceGetValueParams(args [0]string, argsEscaped bool, r *http.Request) (params ExternalServiceGetValueParams, _ error) {
+func decodeInternalServiceNotifyParams(args [0]string, argsEscaped bool, r *http.Request) (params InternalServiceNotifyParams, _ error) {
 	q := uri.NewQueryDecoder(r.URL.Query())
-	// Decode query: key.
+	// Decode query: host.
 	if err := func() error {
 		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "key",
+			Name:    "host",
 			Style:   uri.QueryStyleForm,
 			Explode: true,
 		}
 
 		if err := q.HasParam(cfg); err == nil {
 			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				var paramsDotKeyVal string
+				var paramsDotHostVal string
 				if err := func() error {
 					val, err := d.DecodeValue()
 					if err != nil {
@@ -181,12 +352,12 @@ func decodeExternalServiceGetValueParams(args [0]string, argsEscaped bool, r *ht
 						return err
 					}
 
-					paramsDotKeyVal = c
+					paramsDotHostVal = c
 					return nil
 				}(); err != nil {
 					return err
 				}
-				params.Key.SetTo(paramsDotKeyVal)
+				params.Host.SetTo(paramsDotHostVal)
 				return nil
 			}); err != nil {
 				return err
@@ -195,7 +366,7 @@ func decodeExternalServiceGetValueParams(args [0]string, argsEscaped bool, r *ht
 		return nil
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
-			Name: "key",
+			Name: "host",
 			In:   "query",
 			Err:  err,
 		}
@@ -203,13 +374,13 @@ func decodeExternalServiceGetValueParams(args [0]string, argsEscaped bool, r *ht
 	return params, nil
 }
 
-// ExternalServicePutValueParams is parameters of ExternalService_PutValue operation.
-type ExternalServicePutValueParams struct {
+// InternalServicePutValueInnerParams is parameters of InternalService_PutValueInner operation.
+type InternalServicePutValueInnerParams struct {
 	Key   OptString
 	Value OptString
 }
 
-func unpackExternalServicePutValueParams(packed middleware.Parameters) (params ExternalServicePutValueParams) {
+func unpackInternalServicePutValueInnerParams(packed middleware.Parameters) (params InternalServicePutValueInnerParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "key",
@@ -231,7 +402,7 @@ func unpackExternalServicePutValueParams(packed middleware.Parameters) (params E
 	return params
 }
 
-func decodeExternalServicePutValueParams(args [0]string, argsEscaped bool, r *http.Request) (params ExternalServicePutValueParams, _ error) {
+func decodeInternalServicePutValueInnerParams(args [0]string, argsEscaped bool, r *http.Request) (params InternalServicePutValueInnerParams, _ error) {
 	q := uri.NewQueryDecoder(r.URL.Query())
 	// Decode query: key.
 	if err := func() error {

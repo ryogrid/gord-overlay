@@ -2,17 +2,35 @@
 
 package api_internal
 
-// ExternalServiceDeleteValueOK is response for ExternalServiceDeleteValue operation.
-type ExternalServiceDeleteValueOK struct{}
+// InternalServiceDeleteValueInnerOK is response for InternalServiceDeleteValueInner operation.
+type InternalServiceDeleteValueInnerOK struct{}
 
-// ExternalServiceFindHostForKeyOK is response for ExternalServiceFindHostForKey operation.
-type ExternalServiceFindHostForKeyOK struct{}
+// InternalServiceFindClosestPrecedingNodeOK is response for InternalServiceFindClosestPrecedingNode operation.
+type InternalServiceFindClosestPrecedingNodeOK struct{}
 
-// ExternalServiceGetValueOK is response for ExternalServiceGetValue operation.
-type ExternalServiceGetValueOK struct{}
+// InternalServiceFindSuccessorByListOK is response for InternalServiceFindSuccessorByList operation.
+type InternalServiceFindSuccessorByListOK struct{}
 
-// ExternalServicePutValueOK is response for ExternalServicePutValue operation.
-type ExternalServicePutValueOK struct{}
+// InternalServiceFindSuccessorByTableOK is response for InternalServiceFindSuccessorByTable operation.
+type InternalServiceFindSuccessorByTableOK struct{}
+
+// InternalServiceGetValueInnerOK is response for InternalServiceGetValueInner operation.
+type InternalServiceGetValueInnerOK struct{}
+
+// InternalServiceNotifyOK is response for InternalServiceNotify operation.
+type InternalServiceNotifyOK struct{}
+
+// InternalServicePingOK is response for InternalServicePing operation.
+type InternalServicePingOK struct{}
+
+// InternalServicePredecessorOK is response for InternalServicePredecessor operation.
+type InternalServicePredecessorOK struct{}
+
+// InternalServicePutValueInnerOK is response for InternalServicePutValueInner operation.
+type InternalServicePutValueInnerOK struct{}
+
+// InternalServiceSuccessorsOK is response for InternalServiceSuccessors operation.
+type InternalServiceSuccessorsOK struct{}
 
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {

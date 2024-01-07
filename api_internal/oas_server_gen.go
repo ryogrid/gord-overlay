@@ -8,22 +8,46 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
-	// ExternalServiceDeleteValue implements ExternalService_DeleteValue operation.
+	// InternalServiceDeleteValueInner implements InternalService_DeleteValueInner operation.
 	//
-	// POST /server.ExternalService/DeleteValue
-	ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) error
-	// ExternalServiceFindHostForKey implements ExternalService_FindHostForKey operation.
+	// POST /server.InternalService/DeleteValueInner
+	InternalServiceDeleteValueInner(ctx context.Context, params InternalServiceDeleteValueInnerParams) error
+	// InternalServiceFindClosestPrecedingNode implements InternalService_FindClosestPrecedingNode operation.
 	//
-	// POST /server.ExternalService/FindHostForKey
-	ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) error
-	// ExternalServiceGetValue implements ExternalService_GetValue operation.
+	// POST /server.InternalService/FindClosestPrecedingNode
+	InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) error
+	// InternalServiceFindSuccessorByList implements InternalService_FindSuccessorByList operation.
 	//
-	// POST /server.ExternalService/GetValue
-	ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) error
-	// ExternalServicePutValue implements ExternalService_PutValue operation.
+	// POST /server.InternalService/FindSuccessorByList
+	InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) error
+	// InternalServiceFindSuccessorByTable implements InternalService_FindSuccessorByTable operation.
 	//
-	// POST /server.ExternalService/PutValue
-	ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) error
+	// POST /server.InternalService/FindSuccessorByTable
+	InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) error
+	// InternalServiceGetValueInner implements InternalService_GetValueInner operation.
+	//
+	// POST /server.InternalService/GetValueInner
+	InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) error
+	// InternalServiceNotify implements InternalService_Notify operation.
+	//
+	// POST /server.InternalService/Notify
+	InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) error
+	// InternalServicePing implements InternalService_Ping operation.
+	//
+	// POST /server.InternalService/Ping
+	InternalServicePing(ctx context.Context) error
+	// InternalServicePredecessor implements InternalService_Predecessor operation.
+	//
+	// POST /server.InternalService/Predecessor
+	InternalServicePredecessor(ctx context.Context) error
+	// InternalServicePutValueInner implements InternalService_PutValueInner operation.
+	//
+	// POST /server.InternalService/PutValueInner
+	InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) error
+	// InternalServiceSuccessors implements InternalService_Successors operation.
+	//
+	// POST /server.InternalService/Successors
+	InternalServiceSuccessors(ctx context.Context) error
 }
 
 // Server implements http server based on OpenAPI v3 specification and

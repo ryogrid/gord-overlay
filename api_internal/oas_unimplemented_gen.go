@@ -13,30 +13,72 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
-// ExternalServiceDeleteValue implements ExternalService_DeleteValue operation.
+// InternalServiceDeleteValueInner implements InternalService_DeleteValueInner operation.
 //
-// POST /server.ExternalService/DeleteValue
-func (UnimplementedHandler) ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) error {
+// POST /server.InternalService/DeleteValueInner
+func (UnimplementedHandler) InternalServiceDeleteValueInner(ctx context.Context, params InternalServiceDeleteValueInnerParams) error {
 	return ht.ErrNotImplemented
 }
 
-// ExternalServiceFindHostForKey implements ExternalService_FindHostForKey operation.
+// InternalServiceFindClosestPrecedingNode implements InternalService_FindClosestPrecedingNode operation.
 //
-// POST /server.ExternalService/FindHostForKey
-func (UnimplementedHandler) ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) error {
+// POST /server.InternalService/FindClosestPrecedingNode
+func (UnimplementedHandler) InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) error {
 	return ht.ErrNotImplemented
 }
 
-// ExternalServiceGetValue implements ExternalService_GetValue operation.
+// InternalServiceFindSuccessorByList implements InternalService_FindSuccessorByList operation.
 //
-// POST /server.ExternalService/GetValue
-func (UnimplementedHandler) ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) error {
+// POST /server.InternalService/FindSuccessorByList
+func (UnimplementedHandler) InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) error {
 	return ht.ErrNotImplemented
 }
 
-// ExternalServicePutValue implements ExternalService_PutValue operation.
+// InternalServiceFindSuccessorByTable implements InternalService_FindSuccessorByTable operation.
 //
-// POST /server.ExternalService/PutValue
-func (UnimplementedHandler) ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) error {
+// POST /server.InternalService/FindSuccessorByTable
+func (UnimplementedHandler) InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) error {
+	return ht.ErrNotImplemented
+}
+
+// InternalServiceGetValueInner implements InternalService_GetValueInner operation.
+//
+// POST /server.InternalService/GetValueInner
+func (UnimplementedHandler) InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) error {
+	return ht.ErrNotImplemented
+}
+
+// InternalServiceNotify implements InternalService_Notify operation.
+//
+// POST /server.InternalService/Notify
+func (UnimplementedHandler) InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) error {
+	return ht.ErrNotImplemented
+}
+
+// InternalServicePing implements InternalService_Ping operation.
+//
+// POST /server.InternalService/Ping
+func (UnimplementedHandler) InternalServicePing(ctx context.Context) error {
+	return ht.ErrNotImplemented
+}
+
+// InternalServicePredecessor implements InternalService_Predecessor operation.
+//
+// POST /server.InternalService/Predecessor
+func (UnimplementedHandler) InternalServicePredecessor(ctx context.Context) error {
+	return ht.ErrNotImplemented
+}
+
+// InternalServicePutValueInner implements InternalService_PutValueInner operation.
+//
+// POST /server.InternalService/PutValueInner
+func (UnimplementedHandler) InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) error {
+	return ht.ErrNotImplemented
+}
+
+// InternalServiceSuccessors implements InternalService_Successors operation.
+//
+// POST /server.InternalService/Successors
+func (UnimplementedHandler) InternalServiceSuccessors(ctx context.Context) error {
 	return ht.ErrNotImplemented
 }

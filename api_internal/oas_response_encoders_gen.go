@@ -9,28 +9,70 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-func encodeExternalServiceDeleteValueResponse(response *ExternalServiceDeleteValueOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServiceDeleteValueInnerResponse(response *InternalServiceDeleteValueInnerOK, w http.ResponseWriter, span trace.Span) error {
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
 
 	return nil
 }
 
-func encodeExternalServiceFindHostForKeyResponse(response *ExternalServiceFindHostForKeyOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServiceFindClosestPrecedingNodeResponse(response *InternalServiceFindClosestPrecedingNodeOK, w http.ResponseWriter, span trace.Span) error {
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
 
 	return nil
 }
 
-func encodeExternalServiceGetValueResponse(response *ExternalServiceGetValueOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServiceFindSuccessorByListResponse(response *InternalServiceFindSuccessorByListOK, w http.ResponseWriter, span trace.Span) error {
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
 
 	return nil
 }
 
-func encodeExternalServicePutValueResponse(response *ExternalServicePutValueOK, w http.ResponseWriter, span trace.Span) error {
+func encodeInternalServiceFindSuccessorByTableResponse(response *InternalServiceFindSuccessorByTableOK, w http.ResponseWriter, span trace.Span) error {
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	return nil
+}
+
+func encodeInternalServiceGetValueInnerResponse(response *InternalServiceGetValueInnerOK, w http.ResponseWriter, span trace.Span) error {
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	return nil
+}
+
+func encodeInternalServiceNotifyResponse(response *InternalServiceNotifyOK, w http.ResponseWriter, span trace.Span) error {
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	return nil
+}
+
+func encodeInternalServicePingResponse(response *InternalServicePingOK, w http.ResponseWriter, span trace.Span) error {
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	return nil
+}
+
+func encodeInternalServicePredecessorResponse(response *InternalServicePredecessorOK, w http.ResponseWriter, span trace.Span) error {
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	return nil
+}
+
+func encodeInternalServicePutValueInnerResponse(response *InternalServicePutValueInnerOK, w http.ResponseWriter, span trace.Span) error {
+	w.WriteHeader(200)
+	span.SetStatus(codes.Ok, http.StatusText(200))
+
+	return nil
+}
+
+func encodeInternalServiceSuccessorsResponse(response *InternalServiceSuccessorsOK, w http.ResponseWriter, span trace.Span) error {
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))
 
