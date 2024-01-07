@@ -3,11 +3,10 @@ package core
 import (
 	"connectrpc.com/connect"
 	"context"
-	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/ryogird/gord-overlay/server"
 	"github.com/ryogird/gord-overlay/serverconnect"
 	"github.com/ryogrid/gord-overlay/chord"
-	"github.com/ryogrid/gord-overlay/pkg/model"
+	"github.com/ryogrid/gord-overlay/model"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"net/http"
@@ -89,7 +88,7 @@ func (c *ApiClient) PingRPC(ctx context.Context, to *model.NodeRef) error {
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	_, err = client.Ping(ctx, &connect.Request[emptypb.Empty]{Msg: &empty.Empty{}})
+	_, err = client.Ping(ctx, connect.NewRequest(&emptypb.Empty{}))
 	if err != nil {
 		return server.HandleError(err)
 	}
@@ -103,7 +102,7 @@ func (c *ApiClient) SuccessorsRPC(ctx context.Context, to *model.NodeRef) ([]cho
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	nodes, err := client.Successors(ctx, &connect.Request[emptypb.Empty]{Msg: &emptypb.Empty{}})
+	nodes, err := client.Successors(ctx, connect.NewRequest(&emptypb.Empty{}))
 	if err != nil {
 		return nil, server.HandleError(err)
 	}
@@ -121,7 +120,7 @@ func (c *ApiClient) PredecessorRPC(ctx context.Context, to *model.NodeRef) (chor
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	node, err := client.Predecessor(ctx, &connect.Request[emptypb.Empty]{Msg: &emptypb.Empty{}})
+	node, err := client.Predecessor(ctx, connect.NewRequest(&emptypb.Empty{}))
 	if err != nil {
 		return nil, server.HandleError(err)
 	}
@@ -135,7 +134,7 @@ func (c *ApiClient) FindSuccessorByTableRPC(ctx context.Context, to *model.NodeR
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	node, err := client.FindSuccessorByTable(ctx, &connect.Request[server.FindRequest]{Msg: &server.FindRequest{Id: id}})
+	node, err := client.FindSuccessorByTable(ctx, connect.NewRequest(&server.FindRequest{Id: id}))
 	if err != nil {
 		return nil, server.HandleError(err)
 	}
@@ -149,7 +148,7 @@ func (c *ApiClient) FindSuccessorByListRPC(ctx context.Context, to *model.NodeRe
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	node, err := client.FindSuccessorByList(ctx, &connect.Request[server.FindRequest]{Msg: &server.FindRequest{Id: id}})
+	node, err := client.FindSuccessorByList(ctx, connect.NewRequest(&server.FindRequest{Id: id}))
 	if err != nil {
 		return nil, server.HandleError(err)
 	}
@@ -163,7 +162,7 @@ func (c *ApiClient) FindClosestPrecedingNodeRPC(ctx context.Context, to *model.N
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	node, err := client.FindClosestPrecedingNode(ctx, &connect.Request[server.FindRequest]{Msg: &server.FindRequest{Id: id}})
+	node, err := client.FindClosestPrecedingNode(ctx, connect.NewRequest(&server.FindRequest{Id: id}))
 	if err != nil {
 		return nil, server.HandleError(err)
 	}
@@ -177,9 +176,9 @@ func (c *ApiClient) NotifyRPC(ctx context.Context, to *model.NodeRef, node *mode
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	_, err = client.Notify(ctx, &connect.Request[server.Node]{Msg: &server.Node{
+	_, err = client.Notify(ctx, connect.NewRequest(&server.Node{
 		Host: node.Host,
-	}},
+	}),
 	)
 	if err != nil {
 		return server.HandleError(err)
@@ -202,7 +201,7 @@ func (c *ApiClient) PutValueInnerRPC(ctx context.Context, to *model.NodeRef, key
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	resp, err := client.PutValueInner(ctx, &connect.Request[server.PutValueInnerRequest]{Msg: &server.PutValueInnerRequest{Key: *key, Value: *value}})
+	resp, err := client.PutValueInner(ctx, connect.NewRequest(&server.PutValueInnerRequest{Key: *key, Value: *value}))
 	if err != nil {
 		return false, server.HandleError(err)
 	}
@@ -216,7 +215,7 @@ func (c *ApiClient) GetValueInnerRPC(ctx context.Context, to *model.NodeRef, key
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	resp, err := client.GetValueInner(ctx, &connect.Request[server.GetValueInnerRequest]{Msg: &server.GetValueInnerRequest{Key: *key}})
+	resp, err := client.GetValueInner(ctx, connect.NewRequest(&server.GetValueInnerRequest{Key: *key}))
 	if err != nil {
 		return nil, false, server.HandleError(err)
 	}
@@ -230,7 +229,7 @@ func (c *ApiClient) DeleteValueInnerRPC(ctx context.Context, to *model.NodeRef, 
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	resp, err := client.DeleteValueInner(ctx, &connect.Request[server.DeleteValueInnerRequest]{Msg: &server.DeleteValueInnerRequest{Key: *key}})
+	resp, err := client.DeleteValueInner(ctx, connect.NewRequest(&server.DeleteValueInnerRequest{Key: *key}))
 	if err != nil {
 		return false, server.HandleError(err)
 	}

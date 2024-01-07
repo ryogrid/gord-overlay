@@ -1,7 +1,7 @@
 package chord
 
 import (
-	"github.com/ryogrid/gord-overlay/pkg/model"
+	"github.com/ryogrid/gord-overlay/model"
 	"github.com/stretchr/testify/assert"
 	"math/big"
 	"testing"

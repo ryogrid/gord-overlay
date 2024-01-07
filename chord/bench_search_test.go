@@ -2,7 +2,7 @@ package chord
 
 import (
 	"context"
-	"github.com/ryogrid/gord-overlay/pkg/model"
+	"github.com/ryogrid/gord-overlay/model"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	_ "net/http/pprof"

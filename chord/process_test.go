@@ -2,8 +2,8 @@ package chord
 
 import (
 	"context"
-	"github.com/ryogrid/gord-overlay/pkg/model"
-	"github.com/ryogrid/gord-overlay/pkg/test"
+	"github.com/ryogrid/gord-overlay/model"
+	"github.com/ryogrid/gord-overlay/test"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
