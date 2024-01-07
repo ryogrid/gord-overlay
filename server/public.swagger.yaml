@@ -1,0 +1,103 @@
+openapi: 3.0.2
+info:
+  title: "server/public.proto"
+  version: "version not set"
+tags:
+  - name: "ExternalService"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /server.ExternalService/DeleteValue:
+    post:
+      operationId: "ExternalService_DeleteValue"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/serverDeleteValueResponse"
+      parameters:
+        - name: "key"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      tags:
+        - "ExternalService"
+  /server.ExternalService/FindHostForKey:
+    post:
+      operationId: "ExternalService_FindHostForKey"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/serverNode"
+      parameters:
+        - name: "key"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      tags:
+        - "ExternalService"
+  /server.ExternalService/GetValue:
+    post:
+      operationId: "ExternalService_GetValue"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/serverGetValueResponse"
+      parameters:
+        - name: "key"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      tags:
+        - "ExternalService"
+  /server.ExternalService/PutValue:
+    post:
+      operationId: "ExternalService_PutValue"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/serverPutValueResponse"
+      parameters:
+        - name: "key"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "value"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      tags:
+        - "ExternalService"
+definitions:
+  serverDeleteValueResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+  serverGetValueResponse:
+    type: "object"
+    properties:
+      value:
+        type: "string"
+      success:
+        type: "boolean"
+  serverNode:
+    type: "object"
+    properties:
+      host:
+        type: "string"
+  serverPutValueResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"

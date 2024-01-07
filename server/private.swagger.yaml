@@ -1,0 +1,194 @@
+openapi: 3.0.2
+info:
+  title: "server/private.proto"
+  version: "version not set"
+tags:
+  - name: "InternalService"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /server.InternalService/DeleteValueInner:
+    post:
+      operationId: "InternalService_DeleteValueInner"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/serverDeleteValueInnerResponse"
+      parameters:
+        - name: "key"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      tags:
+        - "InternalService"
+  /server.InternalService/FindClosestPrecedingNode:
+    post:
+      operationId: "InternalService_FindClosestPrecedingNode"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/serverNode"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+            format: "byte"
+      tags:
+        - "InternalService"
+  /server.InternalService/FindSuccessorByList:
+    post:
+      operationId: "InternalService_FindSuccessorByList"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/serverNode"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+            format: "byte"
+      tags:
+        - "InternalService"
+  /server.InternalService/FindSuccessorByTable:
+    post:
+      operationId: "InternalService_FindSuccessorByTable"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/serverNode"
+      parameters:
+        - name: "id"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+            format: "byte"
+      tags:
+        - "InternalService"
+  /server.InternalService/GetValueInner:
+    post:
+      operationId: "InternalService_GetValueInner"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/serverGetValueInnerResponse"
+      parameters:
+        - name: "key"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      tags:
+        - "InternalService"
+  /server.InternalService/Notify:
+    post:
+      operationId: "InternalService_Notify"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            type: "object"
+            properties:
+      parameters:
+        - name: "host"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      tags:
+        - "InternalService"
+  /server.InternalService/Ping:
+    post:
+      operationId: "InternalService_Ping"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            type: "object"
+            properties:
+      tags:
+        - "InternalService"
+  /server.InternalService/Predecessor:
+    post:
+      operationId: "InternalService_Predecessor"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/serverNode"
+      tags:
+        - "InternalService"
+  /server.InternalService/PutValueInner:
+    post:
+      operationId: "InternalService_PutValueInner"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/serverPutValueInnerResponse"
+      parameters:
+        - name: "key"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "value"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      tags:
+        - "InternalService"
+  /server.InternalService/Successors:
+    post:
+      operationId: "InternalService_Successors"
+      responses:
+        200:
+          description: "A successful response."
+          schema:
+            $ref: "#/definitions/serverNodes"
+      tags:
+        - "InternalService"
+definitions:
+  serverDeleteValueInnerResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
+  serverGetValueInnerResponse:
+    type: "object"
+    properties:
+      value:
+        type: "string"
+      success:
+        type: "boolean"
+  serverNode:
+    type: "object"
+    properties:
+      host:
+        type: "string"
+  serverNodes:
+    type: "object"
+    properties:
+      nodes:
+        type: "array"
+        items:
+          type: "object"
+          $ref: "#/definitions/serverNode"
+  serverPutValueInnerResponse:
+    type: "object"
+    properties:
+      success:
+        type: "boolean"
