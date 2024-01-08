@@ -10,9 +10,16 @@ import (
 
 func checkStabilize(expectedFingerTable []*Finger, actualFingerTable []*Finger) bool {
 	for i, finger := range expectedFingerTable {
+
+		if ptr, ok := actualFingerTable[i].Node.(*LocalNode); ok {
+			if ptr == nil {
+				return false
+			}
+		}
 		if actualFingerTable[i].Node == nil {
 			return false
 		}
+
 		if !finger.Node.Reference().ID.Equals(actualFingerTable[i].Node.Reference().ID) {
 			return false
 		}
