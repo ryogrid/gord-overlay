@@ -6,7 +6,7 @@ services:
     ports:
       - "26040:26040"
       - "26041:26041"
-    command: -l gord1
+    command: -l "gord1:26040"
   gord2:
     build: .
     depends_on:
@@ -14,7 +14,7 @@ services:
     ports:
       - "36040:26040"
       - "36041:26041"
-    command: -l gord2 -n gord1
+    command: -l "gord2:26040" -n "gord1:26040"
   gord3:
     build: .
     depends_on:
@@ -23,4 +23,4 @@ services:
     ports:
       - "46040:26040"
       - "46041:26041"
-    command: -l gord3 -n gord2
+    command: -l "gord3:26040" -n "gord2:26040"

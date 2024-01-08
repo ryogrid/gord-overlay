@@ -3,9 +3,9 @@ package core
 import (
 	"connectrpc.com/connect"
 	"context"
-	"github.com/ryogird/gord-overlay/server"
-	"github.com/ryogird/gord-overlay/serverconnect"
 	"github.com/ryogrid/gord-overlay/chord"
+	"github.com/ryogrid/gord-overlay/server"
+	"github.com/ryogrid/gord-overlay/serverconnect"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

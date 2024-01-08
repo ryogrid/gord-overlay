@@ -3,10 +3,10 @@ package core
 import (
 	"connectrpc.com/connect"
 	"context"
-	"github.com/ryogird/gord-overlay/server"
-	"github.com/ryogird/gord-overlay/serverconnect"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/model"
+	"github.com/ryogrid/gord-overlay/server"
+	"github.com/ryogrid/gord-overlay/serverconnect"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"net/http"

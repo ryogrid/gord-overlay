@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/ryogird/gord-overlay/core"
 	"github.com/ryogrid/gord-overlay/chord"
+	"github.com/ryogrid/gord-overlay/core"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"net"
