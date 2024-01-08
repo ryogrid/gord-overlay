@@ -66,7 +66,7 @@ func (g *ExternalServer) Shutdown() {
 
 // FindHostForKey search for a given key's node.
 // It is implemented for PublicService.
-func (g *ExternalServer) ExternalServiceFindHostForKey(ctx context.Context, req api_external.ExternalServiceFindHostForKeyReq) (*api_external.ServerNode, error) {
+func (g *ExternalServer) ExternalServiceFindHostForKey(ctx context.Context, req *api_external.ExternalServiceFindHostForKeyReq) (*api_external.ServerNode, error) {
 	//func (g *ExternalServer) FindHostForKey(ctx context.Context, req *FindHostRequest) (*Node, error) {
 	id := model.NewHashID(req.Key.Value)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
@@ -79,7 +79,7 @@ func (g *ExternalServer) ExternalServiceFindHostForKey(ctx context.Context, req 
 	}, nil
 }
 
-func (g *ExternalServer) ExternalServicePutValue(ctx context.Context, req api_external.ExternalServicePutValueReq) (*api_external.ServerPutValueResponse, error) {
+func (g *ExternalServer) ExternalServicePutValue(ctx context.Context, req *api_external.ExternalServicePutValueReq) (*api_external.ServerPutValueResponse, error) {
 	//func (g *ExternalServer) PutValue(ctx context.Context, req *PutValueRequest) (*PutValueResponse, error) {
 	id := model.NewHashID(req.Key.Value)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
@@ -98,7 +98,7 @@ func (g *ExternalServer) ExternalServicePutValue(ctx context.Context, req api_ex
 	}, nil
 }
 
-func (g *ExternalServer) ExternalServiceGetValue(ctx context.Context, req api_external.ExternalServiceGetValueReq) (*api_external.ServerGetValueResponse, error) {
+func (g *ExternalServer) ExternalServiceGetValue(ctx context.Context, req *api_external.ExternalServiceGetValueReq) (*api_external.ServerGetValueResponse, error) {
 	//func (g *ExternalServer) GetValue(ctx context.Context, req *GetValueRequest) (*GetValueResponse, error) {
 	id := model.NewHashID(req.Key.Value)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
@@ -118,7 +118,7 @@ func (g *ExternalServer) ExternalServiceGetValue(ctx context.Context, req api_ex
 	}, nil
 }
 
-func (g *ExternalServer) ExternalServiceDeleteValue(ctx context.Context, req api_external.ExternalServiceDeleteValueReq) (*api_external.ServerDeleteValueResponse, error) {
+func (g *ExternalServer) ExternalServiceDeleteValue(ctx context.Context, req *api_external.ExternalServiceDeleteValueReq) (*api_external.ServerDeleteValueResponse, error) {
 	//func (g *ExternalServer) DeleteValue(ctx context.Context, req *api_external.DeleteValueRequest) (*api_external.ServerDeleteValueResponse, error) {
 	id := model.NewHashID(req.Key.Value)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
