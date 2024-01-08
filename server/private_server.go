@@ -2,16 +2,13 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/ryogrid/gord-overlay/api_internal"
 	"github.com/ryogrid/gord-overlay/chord"
 	log "github.com/sirupsen/logrus"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
-	"net"
+	"net/http"
 	"time"
 )
 
@@ -71,24 +68,29 @@ func NewChordServer(process *chord.Process, port string, opts ...InternalServerO
 	}
 }
 
-func (is *InternalServer) newRpcServer() *grpc.Server {
-	// TODO: need to implement InternalServer::newRpcServer method
-	s := grpc.NewServer()
-	reflection.Register(s)
-	RegisterInternalServiceServer(s, is)
+func (is *InternalServer) newRpcServer() *api_internal.Server {
+	//s := grpc.NewServer()
+	//reflection.Register(s)
+	//RegisterInternalServiceServer(s, is)
+
+	s, err := api_internal.NewServer(is)
+	if err != nil {
+		panic(err)
+	}
 	return s
 }
 
 // Run runs chord server.
 func (is *InternalServer) Run(ctx context.Context) {
 	go func() {
-		lis, err := net.Listen("tcp", fmt.Sprintf("%s:%s", is.opt.host, is.port))
+		//lis, err := net.Listen("tcp", fmt.Sprintf(":%s", g.port))
+		//if err != nil {
+		//	log.Fatalf("failed to run server. reason: %#v", err)
+		//}
+		rpcServer := is.newRpcServer()
+		err := http.ListenAndServe("0.0.0.0:"+is.port, rpcServer)
 		if err != nil {
-			log.Fatalf("failed to run chord server. reason: %#v", err)
-		}
-		grpcServer := is.newRpcServer()
-		if err := grpcServer.Serve(lis); err != nil {
-			log.Fatalf("failed to run chord server. reason: %#v", err)
+			panic(err)
 		}
 	}()
 	if err := is.process.Start(ctx, is.opt.processOpts...); err != nil {
@@ -152,8 +154,8 @@ func (is *InternalServer) InternalServicePredecessor(ctx context.Context) (*api_
 	return nil, status.Errorf(codes.NotFound, "server: predecessor is not set.")
 }
 
-// InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) (*ServerNode, error)
-func (is *InternalServer) FindSuccessorByTable(ctx context.Context, req *api_internal.FindRequest) (*api_internal.ServerNode, error) {
+func (is *InternalServer) InternalServiceFindSuccessorByTable(ctx context.Context, params api_internal.InternalServiceFindSuccessorByTableParams) (*api_internal.ServerNode, error) {
+//func (is *InternalServer) FindSuccessorByTable(ctx context.Context, req *api_internal.FindRequest) (*api_internal.ServerNode, error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -180,8 +182,8 @@ func (is *InternalServer) InternalServiceFindSuccessorByList(ctx context.Context
 	}, nil
 }
 
-// InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) (*ServerNode, error)
-func (is *InternalServer) FindClosestPrecedingNode(ctx context.Context, req *api_internal.FindRequest) (*api_internal.ServerNode, error) {
+func (is *InternalServer) InternalServiceFindClosestPrecedingNode(ctx context.Context, params api_internal.InternalServiceFindClosestPrecedingNodeParams) (*api_internal.ServerNode, error)
+//func (is *InternalServer) FindClosestPrecedingNode(ctx context.Context, req *api_internal.FindRequest) (*api_internal.ServerNode, error) {
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}

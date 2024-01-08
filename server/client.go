@@ -11,8 +11,6 @@ import (
 	"time"
 )
 
-// TODO: need to modify eatch method codes (client.go)
-
 type ApiClient struct {
 	hostNode   *chord.LocalNode
 	serverPort string
