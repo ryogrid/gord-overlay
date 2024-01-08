@@ -54,7 +54,7 @@ func (g *ExternalServer) Run() {
 		path, handler := serverconnect.NewExternalServiceHandler(g)
 		mux.Handle(path, handler)
 		http.ListenAndServe(
-			"127.0.0.1",
+			"127.0.0.1"+":"+g.port,
 			mux,
 			//// Use h2c so we can serve HTTP/2 without TLS.
 			//h2c.NewHandler(mux, &http2.Server{}),

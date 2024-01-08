@@ -95,7 +95,7 @@ func (is *InternalServer) Run(ctx context.Context) {
 		path, handler := serverconnect.NewInternalServiceHandler(is)
 		mux.Handle(path, handler)
 		http.ListenAndServe(
-			"127.0.0.1",
+			"127.0.0.1"+":"+is.port,
 			mux,
 			//// Use h2c so we can serve HTTP/2 without TLS.
 			//h2c.NewHandler(mux, &http2.Server{}),
