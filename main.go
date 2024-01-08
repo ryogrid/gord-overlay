@@ -58,7 +58,7 @@ func main() {
 					chord.NewRemoteNode(existNodeHostAndPort, process.Transport),
 				)))
 			}
-			ins := core.NewChordServer(process, hostAndPortBase, opts...)
+			ins := core.NewChordServer(process, internalServerPort, opts...)
 			//basePortNum, err := strconv.Atoi(basePort)
 			//if err != nil {
 			//	fmt.Println("invalid basePort. err = %#v", err)
