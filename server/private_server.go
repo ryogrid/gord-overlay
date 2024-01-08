@@ -217,6 +217,7 @@ func (is *InternalServer) InternalServicePutValueInner(ctx context.Context, para
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
+	fmt.Println("InternalServer::InternalServicePutValueInner: ", is.process.Host, params.Key.Value, params.Value.Value)
 	success, err := is.process.PutValue(ctx, &params.Key.Value, &params.Value.Value)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: put value failed. reason = %#v", err)
@@ -232,7 +233,9 @@ func (is *InternalServer) InternalServiceGetValueInner(ctx context.Context, para
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
+	fmt.Println("InternalServer::InternalServiceGetValueInner: ", is.process.Host, params.Key.Value)
 	val, success, err := is.process.GetValue(ctx, &params.Key.Value)
+	//fmt.Println("InternalServer::InternalServiceGetValueInner2: ", *val, success, err)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: get value failed. reason = %#v", err)
 	}

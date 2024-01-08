@@ -88,6 +88,7 @@ func (g *ExternalServer) ExternalServicePutValue(ctx context.Context, req *api_e
 		return nil, err
 	}
 	// TODO: need to consider repllication (ExternalServer::PutValue)
+	fmt.Println("ExternalServicePutValue: ", s, s.Reference().Host, req.Key.Value, req.Value.Value)
 	success, err2 := s.PutValue(ctx, &req.Key.Value, &req.Value.Value)
 	if err2 != nil {
 		log.Errorf("External PutValue failed. reason: %#v", err)
@@ -107,7 +108,9 @@ func (g *ExternalServer) ExternalServiceGetValue(ctx context.Context, req *api_e
 		return nil, err
 	}
 	// TODO: need to consider repllication (ExternalServer::GetValue)
+	fmt.Println("ExternalServiceGetValue: ", s, s.Reference().Host, req.Key.Value)
 	val, success, err2 := s.GetValue(ctx, &req.Key.Value)
+	fmt.Println("ExternalServiceGetValue2: ", *val, success, err2)
 	if err2 != nil {
 		log.Errorf("External GetValue failed. reason: %#v", err)
 		return nil, err2

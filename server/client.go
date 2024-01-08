@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"github.com/ryogird/gord-overlay/api_internal"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/pkg/model"
@@ -175,7 +176,8 @@ func (c *ApiClient) PutValueInnerRPC(ctx context.Context, to *model.NodeRef, key
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	resp, err := client.InternalServicePutValueInner(ctx, &api_internal.InternalServicePutValueInnerReq{Key: api_internal.OptString{Value: *key}, Value: api_internal.NewOptString(*value)})
+	fmt.Println("PutValueInnerRPC: ", to.Host, *key, *value)
+	resp, err := client.InternalServicePutValueInner(ctx, &api_internal.InternalServicePutValueInnerReq{Key: api_internal.NewOptString(*key), Value: api_internal.NewOptString(*value)})
 	if err != nil {
 		return false, handleError(err)
 	}

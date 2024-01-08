@@ -2,6 +2,7 @@ package chord
 
 import (
 	"context"
+	"fmt"
 	"github.com/ryogrid/gord-overlay/pkg/model"
 )
 
@@ -52,6 +53,7 @@ func (r *RemoteNode) Notify(ctx context.Context, node RingNode) error {
 }
 
 func (r *RemoteNode) PutValue(ctx context.Context, key *string, value *string) (bool, error) {
+	fmt.Println("RemoteNode::PutValue: ", r.NodeRef.Host, *key, *value)
 	return r.PutValueInnerRPC(ctx, r.NodeRef, key, value)
 }
 
