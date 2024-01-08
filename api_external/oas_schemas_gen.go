@@ -63,6 +63,73 @@ func (s *ErrorStatusCode) SetResponse(val Error) {
 	s.Response = val
 }
 
+type ExternalServiceDeleteValueReq struct {
+	Key OptString `json:"key"`
+}
+
+// GetKey returns the value of Key.
+func (s *ExternalServiceDeleteValueReq) GetKey() OptString {
+	return s.Key
+}
+
+// SetKey sets the value of Key.
+func (s *ExternalServiceDeleteValueReq) SetKey(val OptString) {
+	s.Key = val
+}
+
+type ExternalServiceFindHostForKeyReq struct {
+	Key OptString `json:"key"`
+}
+
+// GetKey returns the value of Key.
+func (s *ExternalServiceFindHostForKeyReq) GetKey() OptString {
+	return s.Key
+}
+
+// SetKey sets the value of Key.
+func (s *ExternalServiceFindHostForKeyReq) SetKey(val OptString) {
+	s.Key = val
+}
+
+type ExternalServiceGetValueReq struct {
+	Key OptString `json:"key"`
+}
+
+// GetKey returns the value of Key.
+func (s *ExternalServiceGetValueReq) GetKey() OptString {
+	return s.Key
+}
+
+// SetKey sets the value of Key.
+func (s *ExternalServiceGetValueReq) SetKey(val OptString) {
+	s.Key = val
+}
+
+type ExternalServicePutValueReq struct {
+	Key   OptString `json:"key"`
+	Value OptString `json:"value"`
+}
+
+// GetKey returns the value of Key.
+func (s *ExternalServicePutValueReq) GetKey() OptString {
+	return s.Key
+}
+
+// GetValue returns the value of Value.
+func (s *ExternalServicePutValueReq) GetValue() OptString {
+	return s.Value
+}
+
+// SetKey sets the value of Key.
+func (s *ExternalServicePutValueReq) SetKey(val OptString) {
+	s.Key = val
+}
+
+// SetValue sets the value of Value.
+func (s *ExternalServicePutValueReq) SetValue(val OptString) {
+	s.Value = val
+}
+
 // NewOptBool returns new OptBool with value set to v.
 func NewOptBool(v bool) OptBool {
 	return OptBool{

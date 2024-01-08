@@ -25,12 +25,15 @@ paths:
             application/json:
               schema:
                 $ref: "#/definitions/Error"
-      parameters:
-        - name: "key"
-          in: "query"
-          required: false
-          schema:
-            type: "string"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                key:
+                  type: "string"
       tags:
         - "InternalService"
   /server.InternalService/FindClosestPrecedingNode:
@@ -49,13 +52,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/definitions/Error"
-      parameters:
-        - name: "id"
-          in: "query"
-          required: false
-          schema:
-            type: "string"
-            format: "byte"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                id:
+                  type: "string"
+                  format: "byte"
       tags:
         - "InternalService"
   /server.InternalService/FindSuccessorByList:
@@ -74,13 +80,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/definitions/Error"
-      parameters:
-        - name: "id"
-          in: "query"
-          required: false
-          schema:
-            type: "string"
-            format: "byte"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                id:
+                  type: "string"
+                  format: "byte"
       tags:
         - "InternalService"
   /server.InternalService/FindSuccessorByTable:
@@ -99,13 +108,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/definitions/Error"
-      parameters:
-        - name: "id"
-          in: "query"
-          required: false
-          schema:
-            type: "string"
-            format: "byte"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                id:
+                  type: "string"
+                  format: "byte"
       tags:
         - "InternalService"
   /server.InternalService/GetValueInner:
@@ -124,12 +136,15 @@ paths:
             application/json:
               schema:
                 $ref: "#/definitions/Error"
-      parameters:
-        - name: "key"
-          in: "query"
-          required: false
-          schema:
-            type: "string"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                key:
+                  type: "string"
       tags:
         - "InternalService"
   /server.InternalService/Notify:
@@ -148,12 +163,15 @@ paths:
             application/json:
               schema:
                 $ref: "#/definitions/Error"
-      parameters:
-        - name: "host"
-          in: "query"
-          required: false
-          schema:
-            type: "string"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                host:
+                  type: "string"
       tags:
         - "InternalService"
   /server.InternalService/Ping:
@@ -208,17 +226,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/definitions/Error"
-      parameters:
-        - name: "key"
-          in: "query"
-          required: false
-          schema:
-            type: "string"
-        - name: "value"
-          in: "query"
-          required: false
-          schema:
-            type: "string"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                key:
+                  type: "string"
+                value:
+                  type: "string"
       tags:
         - "InternalService"
   /server.InternalService/Successors:

@@ -66,6 +66,115 @@ func (s *ErrorStatusCode) SetResponse(val Error) {
 // InternalServiceDeleteValueInnerOK is response for InternalServiceDeleteValueInner operation.
 type InternalServiceDeleteValueInnerOK struct{}
 
+type InternalServiceDeleteValueInnerReq struct {
+	Key OptString `json:"key"`
+}
+
+// GetKey returns the value of Key.
+func (s *InternalServiceDeleteValueInnerReq) GetKey() OptString {
+	return s.Key
+}
+
+// SetKey sets the value of Key.
+func (s *InternalServiceDeleteValueInnerReq) SetKey(val OptString) {
+	s.Key = val
+}
+
+type InternalServiceFindClosestPrecedingNodeReq struct {
+	ID []byte `json:"id"`
+}
+
+// GetID returns the value of ID.
+func (s *InternalServiceFindClosestPrecedingNodeReq) GetID() []byte {
+	return s.ID
+}
+
+// SetID sets the value of ID.
+func (s *InternalServiceFindClosestPrecedingNodeReq) SetID(val []byte) {
+	s.ID = val
+}
+
+type InternalServiceFindSuccessorByListReq struct {
+	ID []byte `json:"id"`
+}
+
+// GetID returns the value of ID.
+func (s *InternalServiceFindSuccessorByListReq) GetID() []byte {
+	return s.ID
+}
+
+// SetID sets the value of ID.
+func (s *InternalServiceFindSuccessorByListReq) SetID(val []byte) {
+	s.ID = val
+}
+
+type InternalServiceFindSuccessorByTableReq struct {
+	ID []byte `json:"id"`
+}
+
+// GetID returns the value of ID.
+func (s *InternalServiceFindSuccessorByTableReq) GetID() []byte {
+	return s.ID
+}
+
+// SetID sets the value of ID.
+func (s *InternalServiceFindSuccessorByTableReq) SetID(val []byte) {
+	s.ID = val
+}
+
+type InternalServiceGetValueInnerReq struct {
+	Key OptString `json:"key"`
+}
+
+// GetKey returns the value of Key.
+func (s *InternalServiceGetValueInnerReq) GetKey() OptString {
+	return s.Key
+}
+
+// SetKey sets the value of Key.
+func (s *InternalServiceGetValueInnerReq) SetKey(val OptString) {
+	s.Key = val
+}
+
+type InternalServiceNotifyReq struct {
+	Host OptString `json:"host"`
+}
+
+// GetHost returns the value of Host.
+func (s *InternalServiceNotifyReq) GetHost() OptString {
+	return s.Host
+}
+
+// SetHost sets the value of Host.
+func (s *InternalServiceNotifyReq) SetHost(val OptString) {
+	s.Host = val
+}
+
+type InternalServicePutValueInnerReq struct {
+	Key   OptString `json:"key"`
+	Value OptString `json:"value"`
+}
+
+// GetKey returns the value of Key.
+func (s *InternalServicePutValueInnerReq) GetKey() OptString {
+	return s.Key
+}
+
+// GetValue returns the value of Value.
+func (s *InternalServicePutValueInnerReq) GetValue() OptString {
+	return s.Value
+}
+
+// SetKey sets the value of Key.
+func (s *InternalServicePutValueInnerReq) SetKey(val OptString) {
+	s.Key = val
+}
+
+// SetValue sets the value of Value.
+func (s *InternalServicePutValueInnerReq) SetValue(val OptString) {
+	s.Value = val
+}
+
 // NewOptBool returns new OptBool with value set to v.
 func NewOptBool(v bool) OptBool {
 	return OptBool{

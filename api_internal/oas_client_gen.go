@@ -15,7 +15,6 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.19.0"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
@@ -26,27 +25,27 @@ type Invoker interface {
 	// InternalServiceDeleteValueInner invokes InternalService_DeleteValueInner operation.
 	//
 	// POST /server.InternalService/DeleteValueInner
-	InternalServiceDeleteValueInner(ctx context.Context, params InternalServiceDeleteValueInnerParams) error
+	InternalServiceDeleteValueInner(ctx context.Context, request *InternalServiceDeleteValueInnerReq) error
 	// InternalServiceFindClosestPrecedingNode invokes InternalService_FindClosestPrecedingNode operation.
 	//
 	// POST /server.InternalService/FindClosestPrecedingNode
-	InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) (*ServerNode, error)
+	InternalServiceFindClosestPrecedingNode(ctx context.Context, request *InternalServiceFindClosestPrecedingNodeReq) (*ServerNode, error)
 	// InternalServiceFindSuccessorByList invokes InternalService_FindSuccessorByList operation.
 	//
 	// POST /server.InternalService/FindSuccessorByList
-	InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) (*ServerNode, error)
+	InternalServiceFindSuccessorByList(ctx context.Context, request *InternalServiceFindSuccessorByListReq) (*ServerNode, error)
 	// InternalServiceFindSuccessorByTable invokes InternalService_FindSuccessorByTable operation.
 	//
 	// POST /server.InternalService/FindSuccessorByTable
-	InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) (*ServerNode, error)
+	InternalServiceFindSuccessorByTable(ctx context.Context, request *InternalServiceFindSuccessorByTableReq) (*ServerNode, error)
 	// InternalServiceGetValueInner invokes InternalService_GetValueInner operation.
 	//
 	// POST /server.InternalService/GetValueInner
-	InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) (*ServerGetValueInnerResponse, error)
+	InternalServiceGetValueInner(ctx context.Context, request *InternalServiceGetValueInnerReq) (*ServerGetValueInnerResponse, error)
 	// InternalServiceNotify invokes InternalService_Notify operation.
 	//
 	// POST /server.InternalService/Notify
-	InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) (*ServerSuccessResponse, error)
+	InternalServiceNotify(ctx context.Context, request *InternalServiceNotifyReq) (*ServerSuccessResponse, error)
 	// InternalServicePing invokes InternalService_Ping operation.
 	//
 	// POST /server.InternalService/Ping
@@ -58,7 +57,7 @@ type Invoker interface {
 	// InternalServicePutValueInner invokes InternalService_PutValueInner operation.
 	//
 	// POST /server.InternalService/PutValueInner
-	InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) (*ServerPutValueInnerResponse, error)
+	InternalServicePutValueInner(ctx context.Context, request *InternalServicePutValueInnerReq) (*ServerPutValueInnerResponse, error)
 	// InternalServiceSuccessors invokes InternalService_Successors operation.
 	//
 	// POST /server.InternalService/Successors
@@ -120,12 +119,12 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 // InternalServiceDeleteValueInner invokes InternalService_DeleteValueInner operation.
 //
 // POST /server.InternalService/DeleteValueInner
-func (c *Client) InternalServiceDeleteValueInner(ctx context.Context, params InternalServiceDeleteValueInnerParams) error {
-	_, err := c.sendInternalServiceDeleteValueInner(ctx, params)
+func (c *Client) InternalServiceDeleteValueInner(ctx context.Context, request *InternalServiceDeleteValueInnerReq) error {
+	_, err := c.sendInternalServiceDeleteValueInner(ctx, request)
 	return err
 }
 
-func (c *Client) sendInternalServiceDeleteValueInner(ctx context.Context, params InternalServiceDeleteValueInnerParams) (res *InternalServiceDeleteValueInnerOK, err error) {
+func (c *Client) sendInternalServiceDeleteValueInner(ctx context.Context, request *InternalServiceDeleteValueInnerReq) (res *InternalServiceDeleteValueInnerOK, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_DeleteValueInner"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -165,31 +164,13 @@ func (c *Client) sendInternalServiceDeleteValueInner(ctx context.Context, params
 	pathParts[0] = "/server.InternalService/DeleteValueInner"
 	uri.AddPathParts(u, pathParts[:]...)
 
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
-	{
-		// Encode "key" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "key",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := params.Key.Get(); ok {
-				return e.EncodeValue(conv.StringToString(val))
-			}
-			return nil
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	u.RawQuery = q.Values().Encode()
-
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeInternalServiceDeleteValueInnerRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
 
 	stage = "SendRequest"
@@ -211,12 +192,12 @@ func (c *Client) sendInternalServiceDeleteValueInner(ctx context.Context, params
 // InternalServiceFindClosestPrecedingNode invokes InternalService_FindClosestPrecedingNode operation.
 //
 // POST /server.InternalService/FindClosestPrecedingNode
-func (c *Client) InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) (*ServerNode, error) {
-	res, err := c.sendInternalServiceFindClosestPrecedingNode(ctx, params)
+func (c *Client) InternalServiceFindClosestPrecedingNode(ctx context.Context, request *InternalServiceFindClosestPrecedingNodeReq) (*ServerNode, error) {
+	res, err := c.sendInternalServiceFindClosestPrecedingNode(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendInternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) (res *ServerNode, err error) {
+func (c *Client) sendInternalServiceFindClosestPrecedingNode(ctx context.Context, request *InternalServiceFindClosestPrecedingNodeReq) (res *ServerNode, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_FindClosestPrecedingNode"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -256,28 +237,13 @@ func (c *Client) sendInternalServiceFindClosestPrecedingNode(ctx context.Context
 	pathParts[0] = "/server.InternalService/FindClosestPrecedingNode"
 	uri.AddPathParts(u, pathParts[:]...)
 
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
-	{
-		// Encode "id" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "id",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			return e.EncodeValue(conv.BytesToString(params.ID))
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	u.RawQuery = q.Values().Encode()
-
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeInternalServiceFindClosestPrecedingNodeRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
 
 	stage = "SendRequest"
@@ -299,12 +265,12 @@ func (c *Client) sendInternalServiceFindClosestPrecedingNode(ctx context.Context
 // InternalServiceFindSuccessorByList invokes InternalService_FindSuccessorByList operation.
 //
 // POST /server.InternalService/FindSuccessorByList
-func (c *Client) InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) (*ServerNode, error) {
-	res, err := c.sendInternalServiceFindSuccessorByList(ctx, params)
+func (c *Client) InternalServiceFindSuccessorByList(ctx context.Context, request *InternalServiceFindSuccessorByListReq) (*ServerNode, error) {
+	res, err := c.sendInternalServiceFindSuccessorByList(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendInternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) (res *ServerNode, err error) {
+func (c *Client) sendInternalServiceFindSuccessorByList(ctx context.Context, request *InternalServiceFindSuccessorByListReq) (res *ServerNode, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_FindSuccessorByList"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -344,28 +310,13 @@ func (c *Client) sendInternalServiceFindSuccessorByList(ctx context.Context, par
 	pathParts[0] = "/server.InternalService/FindSuccessorByList"
 	uri.AddPathParts(u, pathParts[:]...)
 
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
-	{
-		// Encode "id" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "id",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			return e.EncodeValue(conv.BytesToString(params.ID))
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	u.RawQuery = q.Values().Encode()
-
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeInternalServiceFindSuccessorByListRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
 
 	stage = "SendRequest"
@@ -387,12 +338,12 @@ func (c *Client) sendInternalServiceFindSuccessorByList(ctx context.Context, par
 // InternalServiceFindSuccessorByTable invokes InternalService_FindSuccessorByTable operation.
 //
 // POST /server.InternalService/FindSuccessorByTable
-func (c *Client) InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) (*ServerNode, error) {
-	res, err := c.sendInternalServiceFindSuccessorByTable(ctx, params)
+func (c *Client) InternalServiceFindSuccessorByTable(ctx context.Context, request *InternalServiceFindSuccessorByTableReq) (*ServerNode, error) {
+	res, err := c.sendInternalServiceFindSuccessorByTable(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendInternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) (res *ServerNode, err error) {
+func (c *Client) sendInternalServiceFindSuccessorByTable(ctx context.Context, request *InternalServiceFindSuccessorByTableReq) (res *ServerNode, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_FindSuccessorByTable"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -432,28 +383,13 @@ func (c *Client) sendInternalServiceFindSuccessorByTable(ctx context.Context, pa
 	pathParts[0] = "/server.InternalService/FindSuccessorByTable"
 	uri.AddPathParts(u, pathParts[:]...)
 
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
-	{
-		// Encode "id" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "id",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			return e.EncodeValue(conv.BytesToString(params.ID))
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	u.RawQuery = q.Values().Encode()
-
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeInternalServiceFindSuccessorByTableRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
 
 	stage = "SendRequest"
@@ -475,12 +411,12 @@ func (c *Client) sendInternalServiceFindSuccessorByTable(ctx context.Context, pa
 // InternalServiceGetValueInner invokes InternalService_GetValueInner operation.
 //
 // POST /server.InternalService/GetValueInner
-func (c *Client) InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) (*ServerGetValueInnerResponse, error) {
-	res, err := c.sendInternalServiceGetValueInner(ctx, params)
+func (c *Client) InternalServiceGetValueInner(ctx context.Context, request *InternalServiceGetValueInnerReq) (*ServerGetValueInnerResponse, error) {
+	res, err := c.sendInternalServiceGetValueInner(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendInternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) (res *ServerGetValueInnerResponse, err error) {
+func (c *Client) sendInternalServiceGetValueInner(ctx context.Context, request *InternalServiceGetValueInnerReq) (res *ServerGetValueInnerResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_GetValueInner"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -520,31 +456,13 @@ func (c *Client) sendInternalServiceGetValueInner(ctx context.Context, params In
 	pathParts[0] = "/server.InternalService/GetValueInner"
 	uri.AddPathParts(u, pathParts[:]...)
 
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
-	{
-		// Encode "key" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "key",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := params.Key.Get(); ok {
-				return e.EncodeValue(conv.StringToString(val))
-			}
-			return nil
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	u.RawQuery = q.Values().Encode()
-
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeInternalServiceGetValueInnerRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
 
 	stage = "SendRequest"
@@ -566,12 +484,12 @@ func (c *Client) sendInternalServiceGetValueInner(ctx context.Context, params In
 // InternalServiceNotify invokes InternalService_Notify operation.
 //
 // POST /server.InternalService/Notify
-func (c *Client) InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) (*ServerSuccessResponse, error) {
-	res, err := c.sendInternalServiceNotify(ctx, params)
+func (c *Client) InternalServiceNotify(ctx context.Context, request *InternalServiceNotifyReq) (*ServerSuccessResponse, error) {
+	res, err := c.sendInternalServiceNotify(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendInternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) (res *ServerSuccessResponse, err error) {
+func (c *Client) sendInternalServiceNotify(ctx context.Context, request *InternalServiceNotifyReq) (res *ServerSuccessResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_Notify"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -611,31 +529,13 @@ func (c *Client) sendInternalServiceNotify(ctx context.Context, params InternalS
 	pathParts[0] = "/server.InternalService/Notify"
 	uri.AddPathParts(u, pathParts[:]...)
 
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
-	{
-		// Encode "host" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "host",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := params.Host.Get(); ok {
-				return e.EncodeValue(conv.StringToString(val))
-			}
-			return nil
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	u.RawQuery = q.Values().Encode()
-
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeInternalServiceNotifyRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
 
 	stage = "SendRequest"
@@ -797,12 +697,12 @@ func (c *Client) sendInternalServicePredecessor(ctx context.Context) (res *Serve
 // InternalServicePutValueInner invokes InternalService_PutValueInner operation.
 //
 // POST /server.InternalService/PutValueInner
-func (c *Client) InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) (*ServerPutValueInnerResponse, error) {
-	res, err := c.sendInternalServicePutValueInner(ctx, params)
+func (c *Client) InternalServicePutValueInner(ctx context.Context, request *InternalServicePutValueInnerReq) (*ServerPutValueInnerResponse, error) {
+	res, err := c.sendInternalServicePutValueInner(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendInternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) (res *ServerPutValueInnerResponse, err error) {
+func (c *Client) sendInternalServicePutValueInner(ctx context.Context, request *InternalServicePutValueInnerReq) (res *ServerPutValueInnerResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("InternalService_PutValueInner"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -842,48 +742,13 @@ func (c *Client) sendInternalServicePutValueInner(ctx context.Context, params In
 	pathParts[0] = "/server.InternalService/PutValueInner"
 	uri.AddPathParts(u, pathParts[:]...)
 
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
-	{
-		// Encode "key" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "key",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := params.Key.Get(); ok {
-				return e.EncodeValue(conv.StringToString(val))
-			}
-			return nil
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	{
-		// Encode "value" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "value",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := params.Value.Get(); ok {
-				return e.EncodeValue(conv.StringToString(val))
-			}
-			return nil
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	u.RawQuery = q.Values().Encode()
-
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeInternalServicePutValueInnerRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
 
 	stage = "SendRequest"

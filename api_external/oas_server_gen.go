@@ -11,19 +11,19 @@ type Handler interface {
 	// ExternalServiceDeleteValue implements ExternalService_DeleteValue operation.
 	//
 	// POST /server.ExternalService/DeleteValue
-	ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) (*ServerDeleteValueResponse, error)
+	ExternalServiceDeleteValue(ctx context.Context, req *ExternalServiceDeleteValueReq) (*ServerDeleteValueResponse, error)
 	// ExternalServiceFindHostForKey implements ExternalService_FindHostForKey operation.
 	//
 	// POST /server.ExternalService/FindHostForKey
-	ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) (*ServerNode, error)
+	ExternalServiceFindHostForKey(ctx context.Context, req *ExternalServiceFindHostForKeyReq) (*ServerNode, error)
 	// ExternalServiceGetValue implements ExternalService_GetValue operation.
 	//
 	// POST /server.ExternalService/GetValue
-	ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) (*ServerGetValueResponse, error)
+	ExternalServiceGetValue(ctx context.Context, req *ExternalServiceGetValueReq) (*ServerGetValueResponse, error)
 	// ExternalServicePutValue implements ExternalService_PutValue operation.
 	//
 	// POST /server.ExternalService/PutValue
-	ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) (*ServerPutValueResponse, error)
+	ExternalServicePutValue(ctx context.Context, req *ExternalServicePutValueReq) (*ServerPutValueResponse, error)
 	// NewError creates *ErrorStatusCode from error returned by handler.
 	//
 	// Used for common default response.

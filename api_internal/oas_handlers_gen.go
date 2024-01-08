@@ -60,16 +60,21 @@ func (s *Server) handleInternalServiceDeleteValueInnerRequest(args [0]string, ar
 			ID:   "InternalService_DeleteValueInner",
 		}
 	)
-	params, err := decodeInternalServiceDeleteValueInnerParams(args, argsEscaped, r)
+	request, close, err := s.decodeInternalServiceDeleteValueInnerRequest(r)
 	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
+		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeParams", err)
+		recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
 
 	var response *InternalServiceDeleteValueInnerOK
 	if m := s.cfg.Middleware; m != nil {
@@ -78,19 +83,14 @@ func (s *Server) handleInternalServiceDeleteValueInnerRequest(args [0]string, ar
 			OperationName:    "InternalServiceDeleteValueInner",
 			OperationSummary: "",
 			OperationID:      "InternalService_DeleteValueInner",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "key",
-					In:   "query",
-				}: params.Key,
-			},
-			Raw: r,
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
-			Request  = struct{}
-			Params   = InternalServiceDeleteValueInnerParams
+			Request  = *InternalServiceDeleteValueInnerReq
+			Params   = struct{}
 			Response = *InternalServiceDeleteValueInnerOK
 		)
 		response, err = middleware.HookMiddleware[
@@ -100,14 +100,14 @@ func (s *Server) handleInternalServiceDeleteValueInnerRequest(args [0]string, ar
 		](
 			m,
 			mreq,
-			unpackInternalServiceDeleteValueInnerParams,
+			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				err = s.h.InternalServiceDeleteValueInner(ctx, params)
+				err = s.h.InternalServiceDeleteValueInner(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		err = s.h.InternalServiceDeleteValueInner(ctx, params)
+		err = s.h.InternalServiceDeleteValueInner(ctx, request)
 	}
 	if err != nil {
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -175,16 +175,21 @@ func (s *Server) handleInternalServiceFindClosestPrecedingNodeRequest(args [0]st
 			ID:   "InternalService_FindClosestPrecedingNode",
 		}
 	)
-	params, err := decodeInternalServiceFindClosestPrecedingNodeParams(args, argsEscaped, r)
+	request, close, err := s.decodeInternalServiceFindClosestPrecedingNodeRequest(r)
 	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
+		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeParams", err)
+		recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
 
 	var response *ServerNode
 	if m := s.cfg.Middleware; m != nil {
@@ -193,19 +198,14 @@ func (s *Server) handleInternalServiceFindClosestPrecedingNodeRequest(args [0]st
 			OperationName:    "InternalServiceFindClosestPrecedingNode",
 			OperationSummary: "",
 			OperationID:      "InternalService_FindClosestPrecedingNode",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "id",
-					In:   "query",
-				}: params.ID,
-			},
-			Raw: r,
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
-			Request  = struct{}
-			Params   = InternalServiceFindClosestPrecedingNodeParams
+			Request  = *InternalServiceFindClosestPrecedingNodeReq
+			Params   = struct{}
 			Response = *ServerNode
 		)
 		response, err = middleware.HookMiddleware[
@@ -215,14 +215,14 @@ func (s *Server) handleInternalServiceFindClosestPrecedingNodeRequest(args [0]st
 		](
 			m,
 			mreq,
-			unpackInternalServiceFindClosestPrecedingNodeParams,
+			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.InternalServiceFindClosestPrecedingNode(ctx, params)
+				response, err = s.h.InternalServiceFindClosestPrecedingNode(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.InternalServiceFindClosestPrecedingNode(ctx, params)
+		response, err = s.h.InternalServiceFindClosestPrecedingNode(ctx, request)
 	}
 	if err != nil {
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -290,16 +290,21 @@ func (s *Server) handleInternalServiceFindSuccessorByListRequest(args [0]string,
 			ID:   "InternalService_FindSuccessorByList",
 		}
 	)
-	params, err := decodeInternalServiceFindSuccessorByListParams(args, argsEscaped, r)
+	request, close, err := s.decodeInternalServiceFindSuccessorByListRequest(r)
 	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
+		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeParams", err)
+		recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
 
 	var response *ServerNode
 	if m := s.cfg.Middleware; m != nil {
@@ -308,19 +313,14 @@ func (s *Server) handleInternalServiceFindSuccessorByListRequest(args [0]string,
 			OperationName:    "InternalServiceFindSuccessorByList",
 			OperationSummary: "",
 			OperationID:      "InternalService_FindSuccessorByList",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "id",
-					In:   "query",
-				}: params.ID,
-			},
-			Raw: r,
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
-			Request  = struct{}
-			Params   = InternalServiceFindSuccessorByListParams
+			Request  = *InternalServiceFindSuccessorByListReq
+			Params   = struct{}
 			Response = *ServerNode
 		)
 		response, err = middleware.HookMiddleware[
@@ -330,14 +330,14 @@ func (s *Server) handleInternalServiceFindSuccessorByListRequest(args [0]string,
 		](
 			m,
 			mreq,
-			unpackInternalServiceFindSuccessorByListParams,
+			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.InternalServiceFindSuccessorByList(ctx, params)
+				response, err = s.h.InternalServiceFindSuccessorByList(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.InternalServiceFindSuccessorByList(ctx, params)
+		response, err = s.h.InternalServiceFindSuccessorByList(ctx, request)
 	}
 	if err != nil {
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -405,16 +405,21 @@ func (s *Server) handleInternalServiceFindSuccessorByTableRequest(args [0]string
 			ID:   "InternalService_FindSuccessorByTable",
 		}
 	)
-	params, err := decodeInternalServiceFindSuccessorByTableParams(args, argsEscaped, r)
+	request, close, err := s.decodeInternalServiceFindSuccessorByTableRequest(r)
 	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
+		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeParams", err)
+		recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
 
 	var response *ServerNode
 	if m := s.cfg.Middleware; m != nil {
@@ -423,19 +428,14 @@ func (s *Server) handleInternalServiceFindSuccessorByTableRequest(args [0]string
 			OperationName:    "InternalServiceFindSuccessorByTable",
 			OperationSummary: "",
 			OperationID:      "InternalService_FindSuccessorByTable",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "id",
-					In:   "query",
-				}: params.ID,
-			},
-			Raw: r,
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
-			Request  = struct{}
-			Params   = InternalServiceFindSuccessorByTableParams
+			Request  = *InternalServiceFindSuccessorByTableReq
+			Params   = struct{}
 			Response = *ServerNode
 		)
 		response, err = middleware.HookMiddleware[
@@ -445,14 +445,14 @@ func (s *Server) handleInternalServiceFindSuccessorByTableRequest(args [0]string
 		](
 			m,
 			mreq,
-			unpackInternalServiceFindSuccessorByTableParams,
+			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.InternalServiceFindSuccessorByTable(ctx, params)
+				response, err = s.h.InternalServiceFindSuccessorByTable(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.InternalServiceFindSuccessorByTable(ctx, params)
+		response, err = s.h.InternalServiceFindSuccessorByTable(ctx, request)
 	}
 	if err != nil {
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -520,16 +520,21 @@ func (s *Server) handleInternalServiceGetValueInnerRequest(args [0]string, argsE
 			ID:   "InternalService_GetValueInner",
 		}
 	)
-	params, err := decodeInternalServiceGetValueInnerParams(args, argsEscaped, r)
+	request, close, err := s.decodeInternalServiceGetValueInnerRequest(r)
 	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
+		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeParams", err)
+		recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
 
 	var response *ServerGetValueInnerResponse
 	if m := s.cfg.Middleware; m != nil {
@@ -538,19 +543,14 @@ func (s *Server) handleInternalServiceGetValueInnerRequest(args [0]string, argsE
 			OperationName:    "InternalServiceGetValueInner",
 			OperationSummary: "",
 			OperationID:      "InternalService_GetValueInner",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "key",
-					In:   "query",
-				}: params.Key,
-			},
-			Raw: r,
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
-			Request  = struct{}
-			Params   = InternalServiceGetValueInnerParams
+			Request  = *InternalServiceGetValueInnerReq
+			Params   = struct{}
 			Response = *ServerGetValueInnerResponse
 		)
 		response, err = middleware.HookMiddleware[
@@ -560,14 +560,14 @@ func (s *Server) handleInternalServiceGetValueInnerRequest(args [0]string, argsE
 		](
 			m,
 			mreq,
-			unpackInternalServiceGetValueInnerParams,
+			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.InternalServiceGetValueInner(ctx, params)
+				response, err = s.h.InternalServiceGetValueInner(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.InternalServiceGetValueInner(ctx, params)
+		response, err = s.h.InternalServiceGetValueInner(ctx, request)
 	}
 	if err != nil {
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -635,16 +635,21 @@ func (s *Server) handleInternalServiceNotifyRequest(args [0]string, argsEscaped 
 			ID:   "InternalService_Notify",
 		}
 	)
-	params, err := decodeInternalServiceNotifyParams(args, argsEscaped, r)
+	request, close, err := s.decodeInternalServiceNotifyRequest(r)
 	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
+		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeParams", err)
+		recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
 
 	var response *ServerSuccessResponse
 	if m := s.cfg.Middleware; m != nil {
@@ -653,19 +658,14 @@ func (s *Server) handleInternalServiceNotifyRequest(args [0]string, argsEscaped 
 			OperationName:    "InternalServiceNotify",
 			OperationSummary: "",
 			OperationID:      "InternalService_Notify",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "host",
-					In:   "query",
-				}: params.Host,
-			},
-			Raw: r,
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
-			Request  = struct{}
-			Params   = InternalServiceNotifyParams
+			Request  = *InternalServiceNotifyReq
+			Params   = struct{}
 			Response = *ServerSuccessResponse
 		)
 		response, err = middleware.HookMiddleware[
@@ -675,14 +675,14 @@ func (s *Server) handleInternalServiceNotifyRequest(args [0]string, argsEscaped 
 		](
 			m,
 			mreq,
-			unpackInternalServiceNotifyParams,
+			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.InternalServiceNotify(ctx, params)
+				response, err = s.h.InternalServiceNotify(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.InternalServiceNotify(ctx, params)
+		response, err = s.h.InternalServiceNotify(ctx, request)
 	}
 	if err != nil {
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -942,16 +942,21 @@ func (s *Server) handleInternalServicePutValueInnerRequest(args [0]string, argsE
 			ID:   "InternalService_PutValueInner",
 		}
 	)
-	params, err := decodeInternalServicePutValueInnerParams(args, argsEscaped, r)
+	request, close, err := s.decodeInternalServicePutValueInnerRequest(r)
 	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
+		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeParams", err)
+		recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
 
 	var response *ServerPutValueInnerResponse
 	if m := s.cfg.Middleware; m != nil {
@@ -960,23 +965,14 @@ func (s *Server) handleInternalServicePutValueInnerRequest(args [0]string, argsE
 			OperationName:    "InternalServicePutValueInner",
 			OperationSummary: "",
 			OperationID:      "InternalService_PutValueInner",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "key",
-					In:   "query",
-				}: params.Key,
-				{
-					Name: "value",
-					In:   "query",
-				}: params.Value,
-			},
-			Raw: r,
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
-			Request  = struct{}
-			Params   = InternalServicePutValueInnerParams
+			Request  = *InternalServicePutValueInnerReq
+			Params   = struct{}
 			Response = *ServerPutValueInnerResponse
 		)
 		response, err = middleware.HookMiddleware[
@@ -986,14 +982,14 @@ func (s *Server) handleInternalServicePutValueInnerRequest(args [0]string, argsE
 		](
 			m,
 			mreq,
-			unpackInternalServicePutValueInnerParams,
+			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.InternalServicePutValueInner(ctx, params)
+				response, err = s.h.InternalServicePutValueInner(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.InternalServicePutValueInner(ctx, params)
+		response, err = s.h.InternalServicePutValueInner(ctx, request)
 	}
 	if err != nil {
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {

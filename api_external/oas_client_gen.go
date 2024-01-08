@@ -15,7 +15,6 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.19.0"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/otelogen"
 	"github.com/ogen-go/ogen/uri"
@@ -26,19 +25,19 @@ type Invoker interface {
 	// ExternalServiceDeleteValue invokes ExternalService_DeleteValue operation.
 	//
 	// POST /server.ExternalService/DeleteValue
-	ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) (*ServerDeleteValueResponse, error)
+	ExternalServiceDeleteValue(ctx context.Context, request *ExternalServiceDeleteValueReq) (*ServerDeleteValueResponse, error)
 	// ExternalServiceFindHostForKey invokes ExternalService_FindHostForKey operation.
 	//
 	// POST /server.ExternalService/FindHostForKey
-	ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) (*ServerNode, error)
+	ExternalServiceFindHostForKey(ctx context.Context, request *ExternalServiceFindHostForKeyReq) (*ServerNode, error)
 	// ExternalServiceGetValue invokes ExternalService_GetValue operation.
 	//
 	// POST /server.ExternalService/GetValue
-	ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) (*ServerGetValueResponse, error)
+	ExternalServiceGetValue(ctx context.Context, request *ExternalServiceGetValueReq) (*ServerGetValueResponse, error)
 	// ExternalServicePutValue invokes ExternalService_PutValue operation.
 	//
 	// POST /server.ExternalService/PutValue
-	ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) (*ServerPutValueResponse, error)
+	ExternalServicePutValue(ctx context.Context, request *ExternalServicePutValueReq) (*ServerPutValueResponse, error)
 }
 
 // Client implements OAS client.
@@ -96,12 +95,12 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 // ExternalServiceDeleteValue invokes ExternalService_DeleteValue operation.
 //
 // POST /server.ExternalService/DeleteValue
-func (c *Client) ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) (*ServerDeleteValueResponse, error) {
-	res, err := c.sendExternalServiceDeleteValue(ctx, params)
+func (c *Client) ExternalServiceDeleteValue(ctx context.Context, request *ExternalServiceDeleteValueReq) (*ServerDeleteValueResponse, error) {
+	res, err := c.sendExternalServiceDeleteValue(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) (res *ServerDeleteValueResponse, err error) {
+func (c *Client) sendExternalServiceDeleteValue(ctx context.Context, request *ExternalServiceDeleteValueReq) (res *ServerDeleteValueResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("ExternalService_DeleteValue"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -141,31 +140,13 @@ func (c *Client) sendExternalServiceDeleteValue(ctx context.Context, params Exte
 	pathParts[0] = "/server.ExternalService/DeleteValue"
 	uri.AddPathParts(u, pathParts[:]...)
 
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
-	{
-		// Encode "key" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "key",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := params.Key.Get(); ok {
-				return e.EncodeValue(conv.StringToString(val))
-			}
-			return nil
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	u.RawQuery = q.Values().Encode()
-
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeExternalServiceDeleteValueRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
 
 	stage = "SendRequest"
@@ -187,12 +168,12 @@ func (c *Client) sendExternalServiceDeleteValue(ctx context.Context, params Exte
 // ExternalServiceFindHostForKey invokes ExternalService_FindHostForKey operation.
 //
 // POST /server.ExternalService/FindHostForKey
-func (c *Client) ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) (*ServerNode, error) {
-	res, err := c.sendExternalServiceFindHostForKey(ctx, params)
+func (c *Client) ExternalServiceFindHostForKey(ctx context.Context, request *ExternalServiceFindHostForKeyReq) (*ServerNode, error) {
+	res, err := c.sendExternalServiceFindHostForKey(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) (res *ServerNode, err error) {
+func (c *Client) sendExternalServiceFindHostForKey(ctx context.Context, request *ExternalServiceFindHostForKeyReq) (res *ServerNode, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("ExternalService_FindHostForKey"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -232,31 +213,13 @@ func (c *Client) sendExternalServiceFindHostForKey(ctx context.Context, params E
 	pathParts[0] = "/server.ExternalService/FindHostForKey"
 	uri.AddPathParts(u, pathParts[:]...)
 
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
-	{
-		// Encode "key" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "key",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := params.Key.Get(); ok {
-				return e.EncodeValue(conv.StringToString(val))
-			}
-			return nil
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	u.RawQuery = q.Values().Encode()
-
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeExternalServiceFindHostForKeyRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
 
 	stage = "SendRequest"
@@ -278,12 +241,12 @@ func (c *Client) sendExternalServiceFindHostForKey(ctx context.Context, params E
 // ExternalServiceGetValue invokes ExternalService_GetValue operation.
 //
 // POST /server.ExternalService/GetValue
-func (c *Client) ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) (*ServerGetValueResponse, error) {
-	res, err := c.sendExternalServiceGetValue(ctx, params)
+func (c *Client) ExternalServiceGetValue(ctx context.Context, request *ExternalServiceGetValueReq) (*ServerGetValueResponse, error) {
+	res, err := c.sendExternalServiceGetValue(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) (res *ServerGetValueResponse, err error) {
+func (c *Client) sendExternalServiceGetValue(ctx context.Context, request *ExternalServiceGetValueReq) (res *ServerGetValueResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("ExternalService_GetValue"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -323,31 +286,13 @@ func (c *Client) sendExternalServiceGetValue(ctx context.Context, params Externa
 	pathParts[0] = "/server.ExternalService/GetValue"
 	uri.AddPathParts(u, pathParts[:]...)
 
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
-	{
-		// Encode "key" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "key",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := params.Key.Get(); ok {
-				return e.EncodeValue(conv.StringToString(val))
-			}
-			return nil
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	u.RawQuery = q.Values().Encode()
-
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeExternalServiceGetValueRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
 
 	stage = "SendRequest"
@@ -369,12 +314,12 @@ func (c *Client) sendExternalServiceGetValue(ctx context.Context, params Externa
 // ExternalServicePutValue invokes ExternalService_PutValue operation.
 //
 // POST /server.ExternalService/PutValue
-func (c *Client) ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) (*ServerPutValueResponse, error) {
-	res, err := c.sendExternalServicePutValue(ctx, params)
+func (c *Client) ExternalServicePutValue(ctx context.Context, request *ExternalServicePutValueReq) (*ServerPutValueResponse, error) {
+	res, err := c.sendExternalServicePutValue(ctx, request)
 	return res, err
 }
 
-func (c *Client) sendExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) (res *ServerPutValueResponse, err error) {
+func (c *Client) sendExternalServicePutValue(ctx context.Context, request *ExternalServicePutValueReq) (res *ServerPutValueResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("ExternalService_PutValue"),
 		semconv.HTTPMethodKey.String("POST"),
@@ -414,48 +359,13 @@ func (c *Client) sendExternalServicePutValue(ctx context.Context, params Externa
 	pathParts[0] = "/server.ExternalService/PutValue"
 	uri.AddPathParts(u, pathParts[:]...)
 
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
-	{
-		// Encode "key" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "key",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := params.Key.Get(); ok {
-				return e.EncodeValue(conv.StringToString(val))
-			}
-			return nil
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	{
-		// Encode "value" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "value",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			if val, ok := params.Value.Get(); ok {
-				return e.EncodeValue(conv.StringToString(val))
-			}
-			return nil
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
-		}
-	}
-	u.RawQuery = q.Values().Encode()
-
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "POST", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeExternalServicePutValueRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
 	}
 
 	stage = "SendRequest"

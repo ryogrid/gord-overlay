@@ -11,27 +11,27 @@ type Handler interface {
 	// InternalServiceDeleteValueInner implements InternalService_DeleteValueInner operation.
 	//
 	// POST /server.InternalService/DeleteValueInner
-	InternalServiceDeleteValueInner(ctx context.Context, params InternalServiceDeleteValueInnerParams) error
+	InternalServiceDeleteValueInner(ctx context.Context, req *InternalServiceDeleteValueInnerReq) error
 	// InternalServiceFindClosestPrecedingNode implements InternalService_FindClosestPrecedingNode operation.
 	//
 	// POST /server.InternalService/FindClosestPrecedingNode
-	InternalServiceFindClosestPrecedingNode(ctx context.Context, params InternalServiceFindClosestPrecedingNodeParams) (*ServerNode, error)
+	InternalServiceFindClosestPrecedingNode(ctx context.Context, req *InternalServiceFindClosestPrecedingNodeReq) (*ServerNode, error)
 	// InternalServiceFindSuccessorByList implements InternalService_FindSuccessorByList operation.
 	//
 	// POST /server.InternalService/FindSuccessorByList
-	InternalServiceFindSuccessorByList(ctx context.Context, params InternalServiceFindSuccessorByListParams) (*ServerNode, error)
+	InternalServiceFindSuccessorByList(ctx context.Context, req *InternalServiceFindSuccessorByListReq) (*ServerNode, error)
 	// InternalServiceFindSuccessorByTable implements InternalService_FindSuccessorByTable operation.
 	//
 	// POST /server.InternalService/FindSuccessorByTable
-	InternalServiceFindSuccessorByTable(ctx context.Context, params InternalServiceFindSuccessorByTableParams) (*ServerNode, error)
+	InternalServiceFindSuccessorByTable(ctx context.Context, req *InternalServiceFindSuccessorByTableReq) (*ServerNode, error)
 	// InternalServiceGetValueInner implements InternalService_GetValueInner operation.
 	//
 	// POST /server.InternalService/GetValueInner
-	InternalServiceGetValueInner(ctx context.Context, params InternalServiceGetValueInnerParams) (*ServerGetValueInnerResponse, error)
+	InternalServiceGetValueInner(ctx context.Context, req *InternalServiceGetValueInnerReq) (*ServerGetValueInnerResponse, error)
 	// InternalServiceNotify implements InternalService_Notify operation.
 	//
 	// POST /server.InternalService/Notify
-	InternalServiceNotify(ctx context.Context, params InternalServiceNotifyParams) (*ServerSuccessResponse, error)
+	InternalServiceNotify(ctx context.Context, req *InternalServiceNotifyReq) (*ServerSuccessResponse, error)
 	// InternalServicePing implements InternalService_Ping operation.
 	//
 	// POST /server.InternalService/Ping
@@ -43,7 +43,7 @@ type Handler interface {
 	// InternalServicePutValueInner implements InternalService_PutValueInner operation.
 	//
 	// POST /server.InternalService/PutValueInner
-	InternalServicePutValueInner(ctx context.Context, params InternalServicePutValueInnerParams) (*ServerPutValueInnerResponse, error)
+	InternalServicePutValueInner(ctx context.Context, req *InternalServicePutValueInnerReq) (*ServerPutValueInnerResponse, error)
 	// InternalServiceSuccessors implements InternalService_Successors operation.
 	//
 	// POST /server.InternalService/Successors

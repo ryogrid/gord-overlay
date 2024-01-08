@@ -16,28 +16,28 @@ var _ Handler = UnimplementedHandler{}
 // ExternalServiceDeleteValue implements ExternalService_DeleteValue operation.
 //
 // POST /server.ExternalService/DeleteValue
-func (UnimplementedHandler) ExternalServiceDeleteValue(ctx context.Context, params ExternalServiceDeleteValueParams) (r *ServerDeleteValueResponse, _ error) {
+func (UnimplementedHandler) ExternalServiceDeleteValue(ctx context.Context, req *ExternalServiceDeleteValueReq) (r *ServerDeleteValueResponse, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
 // ExternalServiceFindHostForKey implements ExternalService_FindHostForKey operation.
 //
 // POST /server.ExternalService/FindHostForKey
-func (UnimplementedHandler) ExternalServiceFindHostForKey(ctx context.Context, params ExternalServiceFindHostForKeyParams) (r *ServerNode, _ error) {
+func (UnimplementedHandler) ExternalServiceFindHostForKey(ctx context.Context, req *ExternalServiceFindHostForKeyReq) (r *ServerNode, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
 // ExternalServiceGetValue implements ExternalService_GetValue operation.
 //
 // POST /server.ExternalService/GetValue
-func (UnimplementedHandler) ExternalServiceGetValue(ctx context.Context, params ExternalServiceGetValueParams) (r *ServerGetValueResponse, _ error) {
+func (UnimplementedHandler) ExternalServiceGetValue(ctx context.Context, req *ExternalServiceGetValueReq) (r *ServerGetValueResponse, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
 // ExternalServicePutValue implements ExternalService_PutValue operation.
 //
 // POST /server.ExternalService/PutValue
-func (UnimplementedHandler) ExternalServicePutValue(ctx context.Context, params ExternalServicePutValueParams) (r *ServerPutValueResponse, _ error) {
+func (UnimplementedHandler) ExternalServicePutValue(ctx context.Context, req *ExternalServicePutValueReq) (r *ServerPutValueResponse, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

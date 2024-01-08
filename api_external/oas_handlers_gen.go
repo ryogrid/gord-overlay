@@ -60,16 +60,21 @@ func (s *Server) handleExternalServiceDeleteValueRequest(args [0]string, argsEsc
 			ID:   "ExternalService_DeleteValue",
 		}
 	)
-	params, err := decodeExternalServiceDeleteValueParams(args, argsEscaped, r)
+	request, close, err := s.decodeExternalServiceDeleteValueRequest(r)
 	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
+		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeParams", err)
+		recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
 
 	var response *ServerDeleteValueResponse
 	if m := s.cfg.Middleware; m != nil {
@@ -78,19 +83,14 @@ func (s *Server) handleExternalServiceDeleteValueRequest(args [0]string, argsEsc
 			OperationName:    "ExternalServiceDeleteValue",
 			OperationSummary: "",
 			OperationID:      "ExternalService_DeleteValue",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "key",
-					In:   "query",
-				}: params.Key,
-			},
-			Raw: r,
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
-			Request  = struct{}
-			Params   = ExternalServiceDeleteValueParams
+			Request  = *ExternalServiceDeleteValueReq
+			Params   = struct{}
 			Response = *ServerDeleteValueResponse
 		)
 		response, err = middleware.HookMiddleware[
@@ -100,14 +100,14 @@ func (s *Server) handleExternalServiceDeleteValueRequest(args [0]string, argsEsc
 		](
 			m,
 			mreq,
-			unpackExternalServiceDeleteValueParams,
+			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.ExternalServiceDeleteValue(ctx, params)
+				response, err = s.h.ExternalServiceDeleteValue(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.ExternalServiceDeleteValue(ctx, params)
+		response, err = s.h.ExternalServiceDeleteValue(ctx, request)
 	}
 	if err != nil {
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -175,16 +175,21 @@ func (s *Server) handleExternalServiceFindHostForKeyRequest(args [0]string, args
 			ID:   "ExternalService_FindHostForKey",
 		}
 	)
-	params, err := decodeExternalServiceFindHostForKeyParams(args, argsEscaped, r)
+	request, close, err := s.decodeExternalServiceFindHostForKeyRequest(r)
 	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
+		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeParams", err)
+		recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
 
 	var response *ServerNode
 	if m := s.cfg.Middleware; m != nil {
@@ -193,19 +198,14 @@ func (s *Server) handleExternalServiceFindHostForKeyRequest(args [0]string, args
 			OperationName:    "ExternalServiceFindHostForKey",
 			OperationSummary: "",
 			OperationID:      "ExternalService_FindHostForKey",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "key",
-					In:   "query",
-				}: params.Key,
-			},
-			Raw: r,
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
-			Request  = struct{}
-			Params   = ExternalServiceFindHostForKeyParams
+			Request  = *ExternalServiceFindHostForKeyReq
+			Params   = struct{}
 			Response = *ServerNode
 		)
 		response, err = middleware.HookMiddleware[
@@ -215,14 +215,14 @@ func (s *Server) handleExternalServiceFindHostForKeyRequest(args [0]string, args
 		](
 			m,
 			mreq,
-			unpackExternalServiceFindHostForKeyParams,
+			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.ExternalServiceFindHostForKey(ctx, params)
+				response, err = s.h.ExternalServiceFindHostForKey(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.ExternalServiceFindHostForKey(ctx, params)
+		response, err = s.h.ExternalServiceFindHostForKey(ctx, request)
 	}
 	if err != nil {
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -290,16 +290,21 @@ func (s *Server) handleExternalServiceGetValueRequest(args [0]string, argsEscape
 			ID:   "ExternalService_GetValue",
 		}
 	)
-	params, err := decodeExternalServiceGetValueParams(args, argsEscaped, r)
+	request, close, err := s.decodeExternalServiceGetValueRequest(r)
 	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
+		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeParams", err)
+		recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
 
 	var response *ServerGetValueResponse
 	if m := s.cfg.Middleware; m != nil {
@@ -308,19 +313,14 @@ func (s *Server) handleExternalServiceGetValueRequest(args [0]string, argsEscape
 			OperationName:    "ExternalServiceGetValue",
 			OperationSummary: "",
 			OperationID:      "ExternalService_GetValue",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "key",
-					In:   "query",
-				}: params.Key,
-			},
-			Raw: r,
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
-			Request  = struct{}
-			Params   = ExternalServiceGetValueParams
+			Request  = *ExternalServiceGetValueReq
+			Params   = struct{}
 			Response = *ServerGetValueResponse
 		)
 		response, err = middleware.HookMiddleware[
@@ -330,14 +330,14 @@ func (s *Server) handleExternalServiceGetValueRequest(args [0]string, argsEscape
 		](
 			m,
 			mreq,
-			unpackExternalServiceGetValueParams,
+			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.ExternalServiceGetValue(ctx, params)
+				response, err = s.h.ExternalServiceGetValue(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.ExternalServiceGetValue(ctx, params)
+		response, err = s.h.ExternalServiceGetValue(ctx, request)
 	}
 	if err != nil {
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
@@ -405,16 +405,21 @@ func (s *Server) handleExternalServicePutValueRequest(args [0]string, argsEscape
 			ID:   "ExternalService_PutValue",
 		}
 	)
-	params, err := decodeExternalServicePutValueParams(args, argsEscaped, r)
+	request, close, err := s.decodeExternalServicePutValueRequest(r)
 	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
+		err = &ogenerrors.DecodeRequestError{
 			OperationContext: opErrContext,
 			Err:              err,
 		}
-		recordError("DecodeParams", err)
+		recordError("DecodeRequest", err)
 		s.cfg.ErrorHandler(ctx, w, r, err)
 		return
 	}
+	defer func() {
+		if err := close(); err != nil {
+			recordError("CloseRequest", err)
+		}
+	}()
 
 	var response *ServerPutValueResponse
 	if m := s.cfg.Middleware; m != nil {
@@ -423,23 +428,14 @@ func (s *Server) handleExternalServicePutValueRequest(args [0]string, argsEscape
 			OperationName:    "ExternalServicePutValue",
 			OperationSummary: "",
 			OperationID:      "ExternalService_PutValue",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "key",
-					In:   "query",
-				}: params.Key,
-				{
-					Name: "value",
-					In:   "query",
-				}: params.Value,
-			},
-			Raw: r,
+			Body:             request,
+			Params:           middleware.Parameters{},
+			Raw:              r,
 		}
 
 		type (
-			Request  = struct{}
-			Params   = ExternalServicePutValueParams
+			Request  = *ExternalServicePutValueReq
+			Params   = struct{}
 			Response = *ServerPutValueResponse
 		)
 		response, err = middleware.HookMiddleware[
@@ -449,14 +445,14 @@ func (s *Server) handleExternalServicePutValueRequest(args [0]string, argsEscape
 		](
 			m,
 			mreq,
-			unpackExternalServicePutValueParams,
+			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.ExternalServicePutValue(ctx, params)
+				response, err = s.h.ExternalServicePutValue(ctx, request)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.ExternalServicePutValue(ctx, params)
+		response, err = s.h.ExternalServicePutValue(ctx, request)
 	}
 	if err != nil {
 		if errRes, ok := errors.Into[*ErrorStatusCode](err); ok {
