@@ -111,7 +111,7 @@ func (c *ApiClient) FindSuccessorByTableRPC(ctx context.Context, to *model.NodeR
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	node, err := client.InternalServiceFindSuccessorByTable(ctx, api_internal.InternalServiceFindSuccessorByTableParams{ID: id})
+	node, err := client.InternalServiceFindSuccessorByTable(ctx, &api_internal.InternalServiceFindSuccessorByTableReq{ID: id})
 	if err != nil {
 		return nil, handleError(err)
 	}
@@ -125,7 +125,7 @@ func (c *ApiClient) FindSuccessorByListRPC(ctx context.Context, to *model.NodeRe
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	node, err := client.InternalServiceFindSuccessorByList(ctx, api_internal.InternalServiceFindSuccessorByListParams{ID: id})
+	node, err := client.InternalServiceFindSuccessorByList(ctx, &api_internal.InternalServiceFindSuccessorByListReq{ID: id})
 	if err != nil {
 		return nil, handleError(err)
 	}
@@ -139,7 +139,7 @@ func (c *ApiClient) FindClosestPrecedingNodeRPC(ctx context.Context, to *model.N
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	node, err := client.InternalServiceFindClosestPrecedingNode(ctx, api_internal.InternalServiceFindClosestPrecedingNodeParams{ID: id})
+	node, err := client.InternalServiceFindClosestPrecedingNode(ctx, &api_internal.InternalServiceFindClosestPrecedingNodeReq{ID: id})
 	if err != nil {
 		return nil, handleError(err)
 	}
@@ -153,7 +153,7 @@ func (c *ApiClient) NotifyRPC(ctx context.Context, to *model.NodeRef, node *mode
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	_, err = client.InternalServiceNotify(ctx, api_internal.InternalServiceNotifyParams{Host: api_internal.NewOptString(node.Host)})
+	_, err = client.InternalServiceNotify(ctx, &api_internal.InternalServiceNotifyReq{Host: api_internal.NewOptString(node.Host)})
 	if err != nil {
 		return handleError(err)
 	}
@@ -175,7 +175,7 @@ func (c *ApiClient) PutValueInnerRPC(ctx context.Context, to *model.NodeRef, key
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	resp, err := client.InternalServicePutValueInner(ctx, api_internal.InternalServicePutValueInnerParams{Key: api_internal.OptString{Value: *key}, Value: api_internal.NewOptString(*value)})
+	resp, err := client.InternalServicePutValueInner(ctx, &api_internal.InternalServicePutValueInnerReq{Key: api_internal.OptString{Value: *key}, Value: api_internal.NewOptString(*value)})
 	if err != nil {
 		return false, handleError(err)
 	}
@@ -189,7 +189,7 @@ func (c *ApiClient) GetValueInnerRPC(ctx context.Context, to *model.NodeRef, key
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	resp, err := client.InternalServiceGetValueInner(ctx, api_internal.InternalServiceGetValueInnerParams{Key: api_internal.NewOptString(*key)})
+	resp, err := client.InternalServiceGetValueInner(ctx, &api_internal.InternalServiceGetValueInnerReq{Key: api_internal.NewOptString(*key)})
 	if err != nil {
 		return nil, false, handleError(err)
 	}
@@ -203,7 +203,7 @@ func (c *ApiClient) DeleteValueInnerRPC(ctx context.Context, to *model.NodeRef, 
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	err = client.InternalServiceDeleteValueInner(ctx, api_internal.InternalServiceDeleteValueInnerParams{Key: api_internal.NewOptString(*key)})
+	err = client.InternalServiceDeleteValueInner(ctx, &api_internal.InternalServiceDeleteValueInnerReq{Key: api_internal.NewOptString(*key)})
 	if err != nil {
 		return false, handleError(err)
 	}
