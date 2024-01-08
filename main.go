@@ -2,15 +2,12 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/core"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"net"
 	"os"
 	"os/signal"
-	"strconv"
 	"syscall"
 	"time"
 )
@@ -22,12 +19,10 @@ var (
 	existNodeHostAndPort string
 )
 
-/*
 const (
 	externalServerPort = "26041" //TODO: to be configurable
 	internalServerPort = "26040" //TODO: to be configurable
 )
-*/
 
 func main() {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
@@ -41,19 +36,19 @@ func main() {
 		Long:  "Run gord-overlay process and gRPC server",
 		Run: func(cmd *cobra.Command, args []string) {
 
-			host, basePort, err := net.SplitHostPort(hostAndPortBase)
-			if err != nil {
-				fmt.Println("invalid hostAndPort. err = %#v", err)
-				os.Exit(1)
-			}
+			//host, basePort, err := net.SplitHostPort(hostAndPortBase)
+			//if err != nil {
+			//	fmt.Println("invalid hostAndPort. err = %#v", err)
+			//	os.Exit(1)
+			//}
 
 			var (
 				ctx, cancel = context.WithCancel(context.Background())
 				localNode   = chord.NewLocalNode(hostAndPortBase)
-				transport   = core.NewChordApiClient(localNode, basePort, time.Second*3)
+				transport   = core.NewChordApiClient(localNode, internalServerPort, time.Second*3)
 				process     = chord.NewProcess(localNode, transport)
 				opts        = []core.InternalServerOptionFunc{
-					core.WithNodeOption(host),
+					core.WithNodeOption(hostAndPortBase),
 					core.WithTimeoutConnNode(time.Second * 3),
 				}
 			)
@@ -63,13 +58,13 @@ func main() {
 					chord.NewRemoteNode(existNodeHostAndPort, process.Transport),
 				)))
 			}
-			ins := core.NewChordServer(process, basePort, opts...)
-			basePortNum, err := strconv.Atoi(basePort)
-			if err != nil {
-				fmt.Println("invalid basePort. err = %#v", err)
-				os.Exit(1)
-			}
-			exs := core.NewExternalServer(process, strconv.Itoa(basePortNum+1))
+			ins := core.NewChordServer(process, hostAndPortBase, opts...)
+			//basePortNum, err := strconv.Atoi(basePort)
+			//if err != nil {
+			//	fmt.Println("invalid basePort. err = %#v", err)
+			//	os.Exit(1)
+			//}
+			exs := core.NewExternalServer(process, externalServerPort)
 			go ins.Run(ctx)
 			go exs.Run()
 
