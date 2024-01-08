@@ -47,7 +47,7 @@ func (c *ApiClient) getRpcClient(address string) (*api_internal.Client, error) {
 	//return NewInternalServiceClient(conn), nil
 	customClient := http.DefaultClient
 	// customClient.Transport = nil // TODO: need to implement transport (ApiClient::getRpcClient method)
-	ret, err := api_internal.NewClient(address, api_internal.WithClient(customClient))
+	ret, err := api_internal.NewClient("http://"+address+":"+c.serverPort, api_internal.WithClient(customClient))
 	return ret, err
 }
 
