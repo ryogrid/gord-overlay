@@ -62,14 +62,14 @@ func (g *ExternalServer) Shutdown() {
 // It is implemented for PublicService.
 func (g *ExternalServer) ExternalServiceFindHostForKey(ctx context.Context, params api_external.ExternalServiceFindHostForKeyParams) (*api_external.ServerNode, error) {
 	//func (g *ExternalServer) FindHostForKey(ctx context.Context, req *FindHostRequest) (*Node, error) {
-	id := model.NewHashID(req.Key)
+	id := model.NewHashID(params.Key.Value)
 	s, err := g.process.FindSuccessorByTable(ctx, id)
 	if err != nil {
 		log.Errorf("FindHostForKey failed. reason: %#v", err)
 		return nil, err
 	}
 	return &api_external.ServerNode{
-		Host: s.Reference().Host,
+		Host: api_external.NewOptString(s.Reference().Host),
 	}, nil
 }
 

@@ -34,7 +34,6 @@ func NewChordApiClient(hostNode *chord.LocalNode, port string, timeout time.Dura
 // TODO: Enable mTLS
 // TODO: Add conn pool capacity limit for file descriptors.
 func (c *ApiClient) getRpcClient(address string) (*api_internal.Client, error) {
-	//// TODO: need to implement ApiClient::getRpcClient method
 	//c.poolLock.Lock()
 	//defer c.poolLock.Unlock()
 	//conn, ok := c.connPool[address]
@@ -156,7 +155,7 @@ func (c *ApiClient) NotifyRPC(ctx context.Context, to *model.NodeRef, node *mode
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	_, err = client.InternalServiceNotify(ctx, api_internal.InternalServiceNotifyParams{Host: api_internal.OptString{Value: node.Host}})
+	_, err = client.InternalServiceNotify(ctx, api_internal.InternalServiceNotifyParams{Host: api_internal.NewOptString(node.Host)})
 	if err != nil {
 		return handleError(err)
 	}
@@ -178,7 +177,7 @@ func (c *ApiClient) PutValueInnerRPC(ctx context.Context, to *model.NodeRef, key
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	resp, err := client.InternalServicePutValueInner(ctx, api_internal.InternalServicePutValueInnerParams{Key: api_internal.OptString{Value: *key}, Value: api_internal.OptString{Value: *value}})
+	resp, err := client.InternalServicePutValueInner(ctx, api_internal.InternalServicePutValueInnerParams{Key: api_internal.OptString{Value: *key}, Value: api_internal.NewOptString(*value)})
 	if err != nil {
 		return false, handleError(err)
 	}
@@ -192,7 +191,7 @@ func (c *ApiClient) GetValueInnerRPC(ctx context.Context, to *model.NodeRef, key
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	resp, err := client.InternalServiceGetValueInner(ctx, api_internal.InternalServiceGetValueInnerParams{Key: api_internal.OptString{Value: *key}})
+	resp, err := client.InternalServiceGetValueInner(ctx, api_internal.InternalServiceGetValueInnerParams{Key: api_internal.NewOptString(*key)})
 	if err != nil {
 		return nil, false, handleError(err)
 	}
@@ -206,7 +205,7 @@ func (c *ApiClient) DeleteValueInnerRPC(ctx context.Context, to *model.NodeRef, 
 	}
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	err = client.InternalServiceDeleteValueInner(ctx, api_internal.InternalServiceDeleteValueInnerParams{Key: api_internal.OptString{Value: *key}})
+	err = client.InternalServiceDeleteValueInner(ctx, api_internal.InternalServiceDeleteValueInnerParams{Key: api_internal.NewOptString(*key)})
 	if err != nil {
 		return false, handleError(err)
 	}
