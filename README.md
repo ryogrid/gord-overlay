@@ -20,10 +20,10 @@ In addition, the gord servers communicate with each other via REST to synchroniz
 Then, the server can query via gRPC to resolve the node and communicate with the node.
 
 ## Usage
-Gord's gRPC server reqires a hostname and port number pair.  
-If you specify 127.0.0.1:26000, the server will use 127.0.0.1:26000 to communication between other nodes and use 127.0.0.1:26001 to listen local gRPC request.
-Specified hostname and port number pair is internally used as a node identifier, so you need to specify a unique pair for each node.
-Additionaly, you need to specify address of a node which is already in the network to join the network except the first node.
+- Gord-Overlay REST server reqires a hostname and port number pair
+- If you specify 127.0.0.1:26000, the server will use 127.0.0.1:26000 to communication between other nodes and use 127.0.0.1:26001 to listen local gRPC request
+- Specified hostname and port number pair is internally used as a node identifier, so you need to specify a unique pair for each node
+- Additionaly, you need to specify address of a node which is already in the network to join the network except the first node
 
 ```
 ## Build
