@@ -12,7 +12,7 @@ Gord-Overlay will start as a REST server and your application can access data vi
 ## How is it work?
 Gord-Overlay is an implementation of [DHT Chord](https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf) and simple key-value store using the DHT.
 Chord protocol is an algorithm which extends consistent hashing.
-Gord server, using chord protocol, allocates a key to a node in distributed nodes ring.
+Gord-Overlay server, using chord protocol, allocates a key to a node in distributed nodes ring.
 
 ![chord ring](docs/architecture-1.png) 
 
