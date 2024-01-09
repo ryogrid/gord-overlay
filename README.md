@@ -37,7 +37,6 @@ make build
 ```
 
 ## Examples
-0. Install [grpcurl](https://github.com/fullstorydev/grpcurl)
 
 1. Start servers
 ```bash
@@ -53,22 +52,27 @@ curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:26040/
 && curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:46040/server.InternalService/Successors
 
 # Check predecessor for each node
-grpcurl -plaintext localhost:26040 server.InternalService/Predecessor \
-&& grpcurl -plaintext localhost:36040 server.InternalService/Predecessor \
-&& grpcurl -plaintext localhost:46040 server.InternalService/Predecessor
+curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:26040/server.InternalService/Predecessor \
+&& curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:36040/server.InternalService/Predecessor \
+&& curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:46040/server.InternalService/Predecessor
 
 # Query
-grpcurl -plaintext -d '{"key": "gord1"}' localhost:26041 server.ExternalService/FindHostForKey \
-&& grpcurl -plaintext -d '{"key": "gord1"}' localhost:36041 server.ExternalService/FindHostForKey \
-&& grpcurl -plaintext -d '{"key": "gord1"}' localhost:46041 server.ExternalService/FindHostForKey 
+curl -X POST -H "Content-Type: application/json" -d '{"key": "gord1"}' http://localhost:26041/server.ExternalService/FindHostForKey \
+&& curl -X POST -H "Content-Type: application/json" -d '{"key": "gord1"}' http://localhost:36041/server.ExternalService/FindHostForKey \
+&& curl -X POST -H "Content-Type: application/json" -d '{"key": "gord1"}' http://localhost:46041/server.ExternalService/FindHostForKey 
 
-grpcurl -plaintext -d '{"key": "gord2"}' localhost:26041 server.ExternalService/FindHostForKey \
-&& grpcurl -plaintext -d '{"key": "gord2"}' localhost:36041 server.ExternalService/FindHostForKey \
-&& grpcurl -plaintext -d '{"key": "gord2"}' localhost:46041 server.ExternalService/FindHostForKey 
+curl -X POST -H "Content-Type: application/json" -d '{"key": "gord2"}' http://localhost:26041/server.ExternalService/FindHostForKey \
+&& curl -X POST -H "Content-Type: application/json" -d '{"key": "gord2"}' http://localhost:36041 server.ExternalService/FindHostForKey \
+&& curl -X POST -H "Content-Type: application/json" -d '{"key": "gord2"}' http://localhost:46041 server.ExternalService/FindHostForKey 
 
-grpcurl -plaintext -d '{"key": "gord"}' localhost:26041 server.ExternalService/FindHostForKey \
-&& grpcurl -plaintext -d '{"key": "gord"}' localhost:36041 server.ExternalService/FindHostForKey \
-&& grpcurl -plaintext -d '{"key": "gord"}' localhost:46041 server.ExternalService/FindHostForKey 
+curl -X POST -H "Content-Type: application/json" -d '{"key": "gord"}' localhost:26041 server.ExternalService/FindHostForKey \
+&& curl -X POST -H "Content-Type: application/json" -d '{"key": "gord"}' localhost:36041 server.ExternalService/FindHostForKey \
+&& curl -X POST -H "Content-Type: application/json" -d '{"key": "gord"}' localhost:46041 server.ExternalService/FindHostForKey
+
+# Put and Get value
+curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge", "foobar"}' http://localhost:26041/server.ExternalService/PutValue
+curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://localhost:36041/server.ExternalService/GetValue
+curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://localhost:46041/server.ExternalService/GetValue
 ```
 
 ## How to build
