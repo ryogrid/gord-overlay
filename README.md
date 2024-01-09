@@ -16,8 +16,8 @@ Gord-Overlay server, using chord protocol, allocates a key to a node in distribu
 
 ![chord ring](docs/architecture-1.png) 
 
-In addition, the gord servers communicate with each other via REST to synchronize route information.
-Then, the server can query via gRPC to resolve the node and communicate with the node.
+In addition, servers communicate with each other via REST to synchronize route information.
+Then, servers can query via REST to resolve server address and communicate with the server.
 
 ## Usage
 - Gord-Overlay REST server reqires a hostname and port number pair
