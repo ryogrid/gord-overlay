@@ -7,7 +7,7 @@
 
 ## What is Gord-Overlay?
 Gord-Overlay is a DHT based distribute key-value store.
-Gord-Overlay will start as a gRPC server and your application can access data via gRPC.
+Gord-Overlay will start as a REST server and your application can access data via REST.
 
 ## How is it work?
 Gord-Overlay is an implementation of [DHT Chord](https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf) and simple key-value store using the DHT.
@@ -16,7 +16,7 @@ Gord server, using chord protocol, allocates a key to a node in distributed node
 
 ![chord ring](docs/architecture-1.png) 
 
-In addition, the gord servers communicate with each other via gRPC to synchronize route information.
+In addition, the gord servers communicate with each other via REST to synchronize route information.
 Then, the server can query via gRPC to resolve the node and communicate with the node.
 
 ## Usage
@@ -48,9 +48,9 @@ docker-compose build && docker-compose up
 2. Try! 
 ```bash
 # Check successor list for each node
-grpcurl -plaintext localhost:26040 server.InternalService/Successors \
-&& grpcurl -plaintext localhost:36040 server.InternalService/Successors \
-&& grpcurl -plaintext localhost:46040 server.InternalService/Successors
+curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:26040/server.InternalService/Successors \
+&& curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:36040/server.InternalService/Successors \
+&& curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:46040/server.InternalService/Successors
 
 # Check predecessor for each node
 grpcurl -plaintext localhost:26040 server.InternalService/Predecessor \
