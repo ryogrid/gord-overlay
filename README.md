@@ -1,7 +1,7 @@
 # **Gord-Overlay**
 - [Gord](https://github.com/taisho6339/gord) is a reference implementation of [Chord protocol](https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf).
 - **Gord-Overlay** is a fork of Gord which is enabled to run on overlay network constructed with [gossip-overlay lib](https://github.com/ryogrid/gossip-overlay)
-  - Additionaly, implementation of on-memory KVS store functionality is planned
+  - Additionaly, offers on-memory KVS store functionality
 
 ---
 
