@@ -70,7 +70,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"key": "gord"}' localhost:
 && curl -X POST -H "Content-Type: application/json" -d '{"key": "gord"}' localhost:46041 server.ExternalService/FindHostForKey
 
 # Put and Get value
-curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge", "foobar"}' http://localhost:26041/server.ExternalService/PutValue
+curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge", "value": "foobar"}' http://localhost:26041/server.ExternalService/PutValue
 curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://localhost:36041/server.ExternalService/GetValue
 curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://localhost:46041/server.ExternalService/GetValue
 ```
