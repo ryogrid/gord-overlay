@@ -274,7 +274,13 @@ func (l *LocalNode) Notify(_ context.Context, node RingNode) error {
 	if l.isShutdown {
 		return ErrNodeUnavailable
 	}
-	if l.predecessor == nil || node.Reference().ID.Between(l.predecessor.Reference().ID, l.ID) {
+	typedNil := false
+	if pred, ok := l.predecessor.(*RemoteNode); ok {
+		if pred == nil {
+			typedNil = true
+		}
+	}
+	if typedNil || l.predecessor == nil || node.Reference().ID.Between(l.predecessor.Reference().ID, l.ID) {
 		l.predecessor = node
 	}
 	return nil

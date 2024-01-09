@@ -153,6 +153,7 @@ func (is *InternalServer) Predecessor(ctx context.Context, _ *connect.Request[em
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
 	pred, err := is.process.GetPredecessor(ctx)
+	fmt.Println("InternalServer::Predecessor", is.process.Host, pred, err)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: internal error occured. predecessor is not set.")
 	}
