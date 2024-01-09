@@ -2,7 +2,6 @@ package chord
 
 import (
 	"context"
-	"fmt"
 	"github.com/ryogrid/gord-overlay/model"
 )
 
@@ -41,7 +40,6 @@ func (r *RemoteNode) FindSuccessorByList(ctx context.Context, id model.HashID) (
 }
 
 func (r *RemoteNode) FindSuccessorByTable(ctx context.Context, id model.HashID) (RingNode, error) {
-	fmt.Println("RemoteNode::FindSuccessorByTable", r.NodeRef.Host, id)
 	return r.FindSuccessorByTableRPC(ctx, r.NodeRef, id)
 }
 

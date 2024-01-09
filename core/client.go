@@ -3,7 +3,6 @@ package core
 import (
 	"connectrpc.com/connect"
 	"context"
-	"fmt"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/model"
 	"github.com/ryogrid/gord-overlay/server"
@@ -129,7 +128,6 @@ func (c *ApiClient) PredecessorRPC(ctx context.Context, to *model.NodeRef) (chor
 }
 
 func (c *ApiClient) FindSuccessorByTableRPC(ctx context.Context, to *model.NodeRef, id model.HashID) (chord.RingNode, error) {
-	fmt.Println("ApiClient::FindSuccessorByTableRPC", to.Host, id)
 	client, err := c.getGrpcConn(to.Host)
 	if err != nil {
 		return nil, err

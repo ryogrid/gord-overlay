@@ -3,7 +3,6 @@ package core
 import (
 	"connectrpc.com/connect"
 	"context"
-	"fmt"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/server"
 	"github.com/ryogrid/gord-overlay/serverconnect"
@@ -153,7 +152,6 @@ func (is *InternalServer) Predecessor(ctx context.Context, _ *connect.Request[em
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
 	pred, err := is.process.GetPredecessor(ctx)
-	fmt.Println("InternalServer::Predecessor", is.process.Host, pred, err)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: internal error occured. predecessor is not set.")
 	}
@@ -172,7 +170,6 @@ func (is *InternalServer) FindSuccessorByTable(ctx context.Context, req *connect
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
 	successor, err := is.process.FindSuccessorByTable(ctx, req.Msg.Id)
-	fmt.Println("InternalServer::FindSuccessorByTable", is.process.Host, successor, err, *req, req.Msg.Id)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: find successor failed. reason = %#v", err)
 	}
