@@ -5,7 +5,7 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 BINARY_NAME=gordctl
-BUILD_TARGET=cmd/main.go
+BUILD_TARGET=main.go
 
 all: test build
 build:

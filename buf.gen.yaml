@@ -1,0 +1,12 @@
+version: v1
+managed: # managed mode
+  enabled: true
+  go_package_prefix:
+    default: server/
+plugins:
+  - name: go # protoc-gen-go
+    out: gen
+    opt: paths=source_relative
+  - plugin: connect-go # protoc-gen-connect-go
+    out: gen
+    opt: paths=source_relative

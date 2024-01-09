@@ -3,7 +3,7 @@ package chord
 import (
 	"context"
 	"fmt"
-	"github.com/ryogrid/gord-overlay/pkg/model"
+	"github.com/ryogrid/gord-overlay/model"
 	"sync"
 )
 
@@ -98,10 +98,15 @@ type LocalNode struct {
 }
 
 // NewLocalNode creates a local node.
-func NewLocalNode(host string) *LocalNode {
-	id := model.NewHashID(host)
+func NewLocalNode(hostAndPort string) *LocalNode {
+	id := model.NewHashID(hostAndPort)
+	//host, _, err := net.SplitHostPort(hostAndPort)
+	//if err != nil {
+	//	fmt.Println("invalid hostAndPort. err = %#v", err)
+	//	os.Exit(1)
+	//}
 	return &LocalNode{
-		NodeRef:     model.NewNodeRef(host),
+		NodeRef:     model.NewNodeRef(hostAndPort),
 		fingerTable: NewFingerTable(id),
 	}
 }
@@ -124,6 +129,7 @@ func (l *LocalNode) CreateRing() {
 }
 
 func (l *LocalNode) JoinRing(ctx context.Context, existNode RingNode) error {
+	fmt.Println("join ring", existNode.Reference().Host)
 	successor, err := existNode.FindSuccessorByTable(ctx, l.ID)
 	if err != nil {
 		return fmt.Errorf("find successor failed. err = %#v", err)
@@ -268,7 +274,13 @@ func (l *LocalNode) Notify(_ context.Context, node RingNode) error {
 	if l.isShutdown {
 		return ErrNodeUnavailable
 	}
-	if l.predecessor == nil || node.Reference().ID.Between(l.predecessor.Reference().ID, l.ID) {
+	typedNil := false
+	if pred, ok := l.predecessor.(*RemoteNode); ok {
+		if pred == nil {
+			typedNil = true
+		}
+	}
+	if typedNil || l.predecessor == nil || node.Reference().ID.Between(l.predecessor.Reference().ID, l.ID) {
 		l.predecessor = node
 	}
 	return nil

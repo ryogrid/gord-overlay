@@ -1,9 +1,9 @@
 syntax = "proto3";
 package server;
-option go_package = "github.com/ryogrid/gord-overlay/server";
+//option go_package = "github.com/ryogrid/gord-overlay/server";
 
 import "google/protobuf/empty.proto";
-import "node.proto";
+import "server/node.proto";
 
 service InternalService {
   rpc Ping(google.protobuf.Empty) returns (google.protobuf.Empty) {}

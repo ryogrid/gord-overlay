@@ -5,29 +5,26 @@
 
 ---
 
-## What is Gord?
-Gord is a peer-to-peer lookup service for internet applications.
-Gord provides an ability to return which server node a given key belongs to by cooperating with other Gords, 
-which are distributed across other servers. 
-Gord will start as a gRPC server and your application can determine which node should contain your data by simply giving Gord a key via gRPC.
-
-## Features
-- Resolve the node which a given key belongs to
+## What is Gord-Overlay?
+Gord-Overlay is a DHT based distribute key-value store.
+Gord-Overlay will start as a REST server and your application can access data via REST.
 
 ## How is it work?
-Gord is an implementation of [DHT Chord](https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf).
+Gord-Overlay is an implementation of [DHT Chord](https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf) and simple key-value store using the DHT.
 Chord protocol is an algorithm which extends consistent hashing.
 Gord server, using chord protocol, allocates a key to a node in distributed nodes ring.
 
 ![chord ring](docs/architecture-1.png) 
 
-In addition, the gord servers communicate with each other via gRPC to synchronize route information.
-Then, the client can query via gRPC to resolve the node.
-
-![gRPC server](docs/architecture-2.png)
+In addition, the gord servers communicate with each other via REST to synchronize route information.
+Then, the server can query via gRPC to resolve the node and communicate with the node.
 
 ## Usage
-Gord's gRPC server listens 26041 port by default.
+Gord's gRPC server reqires a hostname and port number pair.  
+If you specify 127.0.0.1:26000, the server will use 127.0.0.1:26000 to communication between other nodes and use 127.0.0.1:26001 to listen local gRPC request.
+Specified hostname and port number pair is internally used as a node identifier, so you need to specify a unique pair for each node.
+Additionaly, you need to specify address of a node which is already in the network to join the network except the first node.
+
 ```
 ## Build
 make build
@@ -36,11 +33,10 @@ make build
 ./gordctl -h
 
 ## Start server
-./gordctl -l hostName(required) -n existNodeHostName(optional)
+./gordctl -l hostAndPort(required) -n existNodeHostAndPort(optional)
 ```
 
 ## Examples
-0. Install [grpcurl](https://github.com/fullstorydev/grpcurl)
 
 1. Start servers
 ```bash
@@ -51,27 +47,32 @@ docker-compose build && docker-compose up
 2. Try! 
 ```bash
 # Check successor list for each node
-grpcurl -plaintext localhost:26040 server.InternalService/Successors \
-&& grpcurl -plaintext localhost:36040 server.InternalService/Successors \
-&& grpcurl -plaintext localhost:46040 server.InternalService/Successors
+curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:26040/server.InternalService/Successors \
+&& curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:36040/server.InternalService/Successors \
+&& curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:46040/server.InternalService/Successors
 
 # Check predecessor for each node
-grpcurl -plaintext localhost:26040 server.InternalService/Predecessor \
-&& grpcurl -plaintext localhost:36040 server.InternalService/Predecessor \
-&& grpcurl -plaintext localhost:46040 server.InternalService/Predecessor
+curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:26040/server.InternalService/Predecessor \
+&& curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:36040/server.InternalService/Predecessor \
+&& curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:46040/server.InternalService/Predecessor
 
 # Query
-grpcurl -plaintext -d '{"key": "gord1"}' localhost:26041 server.ExternalService/FindHostForKey \
-&& grpcurl -plaintext -d '{"key": "gord1"}' localhost:36041 server.ExternalService/FindHostForKey \
-&& grpcurl -plaintext -d '{"key": "gord1"}' localhost:46041 server.ExternalService/FindHostForKey 
+curl -X POST -H "Content-Type: application/json" -d '{"key": "gord1"}' http://localhost:26041/server.ExternalService/FindHostForKey \
+&& curl -X POST -H "Content-Type: application/json" -d '{"key": "gord1"}' http://localhost:36041/server.ExternalService/FindHostForKey \
+&& curl -X POST -H "Content-Type: application/json" -d '{"key": "gord1"}' http://localhost:46041/server.ExternalService/FindHostForKey 
 
-grpcurl -plaintext -d '{"key": "gord2"}' localhost:26041 server.ExternalService/FindHostForKey \
-&& grpcurl -plaintext -d '{"key": "gord2"}' localhost:36041 server.ExternalService/FindHostForKey \
-&& grpcurl -plaintext -d '{"key": "gord2"}' localhost:46041 server.ExternalService/FindHostForKey 
+curl -X POST -H "Content-Type: application/json" -d '{"key": "gord2"}' http://localhost:26041/server.ExternalService/FindHostForKey \
+&& curl -X POST -H "Content-Type: application/json" -d '{"key": "gord2"}' http://localhost:36041 server.ExternalService/FindHostForKey \
+&& curl -X POST -H "Content-Type: application/json" -d '{"key": "gord2"}' http://localhost:46041 server.ExternalService/FindHostForKey 
 
-grpcurl -plaintext -d '{"key": "gord"}' localhost:26041 server.ExternalService/FindHostForKey \
-&& grpcurl -plaintext -d '{"key": "gord"}' localhost:36041 server.ExternalService/FindHostForKey \
-&& grpcurl -plaintext -d '{"key": "gord"}' localhost:46041 server.ExternalService/FindHostForKey 
+curl -X POST -H "Content-Type: application/json" -d '{"key": "gord"}' localhost:26041 server.ExternalService/FindHostForKey \
+&& curl -X POST -H "Content-Type: application/json" -d '{"key": "gord"}' localhost:36041 server.ExternalService/FindHostForKey \
+&& curl -X POST -H "Content-Type: application/json" -d '{"key": "gord"}' localhost:46041 server.ExternalService/FindHostForKey
+
+# Put and Get value
+curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge", "value": "foobar"}' http://localhost:26041/server.ExternalService/PutValue
+curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://localhost:36041/server.ExternalService/GetValue
+curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://localhost:46041/server.ExternalService/GetValue
 ```
 
 ## How to build

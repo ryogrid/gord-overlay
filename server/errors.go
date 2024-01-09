@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func handleError(err error) error {
+func HandleError(err error) error {
 	code := status.Code(err)
 	switch code {
 	case codes.Unavailable:

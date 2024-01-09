@@ -2,7 +2,7 @@ package chord
 
 import (
 	"context"
-	"github.com/ryogrid/gord-overlay/pkg/model"
+	"github.com/ryogrid/gord-overlay/model"
 )
 
 // RemoteNode represents remote nodes.
@@ -12,9 +12,9 @@ type RemoteNode struct {
 	Transport
 }
 
-func NewRemoteNode(host string, transport Transport) RingNode {
+func NewRemoteNode(hostAndPort string, transport Transport) RingNode {
 	return &RemoteNode{
-		NodeRef:   model.NewNodeRef(host),
+		NodeRef:   model.NewNodeRef(hostAndPort),
 		Transport: transport,
 	}
 }
