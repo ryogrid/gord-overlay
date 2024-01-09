@@ -55,7 +55,7 @@ func main() {
 			defer cancel()
 			if existNodeHostAndPort != "" {
 				opts = append(opts, core.WithProcessOptions(chord.WithExistNode(
-					chord.NewRemoteNode(existNodeHostAndPort+":"+internalServerPort, process.Transport),
+					chord.NewRemoteNode(existNodeHostAndPort, process.Transport),
 				)))
 			}
 			ins := core.NewChordServer(process, internalServerPort, opts...)

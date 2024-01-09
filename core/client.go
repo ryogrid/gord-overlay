@@ -3,6 +3,7 @@ package core
 import (
 	"connectrpc.com/connect"
 	"context"
+	"fmt"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/model"
 	"github.com/ryogrid/gord-overlay/server"
@@ -71,7 +72,7 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 	//}
 	//cli.Transport = overlayTransport
 
-	return serverconnect.NewInternalServiceClient(http.DefaultClient, address), nil
+	return serverconnect.NewInternalServiceClient(http.DefaultClient, "http://"+address+":"+c.serverPort), nil
 }
 
 func (c *ApiClient) createRingNodeFrom(node *server.Node) chord.RingNode {
@@ -128,6 +129,7 @@ func (c *ApiClient) PredecessorRPC(ctx context.Context, to *model.NodeRef) (chor
 }
 
 func (c *ApiClient) FindSuccessorByTableRPC(ctx context.Context, to *model.NodeRef, id model.HashID) (chord.RingNode, error) {
+	fmt.Println("ApiClient::FindSuccessorByTableRPC", to.Host, id)
 	client, err := c.getGrpcConn(to.Host)
 	if err != nil {
 		return nil, err

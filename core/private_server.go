@@ -3,6 +3,7 @@ package core
 import (
 	"connectrpc.com/connect"
 	"context"
+	"fmt"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/server"
 	"github.com/ryogrid/gord-overlay/serverconnect"
@@ -95,7 +96,7 @@ func (is *InternalServer) Run(ctx context.Context) {
 		path, handler := serverconnect.NewInternalServiceHandler(is)
 		mux.Handle(path, handler)
 		http.ListenAndServe(
-			"127.0.0.1"+":"+is.port,
+			"0.0.0.0"+":"+is.port,
 			mux,
 			//// Use h2c so we can serve HTTP/2 without TLS.
 			//h2c.NewHandler(mux, &http2.Server{}),
@@ -170,6 +171,7 @@ func (is *InternalServer) FindSuccessorByTable(ctx context.Context, req *connect
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
 	successor, err := is.process.FindSuccessorByTable(ctx, req.Msg.Id)
+	fmt.Println("InternalServer::FindSuccessorByTable", is.process.Host, successor, err, *req, req.Msg.Id)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "server: find successor failed. reason = %#v", err)
 	}

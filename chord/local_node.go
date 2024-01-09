@@ -129,6 +129,7 @@ func (l *LocalNode) CreateRing() {
 }
 
 func (l *LocalNode) JoinRing(ctx context.Context, existNode RingNode) error {
+	fmt.Println("join ring", existNode.Reference().Host)
 	successor, err := existNode.FindSuccessorByTable(ctx, l.ID)
 	if err != nil {
 		return fmt.Errorf("find successor failed. err = %#v", err)
