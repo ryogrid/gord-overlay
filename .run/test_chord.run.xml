@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="test_chord" type="GoTestRunConfiguration" factoryName="Go Test">
+    <module name="gord-overlay" />
+    <working_directory value="$PROJECT_DIR$" />
+    <go_parameters value=".\... -v" />
+    <kind value="PACKAGE" />
+    <package value="github.com/ryogrid/gord-overlay/chord" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$" />
+    <framework value="gotest" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -7,14 +7,17 @@ import (
 	"github.com/ryogrid/gord-overlay/model"
 	"github.com/ryogrid/gord-overlay/server"
 	"github.com/ryogrid/gord-overlay/serverconnect"
+	"github.com/ryogrid/gossip-overlay/overlay"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"net"
 	"net/http"
 	"sync"
 	"time"
 )
 
 type ApiClient struct {
+	olPeer   *overlay.OverlayPeer
 	hostNode *chord.LocalNode
 	timeout  time.Duration
 	connPool map[string]*grpc.ClientConn
@@ -51,25 +54,29 @@ func (c *ApiClient) getGrpcConn(address string) (InternalServiceClient, error) {
 */
 
 func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceClient, error) {
-	//cli := http.DefaultClient
-	//overlayTransport := &http.Transport{
-	//	Proxy: http.ProxyFromEnvironment,
-	//	//DialContext: defaultTransportDialContext(&net.Dialer{
-	//	//	Timeout:   30 * time.Second,
-	//	//	KeepAlive: 30 * time.Second,
-	//	//}),
-	//	DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-	//		return nil, nil
-	//	},
-	//	ForceAttemptHTTP2:     false,
-	//	MaxIdleConns:          100,
-	//	IdleConnTimeout:       90 * time.Second,
-	//	TLSHandshakeTimeout:   10 * time.Second,
-	//	ExpectContinueTimeout: 1 * time.Second,
-	//}
-	//cli.Transport = overlayTransport
+	cli := http.DefaultClient
+	overlayTransport := &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		//DialContext: defaultTransportDialContext(&net.Dialer{
+		//	Timeout:   30 * time.Second,
+		//	KeepAlive: 30 * time.Second,
+		//}),
+		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+			// TODO: Need to implement (ApiClient::getGrpcConn)
+			//       to use overlayTransport.DialContext
+			//       conversion address string to PeerName is needed
+			return c.olPeer.OpenStreamToTargetPeer(address), nil
+		},
+		ForceAttemptHTTP2:     false,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+	}
+	cli.Transport = overlayTransport
 
-	return serverconnect.NewInternalServiceClient(http.DefaultClient, "http://"+address), nil
+	//return serverconnect.NewInternalServiceClient(http.DefaultClient, "http://"+address), nil
+	return serverconnect.NewInternalServiceClient(cli, "http://"+address), nil
 }
 
 func (c *ApiClient) createRingNodeFrom(node *server.Node) chord.RingNode {

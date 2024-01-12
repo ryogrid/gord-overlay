@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="build_main.go" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="gord-overlay" />
+    <working_directory value="$PROJECT_DIR$" />
+    <parameters value="-l 127.0.0.1:26040" />
+    <kind value="FILE" />
+    <package value="github.com/ryogird/gord-overlay" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

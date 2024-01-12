@@ -50,6 +50,8 @@ func main() {
 				os.Exit(1)
 			}
 
+			// TODO: Need to implement getting gossip.OverlayPeer obj and pass it to several initialization methods
+
 			var (
 				ctx, cancel = context.WithCancel(context.Background())
 				localNode   = chord.NewLocalNode(hostAndPortBase)
@@ -67,11 +69,6 @@ func main() {
 				)))
 			}
 			ins := core.NewChordServer(process, basePort, opts...)
-			//basePortNum, err := strconv.Atoi(basePort)
-			//if err != nil {
-			//	fmt.Println("invalid basePort. err = %#v", err)
-			//	os.Exit(1)
-			//}
 			exs := core.NewExternalServer(process, strconv.Itoa(basePortNum+1))
 			go ins.Run(ctx)
 			go exs.Run()
