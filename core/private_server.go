@@ -63,8 +63,8 @@ func NewChordServer(process *chord.Process, port string, opts ...InternalServerO
 		o(opt)
 	}
 	return &InternalServer{
-		process:    process,
 		port:       port,
+		process:    process,
 		opt:        opt,
 		shutdownCh: make(chan struct{}, 1),
 	}

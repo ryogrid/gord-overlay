@@ -15,20 +15,18 @@ import (
 )
 
 type ApiClient struct {
-	hostNode   *chord.LocalNode
-	serverPort string
-	timeout    time.Duration
-	connPool   map[string]*grpc.ClientConn
-	poolLock   sync.Mutex
-	opts       grpc.CallOption
+	hostNode *chord.LocalNode
+	timeout  time.Duration
+	connPool map[string]*grpc.ClientConn
+	poolLock sync.Mutex
+	opts     grpc.CallOption
 }
 
-func NewChordApiClient(hostNode *chord.LocalNode, port string, timeout time.Duration) chord.Transport {
+func NewChordApiClient(hostNode *chord.LocalNode, timeout time.Duration) chord.Transport {
 	return &ApiClient{
-		hostNode:   hostNode,
-		serverPort: port,
-		timeout:    timeout,
-		connPool:   map[string]*grpc.ClientConn{},
+		hostNode: hostNode,
+		timeout:  timeout,
+		connPool: map[string]*grpc.ClientConn{},
 	}
 }
 
@@ -71,7 +69,7 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 	//}
 	//cli.Transport = overlayTransport
 
-	return serverconnect.NewInternalServiceClient(http.DefaultClient, "http://"+address+":"+c.serverPort), nil
+	return serverconnect.NewInternalServiceClient(http.DefaultClient, "http://"+address), nil
 }
 
 func (c *ApiClient) createRingNodeFrom(node *server.Node) chord.RingNode {
