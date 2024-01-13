@@ -1,0 +1,10 @@
+- check go version
+  - $ go version
+  - "go version go1.21.2 windows/amd64" worked
+- $ go install github.com/bufbuild/buf/cmd/buf@v1.28.1
+- $ go install github.com/fullstorydev/grpcurl/cmd/grpcurl@v1.8.9
+- $ go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.5.3
+- $ go install connectrpc.com/connect/cmd/protoc-gen-connect-go@v1.14.0
+- $ buf generate
+  - move generated files to appropriate directories
+- $ go mod tidy

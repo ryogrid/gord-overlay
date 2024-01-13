@@ -30,10 +30,10 @@ Then, servers can query via REST to resolve server address and communicate with 
 make build
 
 ## Check how to use this command
-./gordctl -h
+./gordolctl -h
 
 ## Start server
-./gordctl -l hostAndPort(required) -n existNodeHostAndPort(optional)
+./gordolctl -l hostAndPort(required) -n existNodeHostAndPort(optional)
 ```
 
 ## Examples
