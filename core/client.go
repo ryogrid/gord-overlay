@@ -3,11 +3,13 @@ package core
 import (
 	"connectrpc.com/connect"
 	"context"
+	"fmt"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/model"
 	"github.com/ryogrid/gord-overlay/server"
 	"github.com/ryogrid/gord-overlay/serverconnect"
 	"github.com/ryogrid/gossip-overlay/overlay"
+	"github.com/ryogrid/gossip-overlay/util"
 	"github.com/weaveworks/mesh"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -64,7 +66,8 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 		//	KeepAlive: 30 * time.Second,
 		//}),
 		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-			return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(model.NewHashIDUint64(address))), nil
+			fmt.Println("DialContext", network, addr)
+			return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
 		},
 		ForceAttemptHTTP2:     false,
 		MaxIdleConns:          100,
