@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/core"
+	"github.com/ryogrid/gossip-overlay/overlay"
+	"github.com/ryogrid/gossip-overlay/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"net"
@@ -22,11 +24,6 @@ var (
 	existNodeHostAndPort string
 )
 
-//const (
-//	externalServerPort = "26041" //TODO: to be configurable
-//	internalServerPort = "26040" //TODO: to be configurable
-//)
-
 func main() {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
@@ -39,7 +36,7 @@ func main() {
 		Long:  "Run gord-overlay process and gRPC server",
 		Run: func(cmd *cobra.Command, args []string) {
 
-			_, basePort, err := net.SplitHostPort(hostAndPortBase)
+			host, basePort, err := net.SplitHostPort(hostAndPortBase)
 			if err != nil {
 				fmt.Println("invalid hostAndPort. err = %#v", err)
 				os.Exit(1)
@@ -50,12 +47,21 @@ func main() {
 				os.Exit(1)
 			}
 
-			// TODO: Need to implement getting gossip.OverlayPeer obj and pass it to several initialization methods
+			peers := &util.Stringset{}
+			if existNodeHostAndPort != "" {
+				peers.Set(existNodeHostAndPort)
+			}
+
+			olPeer, err := overlay.NewOverlayPeer(&host, uint16(basePortNum), peers)
+			if err != nil {
+				fmt.Println("failed to create overlay peer. err = %#v", err)
+				panic(err)
+			}
 
 			var (
 				ctx, cancel = context.WithCancel(context.Background())
 				localNode   = chord.NewLocalNode(hostAndPortBase)
-				transport   = core.NewChordApiClient(localNode, time.Second*3)
+				transport   = core.NewChordApiClient(localNode, olPeer, time.Second*3)
 				process     = chord.NewProcess(localNode, transport)
 				opts        = []core.InternalServerOptionFunc{
 					core.WithNodeOption(hostAndPortBase),
@@ -68,7 +74,7 @@ func main() {
 					chord.NewRemoteNode(existNodeHostAndPort, process.Transport),
 				)))
 			}
-			ins := core.NewChordServer(process, basePort, opts...)
+			ins := core.NewChordServer(process, olPeer, basePort, opts...)
 			exs := core.NewExternalServer(process, strconv.Itoa(basePortNum+1))
 			go ins.Run(ctx)
 			go exs.Run()

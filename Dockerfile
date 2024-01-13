@@ -10,6 +10,6 @@ RUN make build
 
 FROM gcr.io/distroless/cc-debian12
 
-COPY --from=gord-build /go/src/app/gordctl /
-ENTRYPOINT ["/gordctl"]
+COPY --from=gord-build /go/src/app/gordolctl /
+ENTRYPOINT ["/gordolctl"]
 CMD ["-l", "", "-n", ""]

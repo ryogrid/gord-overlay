@@ -3,6 +3,7 @@ package model
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/binary"
 	"math/big"
 )
 
@@ -20,6 +21,14 @@ func NewHashID(key string) HashID {
 	hf := hashFunc()
 	hf.Write([]byte(key))
 	return hf.Sum(nil)
+}
+
+func NewHashIDUint64(key string) uint64 {
+	hf := hashFunc()
+	hf.Write([]byte(key))
+	var ret uint64
+	binary.Read(bytes.NewBuffer(hf.Sum(nil)[0:7]), binary.LittleEndian, &ret)
+	return ret
 }
 
 func BytesToHashID(b []byte) HashID {

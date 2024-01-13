@@ -4,7 +4,7 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
-BINARY_NAME=gordctl
+BINARY_NAME=gordolctl
 BUILD_TARGET=main.go
 
 all: test build

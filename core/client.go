@@ -8,6 +8,7 @@ import (
 	"github.com/ryogrid/gord-overlay/server"
 	"github.com/ryogrid/gord-overlay/serverconnect"
 	"github.com/ryogrid/gossip-overlay/overlay"
+	"github.com/weaveworks/mesh"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"net"
@@ -25,8 +26,9 @@ type ApiClient struct {
 	opts     grpc.CallOption
 }
 
-func NewChordApiClient(hostNode *chord.LocalNode, timeout time.Duration) chord.Transport {
+func NewChordApiClient(hostNode *chord.LocalNode, olPeer *overlay.OverlayPeer, timeout time.Duration) chord.Transport {
 	return &ApiClient{
+		olPeer:   olPeer,
 		hostNode: hostNode,
 		timeout:  timeout,
 		connPool: map[string]*grpc.ClientConn{},
@@ -62,10 +64,7 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 		//	KeepAlive: 30 * time.Second,
 		//}),
 		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-			// TODO: Need to implement (ApiClient::getGrpcConn)
-			//       to use overlayTransport.DialContext
-			//       conversion address string to PeerName is needed
-			return c.olPeer.OpenStreamToTargetPeer(address), nil
+			return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(model.NewHashIDUint64(address))), nil
 		},
 		ForceAttemptHTTP2:     false,
 		MaxIdleConns:          100,

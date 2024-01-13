@@ -17,6 +17,7 @@ import (
 
 // InternalServer represents gRPC server to expose for internal chord processes
 type InternalServer struct {
+	olPeer     *overlay.OverlayPeer
 	port       string
 	process    *chord.Process
 	opt        *chordOption
@@ -58,12 +59,13 @@ func WithTimeoutConnNode(duration time.Duration) InternalServerOptionFunc {
 }
 
 // NewChordServer creates a chord server
-func NewChordServer(process *chord.Process, port string, opts ...InternalServerOptionFunc) *InternalServer {
+func NewChordServer(process *chord.Process, olPeer *overlay.OverlayPeer, port string, opts ...InternalServerOptionFunc) *InternalServer {
 	opt := newDefaultServerOption()
 	for _, o := range opts {
 		o(opt)
 	}
 	return &InternalServer{
+		olPeer:     olPeer,
 		port:       port,
 		process:    process,
 		opt:        opt,
@@ -103,7 +105,7 @@ func (is *InternalServer) Run(ctx context.Context) {
 		//)
 
 		//http.Serve(overlay.NewOverlayListener("0.0.0.0"+":"+is.port), mux)
-		http.Serve(overlay.NewOverlayListener(nil), mux)
+		http.Serve(overlay.NewOverlayListener(is.olPeer), mux)
 	}()
 	if err := is.process.Start(ctx, is.opt.processOpts...); err != nil {
 		log.Fatalf("failed to run chord server. reason: %#v", err)
