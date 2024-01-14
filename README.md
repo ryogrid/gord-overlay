@@ -46,16 +46,6 @@ docker-compose build && docker-compose up
 
 2. Try! 
 ```bash
-# Check successor list for each node
-curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:26040/server.InternalService/Successors \
-&& curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:36040/server.InternalService/Successors \
-&& curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:46040/server.InternalService/Successors
-
-# Check predecessor for each node
-curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:26040/server.InternalService/Predecessor \
-&& curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:36040/server.InternalService/Predecessor \
-&& curl -X POST -H "Content-Type: application/json" -d '{}' http://localhost:46040/server.InternalService/Predecessor
-
 # Query
 curl -X POST -H "Content-Type: application/json" -d '{"key": "gord1"}' http://localhost:26041/server.ExternalService/FindHostForKey \
 && curl -X POST -H "Content-Type: application/json" -d '{"key": "gord1"}' http://localhost:36041/server.ExternalService/FindHostForKey \
