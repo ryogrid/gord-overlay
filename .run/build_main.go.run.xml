@@ -2,9 +2,9 @@
   <configuration default="false" name="build_main.go" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="gord-overlay" />
     <working_directory value="$PROJECT_DIR$" />
-    <parameters value="-l 127.0.0.1:26040" />
-    <kind value="FILE" />
-    <package value="github.com/ryogird/gord-overlay" />
+    <parameters value="-l 127.0.0.1:10003 -n 127.0.0.1:10000" />
+    <kind value="PACKAGE" />
+    <package value="github.com/ryogrid/gord-overlay" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$/main.go" />
     <method v="2" />

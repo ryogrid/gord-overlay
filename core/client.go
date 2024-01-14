@@ -67,7 +67,8 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 		//}),
 		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
 			fmt.Println("DialContext", network, addr)
-			return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
+			//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
+			return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
 		},
 		ForceAttemptHTTP2:     false,
 		MaxIdleConns:          100,
