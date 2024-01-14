@@ -9,6 +9,8 @@ import (
 	"github.com/ryogrid/gord-overlay/serverconnect"
 	"github.com/ryogrid/gossip-overlay/overlay"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -106,7 +108,8 @@ func (is *InternalServer) Run(ctx context.Context) {
 		//)
 
 		//http.Serve(overlay.NewOverlayListener("0.0.0.0"+":"+is.port), mux)
-		http.Serve(is.olPeer.GetOverlayListener(), mux)
+		//http.Serve(is.olPeer.GetOverlayListener(), mux)
+		http.Serve(is.olPeer.GetOverlayListener(), h2c.NewHandler(mux, &http2.Server{}))
 	}()
 	if err := is.process.Start(ctx, is.opt.processOpts...); err != nil {
 		log.Fatalf("failed to run chord server. reason: %#v", err)

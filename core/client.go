@@ -70,13 +70,21 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 			//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
 			return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
 		},
-		ForceAttemptHTTP2:     false,
+		ForceAttemptHTTP2:     true,            //false,
 		MaxIdleConns:          0,               //100,
 		IdleConnTimeout:       1 * time.Second, //90 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 90 * time.Second,
 		MaxIdleConnsPerHost:   0, //100,
 	}
+	//overlayTransport := &http2.Transport{
+	//	AllowHTTP: true,
+	//	DialTLS: func(network, addr string, _ *tls.Config) (net.Conn, error) {
+	//		fmt.Println("DialContext", network, addr)
+	//		//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
+	//		return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
+	//	},
+	//}
 	cli.Transport = overlayTransport
 
 	return serverconnect.NewInternalServiceClient(cli, "http://"+address), nil
