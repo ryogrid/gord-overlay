@@ -23,4 +23,4 @@ services:
     ports:
       - "46040:26040"
       - "46041:26041"
-    command: -l gord3:26040 -n gord2:26040
+    command: -l gord3:26040 -n gord1:26040

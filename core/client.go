@@ -20,20 +20,20 @@ import (
 )
 
 type ApiClient struct {
-	olPeer   *overlay.OverlayPeer
-	hostNode *chord.LocalNode
-	timeout  time.Duration
-	connPool map[string]*grpc.ClientConn
-	poolLock sync.Mutex
-	opts     grpc.CallOption
+	olPeer     *overlay.OverlayPeer
+	hostNode   *chord.LocalNode
+	timeout    time.Duration
+	clientPool map[string]*http.Client
+	poolLock   sync.Mutex
+	opts       grpc.CallOption
 }
 
 func NewChordApiClient(hostNode *chord.LocalNode, olPeer *overlay.OverlayPeer, timeout time.Duration) chord.Transport {
 	return &ApiClient{
-		olPeer:   olPeer,
-		hostNode: hostNode,
-		timeout:  timeout,
-		connPool: map[string]*grpc.ClientConn{},
+		olPeer:     olPeer,
+		hostNode:   hostNode,
+		timeout:    timeout,
+		clientPool: make(map[string]*http.Client),
 	}
 }
 
@@ -71,15 +71,14 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 			return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
 		},
 		ForceAttemptHTTP2:     false,
-		MaxIdleConns:          100,
-		IdleConnTimeout:       90 * time.Second,
+		MaxIdleConns:          0,               //100,
+		IdleConnTimeout:       1 * time.Second, //90 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
-		MaxIdleConnsPerHost:   100,
+		ExpectContinueTimeout: 90 * time.Second,
+		MaxIdleConnsPerHost:   0, //100,
 	}
 	cli.Transport = overlayTransport
 
-	//return serverconnect.NewInternalServiceClient(http.DefaultClient, "http://"+address), nil
 	return serverconnect.NewInternalServiceClient(cli, "http://"+address), nil
 }
 
@@ -196,11 +195,11 @@ func (c *ApiClient) NotifyRPC(ctx context.Context, to *model.NodeRef, node *mode
 }
 
 func (c *ApiClient) Shutdown() {
-	c.poolLock.Lock()
-	defer c.poolLock.Unlock()
-	for _, conn := range c.connPool {
-		conn.Close()
-	}
+	//c.poolLock.Lock()
+	//defer c.poolLock.Unlock()
+	//for _, client := range c.clientPool {
+	//	client.Close()
+	//}
 }
 
 func (c *ApiClient) PutValueInnerRPC(ctx context.Context, to *model.NodeRef, key *string, value *string) (bool, error) {
