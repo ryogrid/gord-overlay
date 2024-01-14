@@ -75,6 +75,7 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 		IdleConnTimeout:       90 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
+		MaxIdleConnsPerHost:   100,
 	}
 	cli.Transport = overlayTransport
 
