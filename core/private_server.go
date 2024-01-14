@@ -35,7 +35,7 @@ type InternalServerOptionFunc func(option *chordOption)
 
 func newDefaultServerOption() *chordOption {
 	return &chordOption{
-		host:            "127.0.0.1",
+		host:            "0.0.0.0",
 		timeoutConnNode: time.Second * 5,
 	}
 }
