@@ -25,6 +25,8 @@ var (
 )
 
 func main() {
+	//overlay_setting.OVERLAY_DEBUG = true
+
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
 		<-sigs
@@ -61,11 +63,13 @@ func main() {
 			var (
 				ctx, cancel = context.WithCancel(context.Background())
 				localNode   = chord.NewLocalNode(hostAndPortBase)
-				transport   = core.NewChordApiClient(localNode, olPeer, time.Second*3)
-				process     = chord.NewProcess(localNode, transport)
-				opts        = []core.InternalServerOptionFunc{
+				//transport   = core.NewChordApiClient(localNode, olPeer, time.Second*3)
+				transport = core.NewChordApiClient(localNode, olPeer, time.Second*60)
+				process   = chord.NewProcess(localNode, transport)
+				opts      = []core.InternalServerOptionFunc{
 					core.WithNodeOption(hostAndPortBase),
-					core.WithTimeoutConnNode(time.Second * 3),
+					//core.WithTimeoutConnNode(time.Second * 3),
+					core.WithTimeoutConnNode(time.Second * 60),
 				}
 			)
 			defer cancel()

@@ -3,6 +3,7 @@ package core
 import (
 	"connectrpc.com/connect"
 	"context"
+	"fmt"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/server"
 	"github.com/ryogrid/gord-overlay/serverconnect"
@@ -111,7 +112,8 @@ func (is *InternalServer) Run(ctx context.Context) {
 		log.Fatalf("failed to run chord server. reason: %#v", err)
 	}
 	log.Info("Running Chord server...")
-	log.Infof("Chord listening on %s:%s", is.process.Host, is.port)
+	//log.Infof("Chord listening on %s:%s", is.process.Host, is.port)
+	log.Infof("Chord listening on %d", is.olPeer.Peer.GossipDataMan.Self)
 	<-is.shutdownCh
 	is.process.Shutdown()
 }
@@ -172,6 +174,7 @@ func (is *InternalServer) Predecessor(ctx context.Context, _ *connect.Request[em
 }
 
 func (is *InternalServer) FindSuccessorByTable(ctx context.Context, req *connect.Request[server.FindRequest]) (*connect.Response[server.Node], error) {
+	fmt.Println("InternalServer::FindSuccessorByTable", req.Msg.Id)
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
@@ -220,6 +223,7 @@ func (is *InternalServer) FindClosestPrecedingNode(ctx context.Context, req *con
 }
 
 func (is *InternalServer) Notify(ctx context.Context, req *connect.Request[server.Node]) (*connect.Response[emptypb.Empty], error) {
+	fmt.Println("InternalServer::Notify", req.Msg.Host)
 	if is.process.IsShutdown {
 		return nil, status.Errorf(codes.Unavailable, "server has started shutdown")
 	}
