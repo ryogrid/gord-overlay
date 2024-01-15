@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	//"github.com/e-dard/netbug"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/core"
 	"github.com/ryogrid/gossip-overlay/overlay"
@@ -10,7 +11,6 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"net"
-	//_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"runtime"

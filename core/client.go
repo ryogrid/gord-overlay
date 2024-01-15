@@ -70,12 +70,12 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 			//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
 			return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
 		},
-		ForceAttemptHTTP2:     true,            //false,
-		MaxIdleConns:          0,               //100,
-		IdleConnTimeout:       1 * time.Second, //90 * time.Second,
+		ForceAttemptHTTP2:     true,              //false,
+		MaxIdleConns:          100,               //0,
+		IdleConnTimeout:       180 * time.Second, //0,//1 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 90 * time.Second,
-		MaxIdleConnsPerHost:   0, //100,
+		MaxIdleConnsPerHost:   3, //100, //0,
 	}
 	//overlayTransport := &http2.Transport{
 	//	AllowHTTP: true,
