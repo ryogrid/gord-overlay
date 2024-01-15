@@ -35,7 +35,7 @@ type ProcessOptionFunc func(option *processOption)
 
 func newDefaultProcessOption() *processOption {
 	return &processOption{
-		stabilizerInterval: 2000 * time.Millisecond, //200 * time.Millisecond, //50 * time.Millisecond,
+		stabilizerInterval: 200 * time.Millisecond, //2000 * time.Millisecond, //50 * time.Millisecond,
 		timeoutConnNode:    1 * time.Second,
 	}
 }
@@ -86,7 +86,7 @@ func (p *Process) activate(ctx context.Context, existNode RingNode) error {
 		p.LocalNode.CreateRing()
 		return nil
 	}
-	p.LocalNode.predecessor = existNode
+	//p.LocalNode.predecessor = existNode
 	if err := p.LocalNode.JoinRing(ctx, existNode); err != nil {
 		return err
 	}
