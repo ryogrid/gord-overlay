@@ -10,6 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"net"
+	//_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"runtime"
@@ -28,6 +29,14 @@ var (
 func main() {
 	//overlay_setting.OVERLAY_DEBUG = true
 	runtime.GOMAXPROCS(10)
+
+	//go func() {
+	//	r := http.NewServeMux()
+	//	netbug.RegisterHandler("/debug/pprof/", r)
+	//	if err := http.ListenAndServe(":8080", r); err != nil {
+	//		log.Fatal(err)
+	//	}
+	//}()
 
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
