@@ -3,6 +3,7 @@ package core
 import (
 	"connectrpc.com/connect"
 	"context"
+	"fmt"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/model"
 	server2 "github.com/ryogrid/gord-overlay/server"
@@ -70,11 +71,23 @@ func (g *ExternalServer) Shutdown() {
 	g.shutdownCh <- struct{}{}
 }
 
+func printSuccessors(ringNodes []chord.RingNode) {
+	fmt.Printf("successor: ")
+	for _, node := range ringNodes {
+		fmt.Printf("%s, ", node.Reference().Host)
+	}
+	fmt.Println("")
+}
+
 // FindHostForKey search for a given key's node.
 // It is implemented for PublicService.
 func (g *ExternalServer) FindHostForKey(ctx context.Context, req *connect.Request[server2.FindHostRequest]) (*connect.Response[server2.Node], error) {
+	ringNodes, err := g.process.LocalNode.GetSuccessors(nil)
+	printSuccessors(ringNodes)
+
 	id := model.NewHashID(req.Msg.Key)
-	s, err := g.process.FindSuccessorByTable(ctx, id)
+	//s, err := g.process.FindSuccessorByTable(ctx, id)
+	s, err := g.process.FindSuccessorByList(ctx, id)
 	if err != nil {
 		log.Errorf("FindHostForKey failed. reason: %#v", err)
 		return nil, err
@@ -88,7 +101,8 @@ func (g *ExternalServer) FindHostForKey(ctx context.Context, req *connect.Reques
 
 func (g *ExternalServer) PutValue(ctx context.Context, req *connect.Request[server2.PutValueRequest]) (*connect.Response[server2.PutValueResponse], error) {
 	id := model.NewHashID(req.Msg.Key)
-	s, err := g.process.FindSuccessorByTable(ctx, id)
+	//s, err := g.process.FindSuccessorByTable(ctx, id)
+	s, err := g.process.FindSuccessorByList(ctx, id)
 	if err != nil {
 		log.Errorf("FindHostForKey failed. reason: %#v", err)
 		return nil, err
@@ -108,7 +122,8 @@ func (g *ExternalServer) PutValue(ctx context.Context, req *connect.Request[serv
 
 func (g *ExternalServer) GetValue(ctx context.Context, req *connect.Request[server2.GetValueRequest]) (*connect.Response[server2.GetValueResponse], error) {
 	id := model.NewHashID(req.Msg.Key)
-	s, err := g.process.FindSuccessorByTable(ctx, id)
+	//s, err := g.process.FindSuccessorByTable(ctx, id)
+	s, err := g.process.FindSuccessorByList(ctx, id)
 	if err != nil {
 		log.Errorf("FindHostForKey failed. reason: %#v", err)
 		return nil, err
@@ -129,7 +144,8 @@ func (g *ExternalServer) GetValue(ctx context.Context, req *connect.Request[serv
 
 func (g *ExternalServer) DeleteValue(ctx context.Context, req *connect.Request[server2.DeleteValueRequest]) (*connect.Response[server2.DeleteValueResponse], error) {
 	id := model.NewHashID(req.Msg.Key)
-	s, err := g.process.FindSuccessorByTable(ctx, id)
+	//s, err := g.process.FindSuccessorByTable(ctx, id)
+	s, err := g.process.FindSuccessorByList(ctx, id)
 	if err != nil {
 		log.Errorf("FindHostForKey failed. reason: %#v", err)
 		return nil, err

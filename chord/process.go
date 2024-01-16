@@ -86,7 +86,7 @@ func (p *Process) activate(ctx context.Context, existNode RingNode) error {
 		p.LocalNode.CreateRing()
 		return nil
 	}
-	//p.LocalNode.predecessor = existNode
+	p.LocalNode.predecessor = existNode
 	if err := p.LocalNode.JoinRing(ctx, existNode); err != nil {
 		return err
 	}
