@@ -88,8 +88,11 @@ func (g *ExternalServer) FindHostForKey(ctx context.Context, req *connect.Reques
 	id := model.NewHashID(req.Msg.Key)
 	//s, err := g.process.FindSuccessorByTable(ctx, id)
 	s, err := g.process.FindSuccessorByList(ctx, id)
-	if err != nil {
-		log.Errorf("FindHostForKey failed. reason: %#v", err)
+	if err == chord.ErrNotFound {
+		// FindSuccessorByList can't return self node
+		s = g.process.LocalNode
+	} else if err != nil {
+		log.Errorf("FindSuccessorByList failed. reason: %v", err)
 		return nil, err
 	}
 	return &connect.Response[server2.Node]{
@@ -103,14 +106,17 @@ func (g *ExternalServer) PutValue(ctx context.Context, req *connect.Request[serv
 	id := model.NewHashID(req.Msg.Key)
 	//s, err := g.process.FindSuccessorByTable(ctx, id)
 	s, err := g.process.FindSuccessorByList(ctx, id)
-	if err != nil {
-		log.Errorf("FindHostForKey failed. reason: %#v", err)
+	if err == chord.ErrNotFound {
+		// FindSuccessorByList can't return self node
+		s = g.process.LocalNode
+	} else if err != nil {
+		log.Errorf("FindSuccessorByList failed. reason: %v", err)
 		return nil, err
 	}
 	// TODO: need to consider repllication (ExternalServer::PutValue)
 	success, err2 := s.PutValue(ctx, &req.Msg.Key, &req.Msg.Value)
 	if err2 != nil {
-		log.Errorf("External PutValue failed. reason: %#v", err)
+		log.Errorf("External PutValue failed. reason: %v", err)
 		return nil, err2
 	}
 	return &connect.Response[server2.PutValueResponse]{
@@ -124,8 +130,11 @@ func (g *ExternalServer) GetValue(ctx context.Context, req *connect.Request[serv
 	id := model.NewHashID(req.Msg.Key)
 	//s, err := g.process.FindSuccessorByTable(ctx, id)
 	s, err := g.process.FindSuccessorByList(ctx, id)
-	if err != nil {
-		log.Errorf("FindHostForKey failed. reason: %#v", err)
+	if err == chord.ErrNotFound {
+		// FindSuccessorByList can't return self node
+		s = g.process.LocalNode
+	} else if err != nil {
+		log.Errorf("FindSuccessorByList failed. reason: %v", err)
 		return nil, err
 	}
 	// TODO: need to consider repllication (ExternalServer::GetValue)
@@ -146,14 +155,17 @@ func (g *ExternalServer) DeleteValue(ctx context.Context, req *connect.Request[s
 	id := model.NewHashID(req.Msg.Key)
 	//s, err := g.process.FindSuccessorByTable(ctx, id)
 	s, err := g.process.FindSuccessorByList(ctx, id)
-	if err != nil {
-		log.Errorf("FindHostForKey failed. reason: %#v", err)
+	if err == chord.ErrNotFound {
+		// FindSuccessorByList can't return self node
+		s = g.process.LocalNode
+	} else if err != nil {
+		log.Errorf("FindSuccessorByList failed. reason: %v", err)
 		return nil, err
 	}
 	// TODO: need to consider repllication (ExternalServer::DeleteValue)
 	success, err2 := s.DeleteValue(ctx, &req.Msg.Key)
 	if err2 != nil {
-		log.Errorf("External DeleteValue failed. reason: %#v", err)
+		log.Errorf("External DeleteValue failed. reason: %v", err)
 		return nil, err2
 	}
 	return &connect.Response[server2.DeleteValueResponse]{
