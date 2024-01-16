@@ -35,7 +35,7 @@ type ProcessOptionFunc func(option *processOption)
 
 func newDefaultProcessOption() *processOption {
 	return &processOption{
-		stabilizerInterval: 2000 * time.Millisecond, //200 * time.Millisecond, //3000 * time.Millisecond, //50 * time.Millisecond,
+		stabilizerInterval: 1000 * time.Millisecond, //200 * time.Millisecond, //3000 * time.Millisecond, //50 * time.Millisecond,
 		timeoutConnNode:    1 * time.Second,
 	}
 }
