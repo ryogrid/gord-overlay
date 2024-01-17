@@ -110,6 +110,7 @@ func (is *InternalServer) Run(ctx context.Context) {
 		//http.Serve(overlay.NewOverlayListener("0.0.0.0"+":"+is.port), mux)
 		//http.Serve(is.olPeer.GetOverlayListener(), mux)
 		http.Serve(is.olPeer.GetOverlayListener(), h2c.NewHandler(mux, &http2.Server{}))
+
 	}()
 	if err := is.process.Start(ctx, is.opt.processOpts...); err != nil {
 		log.Fatalf("failed to run chord server. reason: %v", err)
