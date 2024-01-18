@@ -67,12 +67,17 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 	//	//	Timeout:   30 * time.Second,
 	//	//	KeepAlive: 30 * time.Second,
 	//	//}),
-	//	DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-	//		fmt.Println("DialContext", network, addr)
+	//	DialTLSContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+	//		fmt.Println("DialTLSContext", network, addr)
 	//		//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
-	//		return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
+	//		return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
 	//	},
-	//	ForceAttemptHTTP2:     false,             //true,
+	//	//DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+	//	//	fmt.Println("DialContext", network, addr)
+	//	//	//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
+	//	//	return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
+	//	//},
+	//	ForceAttemptHTTP2:     true,              //false,             //true,
 	//	MaxIdleConns:          100,               //0,
 	//	IdleConnTimeout:       180 * time.Second, //0,//1 * time.Second,
 	//	TLSHandshakeTimeout:   10 * time.Second,
@@ -82,12 +87,13 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 	//}
 	cli := &http.Client{
 		Transport: &http2.Transport{
+			//AllowHTTP: true,
 			AllowHTTP: true,
 			DialTLSContext: func(ctx context.Context, network, addr string, _ *tls.Config) (net.Conn, error) {
 				fmt.Println("DialContext", network, addr)
 				//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
-				//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
-				return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
+				return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
+				//return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
 				//return net.Dial(network, addr)
 			},
 		},
