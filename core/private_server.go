@@ -102,9 +102,9 @@ func (is *InternalServer) Run(ctx context.Context) {
 		mux.Handle(path, handler)
 		//http.ListenAndServe(
 		//	"0.0.0.0"+":"+is.port,
-		//	mux,
+		//	//mux,
 		//	//// Use h2c so we can serve HTTP/2 without TLS.
-		//	//h2c.NewHandler(mux, &http2.Server{}),
+		//	h2c.NewHandler(mux, &http2.Server{}),
 		//)
 
 		//http.Serve(overlay.NewOverlayListener("0.0.0.0"+":"+is.port), mux)
@@ -116,7 +116,9 @@ func (is *InternalServer) Run(ctx context.Context) {
 		log.Fatalf("failed to run chord server. reason: %v", err)
 	}
 	log.Info("Running Chord server...")
-	//log.Infof("Chord listening on %s:%s", is.process.Host, is.port)
+	log.Infof("Chord listening on %s:%s", is.process.Host, is.port)
+
+	// TODO: for debugging
 	log.Infof("Chord listening on %d", is.olPeer.Peer.GossipDataMan.Self)
 	<-is.shutdownCh
 	is.process.Shutdown()

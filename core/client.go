@@ -88,6 +88,7 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 				//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
 				//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
 				return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
+				//return net.Dial(network, addr)
 			},
 		},
 	}
