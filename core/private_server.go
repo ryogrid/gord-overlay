@@ -107,9 +107,30 @@ func (is *InternalServer) Run(ctx context.Context) {
 		//	h2c.NewHandler(mux, &http2.Server{}),
 		//)
 
-		//http.Serve(overlay.NewOverlayListener("0.0.0.0"+":"+is.port), mux)
-		//http.Serve(is.olPeer.GetOverlayListener(), mux)
-		http.Serve(is.olPeer.GetOverlayListener(), h2c.NewHandler(mux, &http2.Server{}))
+		serv := &http2.Server{}
+		////http.Serve(overlay.NewOverlayListener("0.0.0.0"+":"+is.port), mux)
+		////http.Serve(is.olPeer.GetOverlayListener(), mux)
+		////serv.MaxReadFrameSize = 1 << 31
+		http.Serve(is.olPeer.GetOverlayListener(), h2c.NewHandler(mux, serv))
+		//oserv, err := overlay.NewOverlayServer(is.olPeer.Peer, is.olPeer.Peer.GossipMM)
+		//if err != nil {
+		//	panic(err)
+		//}
+		//
+		//serv := &http2.Server{}
+		//for {
+		//	channel, _, _, err := oserv.Accept()
+		//	if err != nil {
+		//		fmt.Println("InternalServer::Run", fmt.Sprintf("%v", err))
+		//		continue
+		//	}
+		//	fmt.Println("InternalServer::Run", fmt.Sprintf("%v", channel))
+		//
+		//	tlsChannel := tls.Server(channel, &tls.Config{MinVersion: tls.VersionTLS10, InsecureSkipVerify: true})
+		//	serv.ServeConn(tlsChannel, &http2.ServeConnOpts{
+		//		Handler: mux,
+		//	})
+		//}
 	}()
 	if err := is.process.Start(ctx, is.opt.processOpts...); err != nil {
 		log.Fatalf("failed to run chord server. reason: %v", err)

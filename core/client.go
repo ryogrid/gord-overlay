@@ -87,8 +87,8 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 	//}
 	cli := &http.Client{
 		Transport: &http2.Transport{
-			//AllowHTTP: true,
 			AllowHTTP: true,
+			//AllowHTTP: false,
 			DialTLSContext: func(ctx context.Context, network, addr string, _ *tls.Config) (net.Conn, error) {
 				fmt.Println("DialContext", network, addr)
 				//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
@@ -99,10 +99,21 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 		},
 	}
 	//cli := tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(address))), &tls.Config{InsecureSkipVerify: true})
+	//overlayTransport := &http2.Transport{
+	//	//AllowHTTP: true,
+	//	AllowHTTP: true,
+	//	DialTLSContext: func(ctx context.Context, network, addr string, _ *tls.Config) (net.Conn, error) {
+	//		fmt.Println("DialContext", network, addr)
+	//		//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
+	//		return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
+	//		//return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
+	//		//return net.Dial(network, addr)
+	//	},
+	//}
 	//cli.Transport = overlayTransport
 
 	//return serverconnect.NewInternalServiceClient(cli, "http://"+address), nil
-	return serverconnect.NewInternalServiceClient(cli, "http://"+address), nil
+	return serverconnect.NewInternalServiceClient(cli, "https://"+address), nil
 
 }
 
