@@ -9,8 +9,6 @@ import (
 	"github.com/ryogrid/gord-overlay/serverconnect"
 	"github.com/ryogrid/gossip-overlay/overlay"
 	log "github.com/sirupsen/logrus"
-	"golang.org/x/net/http2"
-	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -102,20 +100,43 @@ func (is *InternalServer) Run(ctx context.Context) {
 		mux.Handle(path, handler)
 		//http.ListenAndServe(
 		//	"0.0.0.0"+":"+is.port,
-		//	mux,
+		//	//mux,
 		//	//// Use h2c so we can serve HTTP/2 without TLS.
-		//	//h2c.NewHandler(mux, &http2.Server{}),
+		//	h2c.NewHandler(mux, &http2.Server{}),
 		//)
 
-		//http.Serve(overlay.NewOverlayListener("0.0.0.0"+":"+is.port), mux)
-		//http.Serve(is.olPeer.GetOverlayListener(), mux)
-		http.Serve(is.olPeer.GetOverlayListener(), h2c.NewHandler(mux, &http2.Server{}))
+		//serv := &http2.Server{}
+		////http.Serve(overlay.NewOverlayListener("0.0.0.0"+":"+is.port), mux)
+		http.Serve(is.olPeer.GetOverlayListener(), mux)
+		////serv.MaxReadFrameSize = 1 << 31
+		//http.Serve(is.olPeer.GetOverlayListener(), h2c.NewHandler(mux, serv))
+		//oserv, err := overlay.NewOverlayServer(is.olPeer.Peer, is.olPeer.Peer.GossipMM)
+		//if err != nil {
+		//	panic(err)
+		//}
+		//
+		//serv := &http2.Server{}
+		//for {
+		//	channel, _, _, err := oserv.Accept()
+		//	if err != nil {
+		//		fmt.Println("InternalServer::Run", fmt.Sprintf("%v", err))
+		//		continue
+		//	}
+		//	fmt.Println("InternalServer::Run", fmt.Sprintf("%v", channel))
+		//
+		//	tlsChannel := tls.Server(channel, &tls.Config{MinVersion: tls.VersionTLS10, InsecureSkipVerify: true})
+		//	serv.ServeConn(tlsChannel, &http2.ServeConnOpts{
+		//		Handler: mux,
+		//	})
+		//}
 	}()
 	if err := is.process.Start(ctx, is.opt.processOpts...); err != nil {
 		log.Fatalf("failed to run chord server. reason: %v", err)
 	}
 	log.Info("Running Chord server...")
-	//log.Infof("Chord listening on %s:%s", is.process.Host, is.port)
+	log.Infof("Chord listening on %s:%s", is.process.Host, is.port)
+
+	// TODO: for debugging
 	log.Infof("Chord listening on %d", is.olPeer.Peer.GossipDataMan.Self)
 	<-is.shutdownCh
 	is.process.Shutdown()

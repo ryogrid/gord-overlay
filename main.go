@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/ryogrid/gossip-overlay/overlay"
+
 	//"github.com/e-dard/netbug"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/core"
-	"github.com/ryogrid/gossip-overlay/overlay"
 	"github.com/ryogrid/gossip-overlay/util"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -50,6 +51,7 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 
 			host, basePort, err := net.SplitHostPort(hostAndPortBase)
+			//_, basePort, err := net.SplitHostPort(hostAndPortBase)
 			if err != nil {
 				fmt.Println("invalid hostAndPort. err = %#v", err)
 				os.Exit(1)
@@ -70,6 +72,7 @@ func main() {
 				fmt.Println("failed to create overlay peer. err = %#v", err)
 				panic(err)
 			}
+			//olPeer := &overlay.OverlayPeer{}
 
 			var (
 				ctx, cancel = context.WithCancel(context.Background())

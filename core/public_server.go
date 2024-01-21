@@ -108,16 +108,29 @@ func (g *ExternalServer) PutValue(ctx context.Context, req *connect.Request[serv
 	s, err := g.process.FindSuccessorByList(ctx, id)
 	if err == chord.ErrNotFound {
 		// FindSuccessorByList can't return self node
-		s = g.process.LocalNode
+		success, err2 := g.process.LocalNode.PutValue(ctx, &req.Msg.Key, &req.Msg.Value)
+		if err2 != nil {
+			log.Errorf("PutValue failed. reason: %v", err2)
+			return &connect.Response[server2.PutValueResponse]{
+				Msg: &server2.PutValueResponse{
+					Success: false,
+				},
+			}, err2
+		}
+		return &connect.Response[server2.PutValueResponse]{
+			Msg: &server2.PutValueResponse{
+				Success: success,
+			},
+		}, nil
 	} else if err != nil {
 		log.Errorf("FindSuccessorByList failed. reason: %v", err)
 		return nil, err
 	}
 	// TODO: need to consider repllication (ExternalServer::PutValue)
-	success, err2 := s.PutValue(ctx, &req.Msg.Key, &req.Msg.Value)
-	if err2 != nil {
-		log.Errorf("External PutValue failed. reason: %v", err)
-		return nil, err2
+	success, err3 := s.PutValue(ctx, &req.Msg.Key, &req.Msg.Value)
+	if err3 != nil {
+		log.Errorf("External PutValue failed. reason: %v", err3)
+		return nil, err3
 	}
 	return &connect.Response[server2.PutValueResponse]{
 		Msg: &server2.PutValueResponse{
@@ -132,7 +145,21 @@ func (g *ExternalServer) GetValue(ctx context.Context, req *connect.Request[serv
 	s, err := g.process.FindSuccessorByList(ctx, id)
 	if err == chord.ErrNotFound {
 		// FindSuccessorByList can't return self node
-		s = g.process.LocalNode
+		val, success, err2 := g.process.LocalNode.GetValue(ctx, &req.Msg.Key)
+		if err2 != nil {
+			log.Errorf("PutValue failed. reason: %v", err2)
+			return &connect.Response[server2.GetValueResponse]{
+				Msg: &server2.GetValueResponse{
+					Success: false,
+				},
+			}, err2
+		}
+		return &connect.Response[server2.GetValueResponse]{
+			Msg: &server2.GetValueResponse{
+				Value:   *val,
+				Success: success,
+			},
+		}, nil
 	} else if err != nil {
 		log.Errorf("FindSuccessorByList failed. reason: %v", err)
 		return nil, err
@@ -157,7 +184,20 @@ func (g *ExternalServer) DeleteValue(ctx context.Context, req *connect.Request[s
 	s, err := g.process.FindSuccessorByList(ctx, id)
 	if err == chord.ErrNotFound {
 		// FindSuccessorByList can't return self node
-		s = g.process.LocalNode
+		success, err2 := g.process.LocalNode.DeleteValue(ctx, &req.Msg.Key)
+		if err2 != nil {
+			log.Errorf("DeleteValue failed. reason: %v", err2)
+			return &connect.Response[server2.DeleteValueResponse]{
+				Msg: &server2.DeleteValueResponse{
+					Success: false,
+				},
+			}, err2
+		}
+		return &connect.Response[server2.DeleteValueResponse]{
+			Msg: &server2.DeleteValueResponse{
+				Success: success,
+			},
+		}, nil
 	} else if err != nil {
 		log.Errorf("FindSuccessorByList failed. reason: %v", err)
 		return nil, err

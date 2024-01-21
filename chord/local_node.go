@@ -130,10 +130,12 @@ func (l *LocalNode) CreateRing() {
 
 func (l *LocalNode) JoinRing(ctx context.Context, existNode RingNode) error {
 	fmt.Println("join ring", existNode.Reference().Host)
+retry:
 	successor, err := existNode.FindSuccessorByTable(ctx, l.ID)
 	if err != nil {
-		//return fmt.Errorf("find successor failed. err = %#v", err)
-		return fmt.Errorf("find successor failed. err = %v", err)
+		fmt.Printf("LocalNode::JoinRing:  find successor failed. err = %v\n", err)
+		goto retry
+		//return fmt.Errorf("find successor failed. err = %v", err)
 	}
 	l.initSuccessors(successor)
 
@@ -142,9 +144,12 @@ func (l *LocalNode) JoinRing(ctx context.Context, existNode RingNode) error {
 		return err
 	}
 
+retry2:
 	err = firstSuc.Notify(ctx, l)
 	if err != nil {
-		return fmt.Errorf("notify failed. err = %#v", err)
+		//return fmt.Errorf("notify failed. err = %#v", err)
+		fmt.Printf("LocalNode::JoinRing:  notify failed. err = %v\n", err)
+		goto retry2
 	}
 
 	successors, err := firstSuc.GetSuccessors(ctx)
