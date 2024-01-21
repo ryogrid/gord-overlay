@@ -3,7 +3,6 @@ package core
 import (
 	"connectrpc.com/connect"
 	"context"
-	"crypto/tls"
 	"fmt"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/model"
@@ -12,7 +11,6 @@ import (
 	"github.com/ryogrid/gossip-overlay/overlay"
 	"github.com/ryogrid/gossip-overlay/util"
 	"github.com/weaveworks/mesh"
-	"golang.org/x/net/http2"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"net"
@@ -60,44 +58,44 @@ func (c *ApiClient) getGrpcConn(address string) (InternalServiceClient, error) {
 */
 
 func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceClient, error) {
-	//cli := http.DefaultClient
-	//overlayTransport := &http.Transport{
-	//	Proxy: http.ProxyFromEnvironment,
-	//	//DialContext: defaultTransportDialContext(&net.Dialer{
-	//	//	Timeout:   30 * time.Second,
-	//	//	KeepAlive: 30 * time.Second,
-	//	//}),
-	//	DialTLSContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-	//		fmt.Println("DialTLSContext", network, addr)
-	//		//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
-	//		return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
-	//	},
-	//	//DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-	//	//	fmt.Println("DialContext", network, addr)
-	//	//	//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
-	//	//	return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
-	//	//},
-	//	ForceAttemptHTTP2:     true,              //false,             //true,
-	//	MaxIdleConns:          100,               //0,
-	//	IdleConnTimeout:       180 * time.Second, //0,//1 * time.Second,
-	//	TLSHandshakeTimeout:   10 * time.Second,
-	//	ExpectContinueTimeout: 90 * time.Second,
-	//	MaxIdleConnsPerHost:   3, //100, //0,
-	//	//DisableKeepAlives:     true,
-	//}
-	cli := &http.Client{
-		Transport: &http2.Transport{
-			AllowHTTP: true,
-			//AllowHTTP: false,
-			DialTLSContext: func(ctx context.Context, network, addr string, _ *tls.Config) (net.Conn, error) {
-				fmt.Println("DialContext", network, addr)
-				//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
-				return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr)), addr), nil
-				//return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
-				//return net.Dial(network, addr)
-			},
+	cli := http.DefaultClient
+	overlayTransport := &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		//DialContext: defaultTransportDialContext(&net.Dialer{
+		//	Timeout:   30 * time.Second,
+		//	KeepAlive: 30 * time.Second,
+		//}),
+		//DialTLSContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+		//	fmt.Println("DialTLSContext", network, addr)
+		//	//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
+		//	return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
+		//},
+		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+			fmt.Println("DialContext", network, addr)
+			//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
+			return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr)), addr), nil
 		},
+		ForceAttemptHTTP2:     false,           //true,
+		MaxIdleConns:          1,               //0, //100,
+		IdleConnTimeout:       1 * time.Second, //180 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 90 * time.Second, //5 * time.Second,
+		MaxIdleConnsPerHost:   1,                //100, //0,
+		//DisableKeepAlives:     true,
 	}
+	//cli := &http.Client{
+	//	Transport: &http2.Transport{
+	//		AllowHTTP: true,
+	//		//AllowHTTP: false,
+	//		DialTLSContext: func(ctx context.Context, network, addr string, _ *tls.Config) (net.Conn, error) {
+	//			fmt.Println("DialContext", network, addr)
+	//			//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
+	//			return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr)), addr), nil
+	//			//return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
+	//			//return net.Dial(network, addr)
+	//		},
+	//	},
+	//}
 	//cli := tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(address))), &tls.Config{InsecureSkipVerify: true})
 	//overlayTransport := &http2.Transport{
 	//	//AllowHTTP: true,
@@ -110,10 +108,10 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 	//		//return net.Dial(network, addr)
 	//	},
 	//}
-	//cli.Transport = overlayTransport
+	cli.Transport = overlayTransport
 
-	//return serverconnect.NewInternalServiceClient(cli, "http://"+address), nil
-	return serverconnect.NewInternalServiceClient(cli, "https://"+address), nil
+	return serverconnect.NewInternalServiceClient(cli, "http://"+address), nil
+	//return serverconnect.NewInternalServiceClient(cli, "https://"+address), nil
 
 }
 
