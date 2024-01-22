@@ -3,8 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/ryogrid/gossip-overlay/overlay"
-
 	//"github.com/e-dard/netbug"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/core"
@@ -50,8 +48,8 @@ func main() {
 		Long:  "Run gord-overlay process and gRPC server",
 		Run: func(cmd *cobra.Command, args []string) {
 
-			host, basePort, err := net.SplitHostPort(hostAndPortBase)
-			//_, basePort, err := net.SplitHostPort(hostAndPortBase)
+			//host, basePort, err := net.SplitHostPort(hostAndPortBase)
+			_, basePort, err := net.SplitHostPort(hostAndPortBase)
 			if err != nil {
 				fmt.Println("invalid hostAndPort. err = %#v", err)
 				os.Exit(1)
@@ -67,18 +65,18 @@ func main() {
 				peers.Set(existNodeHostAndPort)
 			}
 
-			olPeer, err := overlay.NewOverlayPeer(&host, basePortNum, peers)
-			if err != nil {
-				fmt.Println("failed to create overlay peer. err = %#v", err)
-				panic(err)
-			}
+			//olPeer, err := overlay.NewOverlayPeer(&host, basePortNum, peers)
+			//if err != nil {
+			//	fmt.Println("failed to create overlay peer. err = %#v", err)
+			//	panic(err)
+			//}
 			//olPeer := &overlay.OverlayPeer{}
 
 			var (
 				ctx, cancel = context.WithCancel(context.Background())
 				localNode   = chord.NewLocalNode(hostAndPortBase)
 				//transport   = core.NewChordApiClient(localNode, olPeer, time.Second*3)
-				transport = core.NewChordApiClient(localNode, olPeer, time.Second*3*60)
+				transport = core.NewChordApiClient(localNode, nil, time.Second*3*60)
 				process   = chord.NewProcess(localNode, transport)
 				opts      = []core.InternalServerOptionFunc{
 					core.WithNodeOption(hostAndPortBase),
@@ -92,7 +90,7 @@ func main() {
 					chord.NewRemoteNode(existNodeHostAndPort, process.Transport),
 				)))
 			}
-			ins := core.NewChordServer(process, olPeer, basePort, opts...)
+			ins := core.NewChordServer(process, nil, basePort, opts...)
 			exs := core.NewExternalServer(process, strconv.Itoa(basePortNum+1))
 			go ins.Run(ctx)
 			go exs.Run()

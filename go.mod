@@ -18,7 +18,7 @@ require (
 require (
 	//github.com/e-dard/netbug v0.0.0-20151029172837-e64d308a0b20
 	github.com/weaveworks/mesh v0.0.0-20191105120815-58dbcc3e8e63
-	golang.org/x/net v0.17.0
+	golang.org/x/net v0.17.0 // indirect
 )
 
 require (
