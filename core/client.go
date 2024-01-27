@@ -9,10 +9,12 @@ import (
 	"github.com/ryogrid/gord-overlay/model"
 	"github.com/ryogrid/gord-overlay/server"
 	"github.com/ryogrid/gord-overlay/serverconnect"
+	"github.com/ryogrid/gossip-overlay/gossip"
 	"github.com/ryogrid/gossip-overlay/overlay"
 	"golang.org/x/net/http2"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"math"
 	"net"
 	"net/http"
 	"sync"
@@ -60,6 +62,13 @@ func (c *ApiClient) getGrpcConn(address string) (InternalServiceClient, error) {
 */
 
 func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceClient, error) {
+	c.poolLock.Lock()
+	defer c.poolLock.Unlock()
+	client, ok := c.clientPool[address]
+	if ok {
+		return serverconnect.NewInternalServiceClient(client, "http://"+address), nil
+	}
+
 	cli := http.DefaultClient
 	//overlayTransport := &http.Transport{
 	//	Proxy: http.ProxyFromEnvironment,
@@ -108,10 +117,22 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 			//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
 			//return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
 			//return net.Dial(network, addr)
-			return net.Dial(network, *c.proxyAddress)
+			dummyRemoteHost := "127.0.0.1:20000"
+			if c.hostNode.Host == "127.0.0.1:20000" {
+				dummyRemoteHost = "127.0.0.1:20002"
+			}
+			dummyRemoteAddr := &gossip.PeerAddress{
+				PeerName: math.MaxUint64,
+				PeerHost: &dummyRemoteHost,
+			}
+			conn, err := net.Dial(network, *c.proxyAddress)
+			retConn := &DummyTCPConn{conn, dummyRemoteAddr}
+			return retConn, err
 		},
 	}
 	cli.Transport = overlayTransport
+
+	c.clientPool[address] = cli
 
 	return serverconnect.NewInternalServiceClient(cli, "http://"+address), nil
 	//return serverconnect.NewInternalServiceClient(cli, "https://"+address), nil
