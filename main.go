@@ -23,6 +23,7 @@ var (
 	done                 = make(chan bool, 1)
 	hostAndPortBase      string
 	existNodeHostAndPort string
+	proxyHostAndPort     string
 )
 
 func main() {
@@ -76,7 +77,7 @@ func main() {
 				ctx, cancel = context.WithCancel(context.Background())
 				localNode   = chord.NewLocalNode(hostAndPortBase)
 				//transport   = core.NewChordApiClient(localNode, olPeer, time.Second*3)
-				transport = core.NewChordApiClient(localNode, nil, time.Second*3*60)
+				transport = core.NewChordApiClient(localNode, nil, &proxyHostAndPort, time.Second*3*60)
 				process   = chord.NewProcess(localNode, transport)
 				opts      = []core.InternalServerOptionFunc{
 					core.WithNodeOption(hostAndPortBase),
@@ -103,6 +104,7 @@ func main() {
 	}
 	command.PersistentFlags().StringVarP(&hostAndPortBase, "hostAndPort", "l", "127.0.0.1", "host name and port to attach this process.")
 	command.PersistentFlags().StringVarP(&existNodeHostAndPort, "existNodeHostAndPort", "n", "", "host name of exist node in chord ring.")
+	command.PersistentFlags().StringVarP(&proxyHostAndPort, "proxyHostAndPort", "p", "127.0.0.1:2222", "local proxy host name and port.")
 	if err := command.Execute(); err != nil {
 		log.Fatalf("err(%#v)", err)
 	}

@@ -20,20 +20,22 @@ import (
 )
 
 type ApiClient struct {
-	olPeer     *overlay.OverlayPeer
-	hostNode   *chord.LocalNode
-	timeout    time.Duration
-	clientPool map[string]*http.Client
-	poolLock   sync.Mutex
-	opts       grpc.CallOption
+	olPeer       *overlay.OverlayPeer
+	hostNode     *chord.LocalNode
+	timeout      time.Duration
+	clientPool   map[string]*http.Client
+	poolLock     sync.Mutex
+	opts         grpc.CallOption
+	proxyAddress *string
 }
 
-func NewChordApiClient(hostNode *chord.LocalNode, olPeer *overlay.OverlayPeer, timeout time.Duration) chord.Transport {
+func NewChordApiClient(hostNode *chord.LocalNode, olPeer *overlay.OverlayPeer, proxyAddress *string, timeout time.Duration) chord.Transport {
 	return &ApiClient{
-		olPeer:     olPeer,
-		hostNode:   hostNode,
-		timeout:    timeout,
-		clientPool: make(map[string]*http.Client),
+		olPeer:       olPeer,
+		hostNode:     hostNode,
+		timeout:      timeout,
+		clientPool:   make(map[string]*http.Client),
+		proxyAddress: proxyAddress,
 	}
 }
 
@@ -105,7 +107,8 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 			//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
 			//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
 			//return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
-			return net.Dial(network, addr)
+			//return net.Dial(network, addr)
+			return net.Dial(network, *c.proxyAddress)
 		},
 	}
 	cli.Transport = overlayTransport

@@ -33,7 +33,7 @@ make build
 ./gordolctl -h
 
 ## Start server
-./gordolctl -l hostAndPort(required) -n existNodeHostAndPort(optional)
+./gordolctl -l hostAndPort(required) -p proxyHostAndPort(required) -n existNodeHostAndPort(optional) 
 ```
 
 ## Examples
