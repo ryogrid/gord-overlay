@@ -2,12 +2,12 @@ module github.com/ryogrid/gord-overlay
 
 go 1.21.2
 
-replace github.com/ryogrid/gossip-overlay => ../gossip-overlay
+//replace github.com/ryogrid/gossip-overlay => ../gossip-overlay
 
 require (
 	connectrpc.com/connect v1.14.0
 	//github.com/e-dard/netbug v0.0.0-20151029172837-e64d308a0b20
-	//github.com/ryogrid/gossip-overlay v0.0.8
+	github.com/ryogrid/gossip-overlay v0.0.12
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.4
@@ -19,11 +19,6 @@ require (
 	//github.com/e-dard/netbug v0.0.0-20151029172837-e64d308a0b20
 	github.com/weaveworks/mesh v0.0.0-20191105120815-58dbcc3e8e63 // indirect
 	golang.org/x/net v0.17.0
-)
-
-require (
-	github.com/ryogrid/gossip-overlay v0.0.0-00010101000000-000000000000
-	gopkg.in/fatih/pool.v2 v2.0.0
 )
 
 require (
