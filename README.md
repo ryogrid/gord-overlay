@@ -74,3 +74,10 @@ make build
 ```bash
 make test
 ```
+
+## In Progress
+- Implemented more efficient version using customized [gossip-port-forward](https://github.com/ryogrid/gossip-port-forward) as proxy which acts as a gateway between local network and overlay network
+  - This version uses HTTP/2 on communication between servers and reduces communication establishment with reuse of that
+  - But this version is not documented yet
+  - The version is [here](https://github.com/ryogrid/gord-overlay/tree/overlay-proxy-use-http2)
+    - Development note is [here (Japanese)](https://zenn.dev/ryogrid/scraps/42d5c81e8604fd)
