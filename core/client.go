@@ -127,6 +127,18 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 				PeerHost: &addr,
 			}
 			conn, err := net.Dial(network, *c.proxyAddress)
+			if err != nil {
+				panic(err)
+			}
+
+			// notify remote node addr to proxy before return conn
+			remotePeerHostData := []byte(addr)
+			remotePeerHostByteNum := len(remotePeerHostData)
+			// write address length on bytes
+			conn.Write([]byte{byte(remotePeerHostByteNum)})
+			// write remote address
+			conn.Write(remotePeerHostData)
+
 			retConn := &DummyTCPConn{conn, dummyRemoteAddr}
 			return retConn, err
 		},

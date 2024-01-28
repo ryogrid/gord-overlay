@@ -45,10 +45,6 @@ func (dtl *DummyTCPListener) Accept() (net.Conn, error) {
 	}
 	remoteAddrStr := string(addrBuf)
 
-	//var ret uint64
-	//binary.Read(bytes.NewBuffer(hf.Sum(nil)[0:7]), binary.LittleEndian, &ret)
-	//return ret
-
 	// set remote node address to conn (not address of proxy)
 	retConn := &DummyTCPConn{conn, &gossip.PeerAddress{
 		PeerName: math.MaxUint64,
