@@ -117,13 +117,14 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 			//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
 			//return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
 			//return net.Dial(network, addr)
-			dummyRemoteHost := "127.0.0.1:20000"
-			if c.hostNode.Host == "127.0.0.1:20000" {
-				dummyRemoteHost = "127.0.0.1:20002"
-			}
+			//dummyRemoteHost := "127.0.0.1:20000"
+			//if c.hostNode.Host == "127.0.0.1:20000" {
+			//	dummyRemoteHost = "127.0.0.1:20002"
+			//}
 			dummyRemoteAddr := &gossip.PeerAddress{
 				PeerName: math.MaxUint64,
-				PeerHost: &dummyRemoteHost,
+				//PeerHost: &dummyRemoteHost,
+				PeerHost: &addr,
 			}
 			conn, err := net.Dial(network, *c.proxyAddress)
 			retConn := &DummyTCPConn{conn, dummyRemoteAddr}

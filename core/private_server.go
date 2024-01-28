@@ -111,11 +111,11 @@ func (is *InternalServer) Run(ctx context.Context) {
 		////http.Serve(overlay.NewOverlayListener("0.0.0.0"+":"+is.port), mux)
 		//http.Serve(is.olPeer.GetOverlayListener(), mux)
 		////serv.MaxReadFrameSize = 1 << 31
-		dummyRemoteHost := "127.0.0.1:20000"
-		if is.port == "20000" {
-			dummyRemoteHost = "127.0.0.1:20002"
-		}
-		http.Serve(NewDummyTCPListener("127.0.0.1:"+is.port, dummyRemoteHost), h2c.NewHandler(mux, serv))
+		//dummyRemoteHost := "127.0.0.1:20000"
+		//if is.port == "20000" {
+		//	dummyRemoteHost = "127.0.0.1:20002"
+		//}
+		http.Serve(NewDummyTCPListener("127.0.0.1:"+is.port), h2c.NewHandler(mux, serv))
 		//oserv, err := overlay.NewOverlayServer(is.olPeer.Peer, is.olPeer.Peer.GossipMM)
 		//if err != nil {
 		//	panic(err)
