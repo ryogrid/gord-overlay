@@ -4,23 +4,22 @@ services:
   gord1:
     build: .
     ports:
-      - "26040:26040"
-      - "26041:26041"
-    command: -l gord1:26040
+      - "20001:20001"
+    command: "1"
   gord2:
-    build: .
+    #build: .
+    image: gordoverlay_gord1:latest
     depends_on:
       - gord1
     ports:
-      - "36040:26040"
-      - "36041:26041"
-    command: -l gord2:26040 -n gord1:26040
+      - "20005:20005"
+    command: "2"
   gord3:
-    build: .
+    #build: .
+    image: gordoverlay_gord1:latest
     depends_on:
       - gord1
       - gord2
     ports:
-      - "46040:26040"
-      - "46041:26041"
-    command: -l gord3:26040 -n gord1:26040
+      - "20009:20009"
+    command: "3"
