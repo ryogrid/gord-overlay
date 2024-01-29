@@ -82,3 +82,20 @@ curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge", "value": "f
 curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://localhost:20005/server.ExternalService/GetValue
 curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://localhost:20009/server.ExternalService/GetValue
 ```
+
+## Development Memo
+- [here (Japanese)](https://zenn.dev/ryogrid/scraps/42d5c81e8604fd)
+
+## TODO (not implemented part)
+- Easy trial
+  - Dockerfile and docker-compose.yml is not updated properly yet...
+- Data replication
+  - Puted data is stored only one server now
+- Abnormal situation handling
+  - Servers may crash when a node leavs DHT network or HTTP/2 connection...
+- Handling new server join and server leave
+  - When join, data delegation should be needed
+  - When leave, number of servers which have replica assinged to leaved node should be keeped
+    - Data delegation between a server same replica having and new assined node must occur
+
+
