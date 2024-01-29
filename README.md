@@ -22,7 +22,7 @@ Then, servers can query via REST to resolve server address and communicate with 
 ## Usage
 - Gord-Overlay REST server reqires a hostname and port number pair
 - If you specify 127.0.0.1:26000, the server will use 127.0.0.1:26000 to communication between other nodes and use 127.0.0.1:26001 to listen local REST request
-- Specified hostname and port number pair is internally used as a node identifier, so you need to specify a unique pair for each node
+- Specified hostname and port number pair is internally used as a server identifier, so you need to specify a unique pair for each server
 - Additionaly, you need to specify address of a server which is already in the DHT network to join the network except the first server
 - Proxy server introduced later section is a utility to connect to the overlay network from outside of the network
   - These connect to bootstrap server. currently, server at ryogrid.net:9999 is hard-coded a
