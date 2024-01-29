@@ -3,16 +3,18 @@ package core
 import (
 	"connectrpc.com/connect"
 	"context"
+	"crypto/tls"
 	"fmt"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/model"
 	"github.com/ryogrid/gord-overlay/server"
 	"github.com/ryogrid/gord-overlay/serverconnect"
+	"github.com/ryogrid/gossip-overlay/gossip"
 	"github.com/ryogrid/gossip-overlay/overlay"
-	"github.com/ryogrid/gossip-overlay/util"
-	"github.com/weaveworks/mesh"
+	"golang.org/x/net/http2"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"math"
 	"net"
 	"net/http"
 	"sync"
@@ -20,20 +22,22 @@ import (
 )
 
 type ApiClient struct {
-	olPeer     *overlay.OverlayPeer
-	hostNode   *chord.LocalNode
-	timeout    time.Duration
-	clientPool map[string]*http.Client
-	poolLock   sync.Mutex
-	opts       grpc.CallOption
+	olPeer       *overlay.OverlayPeer
+	hostNode     *chord.LocalNode
+	timeout      time.Duration
+	clientPool   map[string]*http.Client
+	poolLock     sync.Mutex
+	opts         grpc.CallOption
+	proxyAddress *string
 }
 
-func NewChordApiClient(hostNode *chord.LocalNode, olPeer *overlay.OverlayPeer, timeout time.Duration) chord.Transport {
+func NewChordApiClient(hostNode *chord.LocalNode, olPeer *overlay.OverlayPeer, proxyAddress *string, timeout time.Duration) chord.Transport {
 	return &ApiClient{
-		olPeer:     olPeer,
-		hostNode:   hostNode,
-		timeout:    timeout,
-		clientPool: make(map[string]*http.Client),
+		olPeer:       olPeer,
+		hostNode:     hostNode,
+		timeout:      timeout,
+		clientPool:   make(map[string]*http.Client),
+		proxyAddress: proxyAddress,
 	}
 }
 
@@ -58,31 +62,38 @@ func (c *ApiClient) getGrpcConn(address string) (InternalServiceClient, error) {
 */
 
 func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceClient, error) {
-	cli := http.DefaultClient
-	overlayTransport := &http.Transport{
-		Proxy: http.ProxyFromEnvironment,
-		//DialContext: defaultTransportDialContext(&net.Dialer{
-		//	Timeout:   30 * time.Second,
-		//	KeepAlive: 30 * time.Second,
-		//}),
-		//DialTLSContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-		//	fmt.Println("DialTLSContext", network, addr)
-		//	//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
-		//	return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
-		//},
-		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-			fmt.Println("DialContext", network, addr)
-			//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
-			return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr)), addr), nil
-		},
-		ForceAttemptHTTP2:     false,           //true,
-		MaxIdleConns:          1,               //0, //100,
-		IdleConnTimeout:       1 * time.Second, //180 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 90 * time.Second, //5 * time.Second,
-		MaxIdleConnsPerHost:   1,                //100, //0,
-		//DisableKeepAlives:     true,
+	c.poolLock.Lock()
+	defer c.poolLock.Unlock()
+	client, ok := c.clientPool[address]
+	if ok {
+		return serverconnect.NewInternalServiceClient(client, "http://"+address), nil
 	}
+
+	cli := http.DefaultClient
+	//overlayTransport := &http.Transport{
+	//	Proxy: http.ProxyFromEnvironment,
+	//	//DialContext: defaultTransportDialContext(&net.Dialer{
+	//	//	Timeout:   30 * time.Second,
+	//	//	KeepAlive: 30 * time.Second,
+	//	//}),
+	//	//DialTLSContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+	//	//	fmt.Println("DialTLSContext", network, addr)
+	//	//	//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
+	//	//	return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
+	//	//},
+	//	DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+	//		fmt.Println("DialContext", network, addr)
+	//		//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
+	//		return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr)), addr), nil
+	//	},
+	//	ForceAttemptHTTP2:     false,           //true,
+	//	MaxIdleConns:          1,               //0, //100,
+	//	IdleConnTimeout:       1 * time.Second, //180 * time.Second,
+	//	TLSHandshakeTimeout:   10 * time.Second,
+	//	ExpectContinueTimeout: 90 * time.Second, //5 * time.Second,
+	//	MaxIdleConnsPerHost:   1,                //100, //0,
+	//	//DisableKeepAlives:     true,
+	//}
 	//cli := &http.Client{
 	//	Transport: &http2.Transport{
 	//		AllowHTTP: true,
@@ -97,18 +108,44 @@ func (c *ApiClient) getGrpcConn(address string) (serverconnect.InternalServiceCl
 	//	},
 	//}
 	//cli := tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(address))), &tls.Config{InsecureSkipVerify: true})
-	//overlayTransport := &http2.Transport{
-	//	//AllowHTTP: true,
-	//	AllowHTTP: true,
-	//	DialTLSContext: func(ctx context.Context, network, addr string, _ *tls.Config) (net.Conn, error) {
-	//		fmt.Println("DialContext", network, addr)
-	//		//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
-	//		return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
-	//		//return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
-	//		//return net.Dial(network, addr)
-	//	},
-	//}
+	overlayTransport := &http2.Transport{
+		//AllowHTTP: true,
+		AllowHTTP: true,
+		DialTLSContext: func(ctx context.Context, network, addr string, _ *tls.Config) (net.Conn, error) {
+			fmt.Println("DialContext", network, addr)
+			//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint64(addr))), nil
+			//return c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), nil
+			//return tls.Client(c.olPeer.OpenStreamToTargetPeer(mesh.PeerName(util.NewHashIDUint16(addr))), &tls.Config{InsecureSkipVerify: true}), nil
+			//return net.Dial(network, addr)
+			//dummyRemoteHost := "127.0.0.1:20000"
+			//if c.hostNode.Host == "127.0.0.1:20000" {
+			//	dummyRemoteHost = "127.0.0.1:20002"
+			//}
+			dummyRemoteAddr := &gossip.PeerAddress{
+				PeerName: math.MaxUint64,
+				//PeerHost: &dummyRemoteHost,
+				PeerHost: &addr,
+			}
+			conn, err := net.Dial(network, *c.proxyAddress)
+			if err != nil {
+				panic(err)
+			}
+
+			// notify remote node addr to proxy before return conn
+			remotePeerHostData := []byte(addr)
+			remotePeerHostByteNum := len(remotePeerHostData)
+			// write address length on bytes
+			conn.Write([]byte{byte(remotePeerHostByteNum)})
+			// write remote address
+			conn.Write(remotePeerHostData)
+
+			retConn := &DummyTCPConn{conn, dummyRemoteAddr}
+			return retConn, err
+		},
+	}
 	cli.Transport = overlayTransport
+
+	c.clientPool[address] = cli
 
 	return serverconnect.NewInternalServiceClient(cli, "http://"+address), nil
 	//return serverconnect.NewInternalServiceClient(cli, "https://"+address), nil

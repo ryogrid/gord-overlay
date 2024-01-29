@@ -1,0 +1,3 @@
+[submodule "third/gossip-port-forward"]
+	path = third/gossip-port-forward
+	url = https://github.com/ryogrid/gossip-port-forward.git
