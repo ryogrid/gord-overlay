@@ -51,14 +51,11 @@ go build -o gossip-port-forward gossip-port-forward.go
 
 1. Start servers
 ```bash
-# launch 3 servers (6 shells are needed...) 
-./third/gossip-port-forward/gossip-port-forward both -a 127.0.0.1 -f 20000 -l 20002
+# launch 3 servers (3 shells are needed...)
+cp ./third/gossip-port-forward/gossip-port-forward .
+
 ./gordolctl -l 127.0.0.1:20000 -p 127.0.0.1:20002
-
-./third/gossip-port-forward/gossip-port-forward both -a 127.0.0.1 -f 20004 -l 20006
 ./gordolctl -l 127.0.0.1:20004 -n 127.0.0.1:20000 -p 127.0.0.1:20006
-
-./third/gossip-port-forward/gossip-port-forward both -a 127.0.0.1 -f 20008 -l 20010
 ./gordolctl.exe -l 127.0.0.1:20008 -n 127.0.0.1:20004 -p 127.0.0.1:20010
 ```
 
