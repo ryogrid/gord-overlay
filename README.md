@@ -49,7 +49,7 @@ go build -o gossip-port-forward gossip-port-forward.go
 
 ## Examples
 
-1. Start servers
+1.A Start servers (after binary builds described above)
 ```bash
 # launch 3 servers (3 shells are needed...)
 cp ./third/gossip-port-forward/gossip-port-forward .
@@ -58,6 +58,16 @@ cp ./third/gossip-port-forward/gossip-port-forward .
 ./gordolctl -l 127.0.0.1:20000 -p 127.0.0.1:20003
 ./gordolctl -l 127.0.0.1:20004 -n 127.0.0.1:20000 -p 127.0.0.1:20007
 ./gordolctl -l 127.0.0.1:20008 -n 127.0.0.1:20004 -p 127.0.0.1:20011
+```
+
+1.B Start servers (using docker-compose)
+```bash
+git clone https://github.com/ryogrid/gord-overlay.git
+cd gord-overlay
+git pull
+git submodule init
+git submodule update
+docker-compose build && docker-compose up
 ```
 
 2. Try! 
@@ -85,8 +95,6 @@ curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://loc
 - [here (Japanese)](https://zenn.dev/ryogrid/scraps/42d5c81e8604fd)
 
 ## TODO (not implemented part)
-- Easy trial
-  - Dockerfile and docker-compose.yml is not updated properly yet...
 - Data replication
   - Puted data is stored only one server now
 - Abnormal situation handling
