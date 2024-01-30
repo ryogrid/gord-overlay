@@ -3,6 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"os/exec"
+	"path/filepath"
+	"strings"
+
 	//"github.com/e-dard/netbug"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/core"
@@ -66,12 +70,26 @@ func main() {
 				peers.Set(existNodeHostAndPort)
 			}
 
-			//olPeer, err := overlay.NewOverlayPeer(&host, basePortNum, peers)
-			//if err != nil {
-			//	fmt.Println("failed to create overlay peer. err = %#v", err)
-			//	panic(err)
-			//}
-			//olPeer := &overlay.OverlayPeer{}
+			// execute proxy process
+			exe, err := os.Executable()
+			if err != nil {
+				panic(err)
+			}
+			dirStr := filepath.Dir(exe)
+			launchDir := dirStr
+			var proxyBinaryName = launchDir + "/gossip-port-forward"
+			if runtime.GOOS == "windows" {
+				proxyBinaryName = launchDir + "/gossip-port-forward.exe"
+			}
+			startCmd := proxyBinaryName
+			startArgs := strings.Fields("both -a 127.0.0.1 -f " + strconv.Itoa(basePortNum) + " -l " + strconv.Itoa(basePortNum+2))
+			proxyProc := exec.Command(startCmd, startArgs...)
+			proxyProc.Dir = launchDir
+			err = proxyProc.Start()
+			if err != nil {
+				panic(err)
+			}
+			time.Sleep(5 * time.Second)
 
 			var (
 				ctx, cancel = context.WithCancel(context.Background())

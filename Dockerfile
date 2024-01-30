@@ -19,6 +19,8 @@ COPY --from=gordol-build /go/src/app/gordolctl /
 COPY --from=gordol-build /go/src/app/third/gossip-port-forward/gossip-port-forward /
 COPY --from=gordol-build /go/src/app/start_kvs_and_proxy.sh /
 WORKDIR /
-#ENTRYPOINT ["/gordolctl"]
-ENTRYPOINT ["/start_kvs_and_proxy.sh"]
+#RUN chmod +x /start_kvs_and_proxy.sh
+ENTRYPOINT ["/gordolctl"]
+#ENTRYPOINT ["/bin/sh /start_kvs_and_proxy.sh"]
+#CMD ["/bin/sh /start_kvs_and_proxy.sh 1"]
 CMD [""]
