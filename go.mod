@@ -7,7 +7,7 @@ go 1.21.2
 require (
 	connectrpc.com/connect v1.14.0
 	//github.com/e-dard/netbug v0.0.0-20151029172837-e64d308a0b20
-	github.com/ryogrid/gossip-overlay v0.0.12
+	github.com/ryogrid/gossip-overlay v0.0.13
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.4
