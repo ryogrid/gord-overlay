@@ -82,7 +82,9 @@ func main() {
 				proxyBinaryName = launchDir + "/gossip-port-forward.exe"
 			}
 			startCmd := proxyBinaryName
-			startArgs := strings.Fields("both -a 127.0.0.1 -f " + strconv.Itoa(basePortNum) + " -l " + strconv.Itoa(basePortNum+2))
+			argsStr := "both -a 127.0.0.1 -f " + strconv.Itoa(basePortNum) + " -l " + strconv.Itoa(basePortNum+2)
+			fmt.Println("lauch proxy: ", startCmd+" "+argsStr)
+			startArgs := strings.Fields(argsStr)
 			proxyProc := exec.Command(startCmd, startArgs...)
 			proxyProc.Dir = launchDir
 			err = proxyProc.Start()

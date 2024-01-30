@@ -3,9 +3,7 @@ FROM golang:1.21.2 as gordol-build
 WORKDIR /go/src/app
 COPY go.mod /go/src/app
 COPY go.sum /go/src/app
-COPY start_kvs_and_proxy.sh /go/src/app
 COPY . /go/src/app/
-RUN chmod +x /go/src/app/start_kvs_and_proxy.sh
 RUN go mod download
 RUN make build
 
@@ -17,10 +15,6 @@ FROM gcr.io/distroless/cc-debian12
 
 COPY --from=gordol-build /go/src/app/gordolctl /
 COPY --from=gordol-build /go/src/app/third/gossip-port-forward/gossip-port-forward /
-COPY --from=gordol-build /go/src/app/start_kvs_and_proxy.sh /
 WORKDIR /
-#RUN chmod +x /start_kvs_and_proxy.sh
 ENTRYPOINT ["/gordolctl"]
-#ENTRYPOINT ["/bin/sh /start_kvs_and_proxy.sh"]
-#CMD ["/bin/sh /start_kvs_and_proxy.sh 1"]
 CMD [""]
