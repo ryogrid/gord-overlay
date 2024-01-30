@@ -22,7 +22,7 @@ Then, servers can query via REST to resolve server address and communicate with 
 ## Usage
 - Gord-Overlay REST server reqires a hostname and port number pair
 - If you specify 127.0.0.1:26000, the server will use 127.0.0.1:26000 to communication between other nodes and use 127.0.0.1:26001 to listen local REST request
-- Specified hostname and port number pair is internally used as a node identifier, so you need to specify a unique pair for each node
+- Specified hostname and port number pair is internally used as a server identifier, so you need to specify a unique pair for each server
 - Additionaly, you need to specify address of a server which is already in the DHT network to join the network except the first server
 - Proxy server introduced later section is a utility to connect to the overlay network from outside of the network
   - These connect to bootstrap server. currently, server at ryogrid.net:9999 is hard-coded a
@@ -51,14 +51,11 @@ go build -o gossip-port-forward gossip-port-forward.go
 
 1. Start servers
 ```bash
-# launch 3 servers (6 shells are needed...) 
-./third/gossip-port-forward/gossip-port-forward both -a 127.0.0.1 -f 20000 -l 20002
+# launch 3 servers (3 shells are needed...)
+cp ./third/gossip-port-forward/gossip-port-forward .
+
 ./gordolctl -l 127.0.0.1:20000 -p 127.0.0.1:20002
-
-./third/gossip-port-forward/gossip-port-forward both -a 127.0.0.1 -f 20004 -l 20006
 ./gordolctl -l 127.0.0.1:20004 -n 127.0.0.1:20000 -p 127.0.0.1:20006
-
-./third/gossip-port-forward/gossip-port-forward both -a 127.0.0.1 -f 20008 -l 20010
 ./gordolctl.exe -l 127.0.0.1:20008 -n 127.0.0.1:20004 -p 127.0.0.1:20010
 ```
 
@@ -82,3 +79,20 @@ curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge", "value": "f
 curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://localhost:20005/server.ExternalService/GetValue
 curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://localhost:20009/server.ExternalService/GetValue
 ```
+
+## Development Memo
+- [here (Japanese)](https://zenn.dev/ryogrid/scraps/42d5c81e8604fd)
+
+## TODO (not implemented part)
+- Easy trial
+  - Dockerfile and docker-compose.yml is not updated properly yet...
+- Data replication
+  - Puted data is stored only one server now
+- Abnormal situation handling
+  - Servers may crash when a node leavs DHT network or HTTP/2 connection...
+- Handling new server join and server leave
+  - When join, data delegation should be needed
+  - When leave, number of servers which have replica assinged to leaved node should be keeped
+    - Data delegation between a server same replica having and new assined node must occur
+
+
