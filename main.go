@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"fmt"
+	"io"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -87,6 +89,18 @@ func main() {
 			startArgs := strings.Fields(argsStr)
 			proxyProc := exec.Command(startCmd, startArgs...)
 			proxyProc.Dir = launchDir
+			stdout, _ := proxyProc.StdoutPipe()
+			stderr, _ := proxyProc.StderrPipe()
+			stdoutStderr := io.MultiReader(stdout, stderr)
+
+			// print proxy process output in background
+			go func(childOut io.Reader) {
+				scanner := bufio.NewScanner(childOut)
+				for scanner.Scan() {
+					fmt.Println(scanner.Text())
+				}
+			}(stdoutStderr)
+			
 			err = proxyProc.Start()
 			if err != nil {
 				panic(err)
