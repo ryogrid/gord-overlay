@@ -1,14 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	"fmt"
-	"io"
-	"os/exec"
-	"path/filepath"
-	"strings"
-
 	//"github.com/e-dard/netbug"
 	"github.com/ryogrid/gord-overlay/chord"
 	"github.com/ryogrid/gord-overlay/core"
@@ -55,8 +49,8 @@ func main() {
 		Long:  "Run gord-overlay process and gRPC server",
 		Run: func(cmd *cobra.Command, args []string) {
 
-			//host, basePort, err := net.SplitHostPort(hostAndPortBase)
 			_, basePort, err := net.SplitHostPort(hostAndPortBase)
+			//host, basePort, err := net.SplitHostPort(hostAndPortBase)
 			if err != nil {
 				fmt.Println("invalid hostAndPort. err = %#v", err)
 				os.Exit(1)
@@ -72,40 +66,40 @@ func main() {
 				peers.Set(existNodeHostAndPort)
 			}
 
-			// execute proxy process
-			exe, err := os.Executable()
-			if err != nil {
-				panic(err)
-			}
-			dirStr := filepath.Dir(exe)
-			launchDir := dirStr
-			var proxyBinaryName = launchDir + "/gossip-port-forward"
-			if runtime.GOOS == "windows" {
-				proxyBinaryName = launchDir + "/gossip-port-forward.exe"
-			}
-			startCmd := proxyBinaryName
-			argsStr := "both -a 127.0.0.1 -f " + strconv.Itoa(basePortNum) + " -l " + strconv.Itoa(basePortNum+2)
-			fmt.Println("lauch proxy: ", startCmd+" "+argsStr)
-			startArgs := strings.Fields(argsStr)
-			proxyProc := exec.Command(startCmd, startArgs...)
-			proxyProc.Dir = launchDir
-			stdout, _ := proxyProc.StdoutPipe()
-			stderr, _ := proxyProc.StderrPipe()
-			stdoutStderr := io.MultiReader(stdout, stderr)
-
-			// print proxy process output in background
-			go func(childOut io.Reader) {
-				scanner := bufio.NewScanner(childOut)
-				for scanner.Scan() {
-					fmt.Println(scanner.Text())
-				}
-			}(stdoutStderr)
-			
-			err = proxyProc.Start()
-			if err != nil {
-				panic(err)
-			}
-			time.Sleep(5 * time.Second)
+			//// execute proxy process
+			//exe, err := os.Executable()
+			//if err != nil {
+			//	panic(err)
+			//}
+			//dirStr := filepath.Dir(exe)
+			//launchDir := dirStr
+			//var proxyBinaryName = launchDir + "/gossip-port-forward"
+			//if runtime.GOOS == "windows" {
+			//	proxyBinaryName = launchDir + "/gossip-port-forward.exe"
+			//}
+			//startCmd := proxyBinaryName
+			//argsStr := "both -a " + host + " -f " + strconv.Itoa(basePortNum) + " -l " + strconv.Itoa(basePortNum+2)
+			//fmt.Println("lauch proxy: ", startCmd+" "+argsStr)
+			//startArgs := strings.Fields(argsStr)
+			//proxyProc := exec.Command(startCmd, startArgs...)
+			//proxyProc.Dir = launchDir
+			//stdout, _ := proxyProc.StdoutPipe()
+			//stderr, _ := proxyProc.StderrPipe()
+			//stdoutStderr := io.MultiReader(stdout, stderr)
+			//
+			//// print proxy process output in background
+			//go func(childOut io.Reader) {
+			//	scanner := bufio.NewScanner(childOut)
+			//	for scanner.Scan() {
+			//		fmt.Println(scanner.Text())
+			//	}
+			//}(stdoutStderr)
+			//
+			//err = proxyProc.Start()
+			//if err != nil {
+			//	panic(err)
+			//}
+			//time.Sleep(5 * time.Second)
 
 			var (
 				ctx, cancel = context.WithCancel(context.Background())
