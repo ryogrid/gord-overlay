@@ -54,6 +54,7 @@ go build -o gossip-port-forward gossip-port-forward.go
 # launch 3 servers (3 shells are needed...)
 cp ./third/gossip-port-forward/gossip-port-forward .
 
+# each gordlctl internally launch gossip-port-forward process for myself
 ./gordolctl -l 127.0.0.1:20000 -p 127.0.0.1:20002
 ./gordolctl -l 127.0.0.1:20004 -n 127.0.0.1:20000 -p 127.0.0.1:20006
 ./gordolctl.exe -l 127.0.0.1:20008 -n 127.0.0.1:20004 -p 127.0.0.1:20010
