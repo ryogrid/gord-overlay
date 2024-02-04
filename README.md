@@ -12,38 +12,38 @@ Gord-Overlay will start as a REST server and your application can access data vi
 ## How is it work?
 Gord-Overlay is an implementation of [DHT Chord](https://pdos.csail.mit.edu/papers/ton:chord/paper-ton.pdf) and simple key-value store using the DHT.
 Chord protocol is an algorithm which extends consistent hashing.
-Gord-Overlay server, using chord protocol, allocates a key to a node in distributed nodes ring.
+Gord-Overlay, using chord protocol, allocates a key to a node in distributed nodes ring.
 
 ![chord ring](docs/architecture-1.png) 
 
-In addition, servers communicate with each other via REST to synchronize route information.
-Then, servers can query via REST to resolve server address and communicate with the server.
+In addition, KVS servers communicate with each other via REST to synchronize route information.
+Then, servers can query via REST to resolve other servers address and communicate with these.
 
 ## Usage
 - Gord-Overlay REST server reqires a hostname and port number pair
 - If you specify 127.0.0.1:26000, the server will use 127.0.0.1:26000 to communication between other nodes and use 127.0.0.1:26001 to listen local REST request
-- Specified hostname and port number pair is internally used as a server identifier, so you need to specify a unique pair for each server
+- Specified hostname and port number pair is internally used as a KVS/Proxy server identifier, so you need to specify a unique pair for each server
 - Additionaly, you need to specify address of a server which is already in the DHT network to join the network except the first server
 - Proxy server introduced later section is a utility to connect to the overlay network from outside of the network
-  - These connect to bootstrap server. currently, server at ryogrid.net:9999 is hard-coded a
+  - Proxy connect to bootstrap server. currently, proxy server at ryogrid.net:9999 is hard-coded
   - But you can change it by modifying [this line](https://github.com/ryogrid/gossip-port-forward/blob/master/constants/constants.go#L3)
   - First proxy can launch with command `./third/gossip-port-forward/gossip-port-forward relay -p listenPort(required)`
-  - Other proxy can be bootstrap server also. But one proxy which has global IP is needed at least on overlay network for NAT travarsal
+  - Other proxies can be bootstrap server also. But one proxy server which has global IP is needed at least on overlay network for NAT travarsal
 ```
 ## Build
 make build
 
-## Build proxy for gordolctl connecting to overlay network
+## Build proxy server for gordolctl connecting to overlay network
 git pull
 git submodule init
 git submodule update
 cd third/gossip-port-forward
 go build -o gossip-port-forward gossip-port-forward.go
 
-## Start proxy
+## Start proxy server (you do this only if you launch bootstrap proxy server myself)
 ./third/gossip-port-forward/gossip-port-forward both -a 127.0.0.1 -f forwardAddress(required) -l listenPort(required)
 
-## Start server
+## Start KVS server (internally proxy server is launched) 
 ./gordolctl -l hostAndPort(required) -p proxyHostAndPort(required) -n existNodeHostAndPort(optional) 
 ```
 
@@ -56,8 +56,8 @@ cp ./third/gossip-port-forward/gossip-port-forward .
 
 # each gordlctl internally launch gossip-port-forward process for myself
 ./gordolctl -l 127.0.0.1:20000 -p 127.0.0.1:20003
-./gordolctl -l 127.0.0.1:20004 -n 127.0.0.1:20000 -p 127.0.0.1:20007
-./gordolctl -l 127.0.0.1:20008 -n 127.0.0.1:20004 -p 127.0.0.1:20011
+./gordolctl -l 127.0.0.1:20004 -p 127.0.0.1:20007 -n 127.0.0.1:20000 
+./gordolctl -l 127.0.0.1:20008 -p 127.0.0.1:20011 -n 127.0.0.1:20004 
 ```
 
 1.B Start servers (using docker-compose)
@@ -99,9 +99,9 @@ curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://loc
   - Puted data is stored only one server now
 - Abnormal situation handling
   - Servers may crash when a node leavs DHT network or HTTP/2 connection...
-- Handling new server join and server leave
-  - When join, data delegation should be needed
-  - When leave, number of servers which have replica assinged to leaved node should be keeped
-    - Data delegation between a server same replica having and new assined node must occur
+- Handling new server join and server leave after data writing started
+  - When join, data delegation is needed
+  - When leave, number of servers which have replica entries (key/value) same with leaved node should be keeped 
+    - Data replication to additinal server must occur
 
 
