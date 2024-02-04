@@ -45,7 +45,7 @@ go build -o gossip-port-forward gossip-port-forward.go
 ./third/gossip-port-forward/gossip-port-forward both -a 127.0.0.1 -f forwardAddress(required) -l listenPort(required)
 
 ## Start KVS server (internally proxy server is launched) 
-./gordolctl -l hostAndPort(required) -p proxyHostAndPort(required) -n existNodeHostAndPort(optional) 
+./gordolctl -l hostAndPort(required) -n existNodeHostAndPort(optional) 
 ```
 
 ## Examples
