@@ -6,7 +6,7 @@ services:
     ports:
       - "20001:20001"
       - "20003:20003"
-    command: -l 127.0.0.1:20000 -p 127.0.0.1:20003
+    command: -l 127.0.0.1:20000
   gord2:
     #build: .
     image: gordoverlay_gord1:latest
@@ -15,7 +15,7 @@ services:
     ports:
       - "20005:20005"
       - "20007:20007"
-    command: -l 127.0.0.1:20004 -n 127.0.0.1:20000 -p 127.0.0.1:20007
+    command: -l 127.0.0.1:20004 -n 127.0.0.1:20000
   gord3:
     #build: .
     image: gordoverlay_gord1:latest
@@ -25,4 +25,4 @@ services:
     ports:
       - "20009:20009"
       - "20011:20011"
-    command: -l 127.0.0.1:20008 -n 127.0.0.1:20004 -p 127.0.0.1:20011
+    command: -l 127.0.0.1:20008 -n 127.0.0.1:20004

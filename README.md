@@ -18,6 +18,7 @@ Gord-Overlay, using chord protocol, allocates a key to a node in distributed nod
 
 In addition, KVS servers communicate with each other via REST to synchronize route information.
 Then, servers can query via REST to resolve other servers address and communicate with these.
+(REST I/F between servers is HTTP/2 but one for KVS accesses is HTTP/1.1)
 
 ## Usage
 - Gord-Overlay REST server reqires a hostname and port number pair
@@ -55,9 +56,9 @@ go build -o gossip-port-forward gossip-port-forward.go
 cp ./third/gossip-port-forward/gossip-port-forward .
 
 # each gordlctl internally launch gossip-port-forward process for myself
-./gordolctl -l 127.0.0.1:20000 -p 127.0.0.1:20003
-./gordolctl -l 127.0.0.1:20004 -p 127.0.0.1:20007 -n 127.0.0.1:20000 
-./gordolctl -l 127.0.0.1:20008 -p 127.0.0.1:20011 -n 127.0.0.1:20004 
+./gordolctl -l 127.0.0.1:20000
+./gordolctl -l 127.0.0.1:20004 -n 127.0.0.1:20000 
+./gordolctl -l 127.0.0.1:20008 -n 127.0.0.1:20004 
 ```
 
 1.B Start servers (using docker-compose)
