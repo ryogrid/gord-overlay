@@ -99,7 +99,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"key": "hoge"}' http://loc
 - Data replication
   - Puted data is stored only one server now
 - Abnormal situation handling
-  - Servers may crash when a node leavs DHT network or HTTP/2 connection...
+  - Servers may crash when a node leavs DHT network or HTTP/2 connection is disconnected...
 - Handling new server join and server leave after data writing started
   - When join, data delegation is needed
   - When leave, number of servers which have replica entries (key/value) same with leaved node should be keeped 
